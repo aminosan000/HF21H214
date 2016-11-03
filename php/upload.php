@@ -1,6 +1,8 @@
 <?php
 require_once('Image.class.php');
 require_once('ImageDao.class.php');
+require_once('Comment.class.php');
+require_once('CommentDao.class.php');
 require_once('DaoFactory.class.php');
 require_once('secureFunc.php');
 date_default_timezone_set('Asia/Tokyo');
@@ -27,6 +29,15 @@ try{
 		$daoFactory = DaoFactory::getDaoFactory();
 		$dao = $daoFactory->createImageDao();
 		$dao->insert($image);
+		if(isset($_POST['comment']) && $_POST['comment'] != ''){
+			$comment = new Comment();
+			$comment->setUserId($userId);
+			$comment->setCommentDate($today);
+			$comment->setComment(h($_POST['comment']));
+			$comment->setImageName($fileName);
+			$dao = $daoFactory->createCommentDao();
+			$dao->insert($comment);
+		}
 	}
 }catch(Exception $e) {
 	//echo 'エラー:', $e->getMessage().PHP_EOL;

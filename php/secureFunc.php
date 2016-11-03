@@ -19,7 +19,7 @@ function require_logined_session()
     @session_start();
     // ログインしていなければ /login.php に遷移
     if (!isset($_SESSION['userId'])) {
-        header('Location: ../login.php');
+        header('Location: ./login.php');
         exit;
     }
 }

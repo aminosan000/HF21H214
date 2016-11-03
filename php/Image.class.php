@@ -1,5 +1,5 @@
 <?PHP
-class Image extends ArrayObject{
+class Image{
 	private $imageName, $userId, $uploadDate, $category;
 	public function setImageName($imageName) {
         $this->imageName = (string)filter_var($imageName);

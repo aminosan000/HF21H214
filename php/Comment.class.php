@@ -1,5 +1,5 @@
 <?PHP
-class Comment extends ArrayObject{
+class Comment{
 	private $imageName, $userId, $commentDate, $comment;
 	public function setImageName($imageName) {
         $this->imageName = (string)filter_var($imageName);

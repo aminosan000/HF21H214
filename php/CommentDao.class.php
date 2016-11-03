@@ -1,6 +1,6 @@
 <?PHP
 
-ini_set("display_errors", On);
+ini_set("display_errors", 1);
 error_reporting(E_ALL);
 
 require_once('Comment.class.php');
@@ -18,15 +18,31 @@ class CommentDao{
 	public function select(){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
-			$commentArray = new Comment(array());
-			foreach($dbh->query('SELECT * from Comment') as $row) {
-				// 取り出したデータをクラスインスタンスの配列に入れる
+			$imageName = '';
+			$cnt = 1;
+			// 行数を取得
+			$res = $dbh->query('SELECT COUNT(*) FROM Comment');
+			$rowCount = $res->fetchColumn();
+			$commentArray = array();
+			foreach($dbh->query('SELECT * FROM Comment ORDER BY ImageName') as $row) {
+				if($cnt == 1){
+					$imageName = $row['ImageName'];
+				}
+				if($imageName != $row['ImageName']){
+					$commentArray[$imageName] = $oneImageComment;
+					$imageName = $row['ImageName'];
+					$oneImageComment = array();
+				}
 				$comment = new Comment();
 				$comment->setImageName($row['ImageName']);
 				$comment->setUserId($row['UserId']);
 				$comment->setCommentDate($row['CommentDate']);
 				$comment->setComment($row['Comment']);
-				$commentArray->append($good);
+				$oneImageComment[] = $comment;
+				if($cnt == $rowCount){
+					$commentArray[$imageName] = $oneImageComment;
+				}
+				$cnt++;
 			}
 		}catch (PDOException $e){
 			print('Connection failed:'.$e->getMessage());
@@ -40,48 +56,36 @@ class CommentDao{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
 			$stmt = $dbh->prepare('INSERT INTO Comment (ImageName, UserId, CommentDate, Comment) values (?, ?, ?, ?)');
 			$flag = $stmt->execute(array($comment->getImageName(), $comment->getUserId(), $comment->getCommentDate(), $comment->getComment()));
-			if ($flag){
-				print('データの追加に成功しました<br>');
-			}else{
-				print('データの追加に失敗しました<br>');
-			}
 		}catch (PDOException $e){
 			print('Connection failed:'.$e->getMessage());
 			die();
 		}
 		$dbh = null;
+		return $flag;
 	}
 	public function delete($comment){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
 			$stmt = $dbh->prepare('DELETE FROM Comment WHERE ImageName = ? AND UserId = ?');
 			$flag = $stmt->execute(array($comment->getImageName(), $comment->getUserId()));
-			if ($flag){
-				print('データの削除に成功しました<br>');
-			}else{
-				print('データの削除に失敗しました<br>');
-			}
 		}catch (PDOException $e){
 			print('Connection failed:'.$e->getMessage());
 			die();
 		}
 		$dbh = null;
+		return $flag;
 	}
 	public function update($comment){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
 			$stmt = $dbh->prepare('UPDATE Comment SET UserId = ?, CommentDate = ?, Comment = ? WHERE ImageName = ?');
 			$flag = $stmt->execute(array($comment->getUserId(), $comment->getCommentDate(), $comment->getComment, $comment->getImageName()));
-			if ($flag){
-				print('データの更新に成功しました<br>');
-			}else{
-				print('データの更新に失敗しました<br>');
-			}
 		}catch (PDOException $e){
 			print('Connection failed:'.$e->getMessage());
 			die();
 		}
 		$dbh = null;
+		return $flag;
 	}
 }
 ?>

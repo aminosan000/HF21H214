@@ -1,5 +1,5 @@
 <?PHP
-class Follow extends ArrayObject{
+class Follow{
 	private $userId, $followerId;
 	public function setUserId($userId) {
         $this->userId = (string)filter_var($userId);

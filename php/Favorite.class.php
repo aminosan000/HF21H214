@@ -1,5 +1,5 @@
 <?PHP
-class Favorite extends ArrayObject{
+class Favorite{
 	private $imageName, $userId, $favoriteDate;
 	public function setImageName($imageName) {
         $this->imageName = (string)filter_var($imageName);

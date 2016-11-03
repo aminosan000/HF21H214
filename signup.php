@@ -27,16 +27,15 @@
       <a id="logo-container" href="./" class="brand-logo left"><img id="logo_img" src="Images/Logo/logo4.png" alt="" /></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="./upload.html"><i class="material-icons black-text">present_to_all</i></a></li>
-        <li><a href="./signup.php"><i class="material-icons black-text">input</i></a></li>
-        <li><a href="./php/mypage.php"><i class="material-icons black-text">lock</i></a></li>
+        <li><a href="./mypage.php"><i class="material-icons black-text">perm_identity</i></a></li>
       </ul>
       <div id="hide-menu" class="right">
         <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons black-text">menu</i></a>
       </div>
       <!-- side-nav -->
       <ul id="nav-mobile" class="side-nav">
-        <li><a href="index.php">TOP</a></li>
-        <li><a href="login.php">Login</a></li>
+        <li><a href="./upload.html">UPLOAD</a></li>
+        <li><a href="./mypage.php">MYPAGE</a></li>
       </ul>
     </div>
   </nav>

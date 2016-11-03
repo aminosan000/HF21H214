@@ -35,13 +35,12 @@ class UserDao{
 	public function select(){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
-			$UserArray = new User(array());
 			foreach($dbh->query('SELECT * from User') as $row) {
 				// 取り出したデータをクラスインスタンスの配列に入れる
 				$user = new User();
 				$user->setUserId($row['UserId']);
 				$user->setPassword($row['Password']);
-				$userArray->append($user);
+				$userArray[] = $user;
 			}
 		}catch (PDOException $e){
 			print('Connection failed:'.$e->getMessage());

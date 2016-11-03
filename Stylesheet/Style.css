@@ -1,0 +1,32 @@
+/* import css */
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans');
+@import url(http://fonts.googleapis.com/earlyaccess/notosansjapanese.css);
+
+/* General Setting */
+body {
+  font-family: 'Noto Sans', 'Noto Sans Japanese', sans-serif;
+}
+
+.container {
+  margin-top: 30px;
+}
+
+/* navbar setting */
+.navbar-fixed {
+  margin-bottom: 20px;
+}
+
+.nav {
+  background-color: #fafafa;
+}
+
+#logo_img {
+  margin-top: 5px;
+  margin-left: 20px;
+  width: 93px;
+  height: 54px;
+}
+
+#hide-menu {
+  margin-right: 20px;
+}

@@ -1,5 +1,5 @@
 <?PHP
-class User extends ArrayObject{
+class User{
 	private $userId, $password;
 	public function setUserId($userId) {
         $this->userId = (string)filter_var($userId);
