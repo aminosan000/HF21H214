@@ -33,7 +33,7 @@ error_reporting(E_ALL);
     <div class="nav-wrapper z-depth-1">
       <a id="logo-container" href="./" class="brand-logo left"><img id="logo_img" src="Images/Logo/logo4.png" alt="" /></a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="./upload.html"><i class="material-icons black-text">present_to_all</i></a></li>
+        <li><a href="./upload.php"><i class="material-icons black-text">present_to_all</i></a></li>
         <li><a href="./mypage.php"><i class="material-icons black-text">perm_identity</i></a></li>
       </ul>
       <div id="hide-menu" class="right">
@@ -41,7 +41,7 @@ error_reporting(E_ALL);
       </div>
       <!-- side-nav -->
       <ul id="nav-mobile" class="side-nav">
-        <li><a href="./upload.html">UPLOAD</a></li>
+        <li><a href="./upload.php">UPLOAD</a></li>
         <li><a href="./mypage.php">MYPAGE</a></li>
       </ul>
     </div>

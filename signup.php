@@ -26,7 +26,7 @@
     <div class="nav-wrapper z-depth-1">
       <a id="logo-container" href="./" class="brand-logo left"><img id="logo_img" src="Images/Logo/logo4.png" alt="" /></a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="./upload.html"><i class="material-icons black-text">present_to_all</i></a></li>
+        <li><a href="./upload.php"><i class="material-icons black-text">present_to_all</i></a></li>
         <li><a href="./mypage.php"><i class="material-icons black-text">perm_identity</i></a></li>
       </ul>
       <div id="hide-menu" class="right">
@@ -34,7 +34,7 @@
       </div>
       <!-- side-nav -->
       <ul id="nav-mobile" class="side-nav">
-        <li><a href="./upload.html">UPLOAD</a></li>
+        <li><a href="./upload.php">UPLOAD</a></li>
         <li><a href="./mypage.php">MYPAGE</a></li>
       </ul>
     </div>
@@ -47,7 +47,7 @@
 
       <div class="card-panel large z-depth-3 white">
 
-         <form method="post" action="./signupfunc.php">
+         <form method="post" action="./php/signupfunc.php">
           <div class="input-field">
             <i class="material-icons prefix">account_circle</i>
             <label for="userId">ID</label>
@@ -70,9 +70,31 @@
           </div>
         </form>
         
-<?php if (http_response_code() === 403): ?>
-<p style="color: red;">IDまたはパスワードが不正です</p>
-<?php endif; ?>
+        <?php
+			if(isset($_GET['err'])){
+				switch($_GET['err']){
+					case 'idNullErr':
+						$errStr = 'ユーザIDが不正です';
+						break;
+					case 'pass1Err':
+						$errStr = 'パスワードが不正です';
+						break;
+					case 'pass2Err':
+						$errStr = '確認用パスワードが不正です';
+						break;
+					case 'passMismatchErr':
+						$errStr = '確認用パスワードが異なります';
+						break;
+					case 'idOvelapErr':
+						$errStr = '登録済みIDです';
+						break;
+					case 'dbErr':
+						$errStr = 'DBエラー';
+						break;
+				}
+				echo "<p style='color: red;'>" . $errStr . "</p>";
+			}
+        ?>
 
       </div>
       

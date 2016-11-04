@@ -26,7 +26,7 @@
     <div class="nav-wrapper z-depth-1">
       <a id="logo-container" href="./" class="brand-logo left"><img id="logo_img" src="Images/Logo/logo4.png" alt="" /></a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="./upload.html"><i class="material-icons black-text">present_to_all</i></a></li>
+        <li><a href="./upload.php"><i class="material-icons black-text">present_to_all</i></a></li>
         <li><a href="./mypage.php"><i class="material-icons black-text">perm_identity</i></a></li>
       </ul>
       <div id="hide-menu" class="right">
@@ -34,7 +34,7 @@
       </div>
       <!-- side-nav -->
       <ul id="nav-mobile" class="side-nav">
-        <li><a href="./upload.html">UPLOAD</a></li>
+        <li><a href="./upload.php">UPLOAD</a></li>
         <li><a href="./mypage.php">MYPAGE</a></li>
       </ul>
     </div>
@@ -80,6 +80,10 @@ if (isset($_GET['word'])) {
 }
 $dao = $daoFactory->createCommentDao();
 $commentArray = $dao->select();
+if($rowCount == 0){
+	echo "<div class='center'>該当結果０件</div>";
+}
+$cnt = 1;
 foreach($imageArray as $imageRow){
 ?>
 
@@ -106,8 +110,16 @@ if(isset($commentArray[$imageRow->getImageName()])){
 	echo "<p>コメントなし";
 }
 ?>
-
-                    </p>
+					</p>
+                    <form method="get" action="./php/commentfunc.php">
+                        <div class="input-field">
+                            <i class="material-icons prefix">mode_edit</i>
+                            <label for="comment<?php echo $cnt; ?>">コメント</label>
+                            <input id="comment<?php echo $cnt; ?>" type="text" class="validate" name="comment" value="">
+                        </div>
+                        <input type="hidden" name="imageName" value="<?php echo $imageRow->getImageName(); ?>">
+                        <button class="waves-effect waves-light btn red accent-4" type="submit" name="action">コメント追加</button>
+                    </form>
                 </div>
                 <div class='card-action'>
                    <a href='#'>Link is Here</a>
@@ -116,6 +128,7 @@ if(isset($commentArray[$imageRow->getImageName()])){
         </div>
 
 <?php
+$cnt++;
 }
 ?>
 
@@ -137,7 +150,7 @@ for($count = 0; $count < ceil($rowCount / 12); $count++){
 	}
 	echo "<a href='./index.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
 }
-if($pageNum == ceil($rowCount / 12) - 1){
+if($pageNum >= ceil($rowCount / 12) - 1){
 	echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
 ";
 }else{
