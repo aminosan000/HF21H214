@@ -9,8 +9,8 @@ require_unlogined_session();
 //error_reporting(E_ALL);
 
 // ユーザから受け取ったユーザIDとパスワード
-$userId = filter_input(INPUT_POST, 'userId');
-$password = filter_input(INPUT_POST, 'password');
+$userId = filter_input(INPUT_POST, 'id');
+$password = filter_input(INPUT_POST, 'passwd');
 
 //DB内から当該IDのデータを検索
 $user = new User();
@@ -38,5 +38,5 @@ if(isset($userData)){
 	$err = 'idErr';
 }
 // 認証が失敗したときは戻る
-header('../login.php?err='. $err);
+header('Location: ../login.php?err='. $err);
 ?>

@@ -93,7 +93,7 @@
           <a href="favorite.php" class="hide-on-med-and-down"><i class="material-icons">favorite</i></a>
         </li>
         <li>
-          <a href="setting.php" class="hide-on-med-and-down"><i class="material-icons">settings</i></a>
+          <a href="favorite.php" class="hide-on-med-and-down"><i class="material-icons">settings</i></a>
         </li>
       </ul>
 
@@ -115,6 +115,19 @@
 <main>
   <br>
   <div class="container">
+     <form method="get" action="./search.php">
+        <div class="card-content">
+          <div class="input-field">
+            <label for="word center">検索ワードを入力</label>
+            <input id="word" type="text" class="validate" class="validate" name="word" maxlength="40" value="">
+          </div>
+        </div>
+        <div class="card-action center">
+             <button class="waves-effect waves-light btn-large orange darken-2" type="submit" name="action">
+                <i class="material-icons left">search</i>検索
+             </button>
+        </div>
+      </form>
     <div class="row">
     
         <?php
@@ -136,15 +149,16 @@
             if (isset($_GET['word'])) {
                 $imageArray = $dao->search($_GET['word'], $pageNum);
                 $rowCount = $dao->searchRows($_GET['word']);
-            }else{	
+		       //if($rowCount == 0){
+                echo "<div class='center'>該当結果" . $rowCount . "件</div>";
+            		//}
+            /*}else{	
                 $imageArray = $dao->select($pageNum);
                 $rowCount = $dao->rows();
-            }
+            }*/
             $dao = $daoFactory->createCommentDao();
             $commentArray = $dao->select();
-            if($rowCount == 0){
-                echo "<div class='center'>該当結果０件</div>";
-            }
+
             $cnt = 1;
             foreach($imageArray as $imageRow){
         ?>
@@ -224,6 +238,7 @@
 					}else{
 						echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
 					";
+					}
 					}
                 ?>
         

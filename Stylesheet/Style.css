@@ -1,32 +1,103 @@
-/* import css */
-@import url('https://fonts.googleapis.com/css?family=Noto+Sans');
-@import url(http://fonts.googleapis.com/earlyaccess/notosansjapanese.css);
+@import url('http://fonts.googleapis.com/earlyaccess/notosansjapanese.css');
+@import url('https://fonts.googleapis.com/css?family=Yesteryear');
 
-/* General Setting */
 body {
-  font-family: 'Noto Sans', 'Noto Sans Japanese', sans-serif;
+  font-family: 'Noto Sans Japanese', sans-serif;
+  color: #50514f;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
-.container {
-  margin-top: 30px;
+main {
+  flex: 1 0 auto;
 }
 
-/* navbar setting */
-.navbar-fixed {
-  margin-bottom: 20px;
+p.text {
+  padding-bottom: 20px;
 }
 
-.nav {
-  background-color: #fafafa;
+p.err_text {
+  padding: 0 20px 20px 20px;
+  color: #FF0000;
 }
 
-#logo_img {
-  margin-top: 5px;
-  margin-left: 20px;
-  width: 93px;
-  height: 54px;
+
+.brand-logo-font {
+  font-family: 'Yesteryear';
 }
 
-#hide-menu {
-  margin-right: 20px;
+.navigation {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  /*
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  */
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  box-sizing: border-box;
+}
+
+.nav-position {
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+.navigation-link {
+  color: #424242;
+  text-decoration: none;
+  font-size: 24px;
+  line-height: 60px;
+  letter-spacing: 0;
+  opacity: .87;
+  display: -webkit-flex !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 400;
+}
+
+.navigation .navigation-link .material-icons {
+  color: #424242;
+  text-decoration: none;
+  margin-right: 45px;
+  font-size: 24px;
+  line-height: 60px;
+  letter-spacing: 0;
+  opacity: .87;
+  display: -webkit-flex !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 400;
+}
+
+.card-nav-link {
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 0;
+  opacity: .87;
+  display: -webkit-flex !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  font-weight: 400;
 }

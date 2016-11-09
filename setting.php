@@ -1,6 +1,6 @@
 <?php
 	require_once('./php/secureFunc.php');
-	require_unlogined_session();
+	require_logined_session();
 ?>
 <!DOCTYPE html>
 <html lang="jp">
@@ -19,6 +19,7 @@
   <script src="JavaScript/materialize.js"></script>
   <script src="JavaScript/lity.js"></script>
   <!--Let browser know website is optimized for mobile-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
@@ -67,17 +68,17 @@
           <a href="upload.php" class="navigation-link"><i class="material-icons">cloud_upload</i>アップロード</a>
         </li>
         <li class="nav-position">
-          <a href="#" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
+          <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
         </li>
         <li class="nav-position">
-          <a href="#" class="navigation-link"><i class="material-icons">settings</i>設定</a>
+          <a href="setting.php" class="navigation-link"><i class="material-icons">settings</i>設定</a>
         </li>
       </ul>
 
       <!-- navigation desktop-only -->
       <ul class="hide-on-med-and-down right">
         <li>
-          <a href="index.php" class="hide-on-med-and-down"><i class="material-icons">home</i></a>
+          <a href="./" class="hide-on-med-and-down"><i class="material-icons">home</i></a>
         </li>
         <li>
           <a href="search.php" class="hide-on-med-and-down"><i class="material-icons">search</i></a>
@@ -89,10 +90,10 @@
           <a href="profile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a>
         </li>
         <li>
-          <a href="#" class="hide-on-med-and-down"><i class="material-icons">favorite</i></a>
+          <a href="favorite.php" class="hide-on-med-and-down"><i class="material-icons">favorite</i></a>
         </li>
         <li>
-          <a href="#" class="hide-on-med-and-down"><i class="material-icons">settings</i></a>
+          <a href="setting.php" class="hide-on-med-and-down"><i class="material-icons">settings</i></a>
         </li>
       </ul>
 
@@ -115,66 +116,11 @@
   <br>
   <div class="container">
     <div class="row">
-
-      <div class="col s12 m12 l12">
-        <div class="card">
-          <form method="post" action="./php/signupfunc.php">
-            <div class="card-content">
-              <div class="input-field">
-                <label for="id">Enter ID</label>
-                <input id="id" type="text" class="validate" name="id" maxlength="40" value="">
-              </div>
-              ※英数字6~30文字
-              <div class="input-field">
-                <label for="passwd">Enter Password</label>
-                <input id="passwd" type="password" class="validate" name="passwd" maxlength="40" value="">
-              </div>
-              <div class="input-field">
-                <label for="passwd2">Enter Confirm Password</label>
-                <input id="passwd2" type="password" class="validate" name="passwd2" maxlength="40" value="">
-              </div>
-              ※英数字6~30文字
-            </div>
-            <div class="card-action center">
-              <button class="waves-effect waves-light btn-large orange darken-2" type="submit" name="action">
-                <i class="material-icons left">lock_open</i>登録
-              </button>
-            </div>
-          </form>
-            
-            <?php
-                if(isset($_GET['err'])){
-                    switch($_GET['err']){
-                        case 'idNullErr':
-                            $errStr = 'ユーザIDが不正です';
-                            break;
-                        case 'pass1Err':
-                            $errStr = 'パスワードが不正です';
-                            break;
-                        case 'pass2Err':
-                            $errStr = '確認用パスワードが不正です';
-                            break;
-                        case 'passMismatchErr':
-                            $errStr = '確認用パスワードが異なります';
-                            break;
-                        case 'idOvelapErr':
-                            $errStr = '登録済みIDです';
-                            break;
-                        case 'dbErr':
-                            $errStr = 'DBエラー';
-                            break;
-                    }
-                    echo "<p class='err_text'>" . $errStr . "</p>";
-                }
-            ?>
-        </div>
-      </div>
-      
+		<h3>SETTING</h3>
     </div>
   </div>
 </main>
 
-<!--
 <div class="fixed-action-btn hide-on-large-only">
   <a class="btn-floating btn-large orange">
     <i class="large material-icons">mode_edit</i>
@@ -186,7 +132,6 @@
     <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
   </ul>
 </div>
--->
 
 <!--
 <footer class="page-footer orange darken-2">

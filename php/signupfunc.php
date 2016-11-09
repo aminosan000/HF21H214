@@ -10,9 +10,9 @@ error_reporting(E_ALL);
 
 // ユーザから受け取ったユーザIDとパスワード
 $options = array('options' => array('regexp' => '/[0-9a-zA-Z]{6,30}+$/'));
-$userId = filter_input(INPUT_POST, 'userId', FILTER_VALIDATE_REGEXP, $options);
-$password = filter_input(INPUT_POST, 'password', FILTER_VALIDATE_REGEXP, $options);
-$password2 = filter_input(INPUT_POST, 'password2', FILTER_VALIDATE_REGEXP, $options);
+$userId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_REGEXP, $options);
+$password = filter_input(INPUT_POST, 'passwd', FILTER_VALIDATE_REGEXP, $options);
+$password2 = filter_input(INPUT_POST, 'passwd2', FILTER_VALIDATE_REGEXP, $options);
 
 if($userId !== false && $userId !== null){
 	if($password !== false && $password !== null){

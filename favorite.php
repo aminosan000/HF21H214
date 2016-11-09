@@ -1,6 +1,6 @@
 <?php
 	require_once('./php/secureFunc.php');
-	require_unlogined_session();
+	require_logined_session();
 ?>
 <!DOCTYPE html>
 <html lang="jp">
@@ -19,6 +19,7 @@
   <script src="JavaScript/materialize.js"></script>
   <script src="JavaScript/lity.js"></script>
   <!--Let browser know website is optimized for mobile-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
@@ -67,17 +68,17 @@
           <a href="upload.php" class="navigation-link"><i class="material-icons">cloud_upload</i>アップロード</a>
         </li>
         <li class="nav-position">
-          <a href="#" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
+          <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
         </li>
         <li class="nav-position">
-          <a href="#" class="navigation-link"><i class="material-icons">settings</i>設定</a>
+          <a href="setting.php" class="navigation-link"><i class="material-icons">settings</i>設定</a>
         </li>
       </ul>
 
       <!-- navigation desktop-only -->
       <ul class="hide-on-med-and-down right">
         <li>
-          <a href="index.php" class="hide-on-med-and-down"><i class="material-icons">home</i></a>
+          <a href="./" class="hide-on-med-and-down"><i class="material-icons">home</i></a>
         </li>
         <li>
           <a href="search.php" class="hide-on-med-and-down"><i class="material-icons">search</i></a>
@@ -89,10 +90,10 @@
           <a href="profile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a>
         </li>
         <li>
-          <a href="#" class="hide-on-med-and-down"><i class="material-icons">favorite</i></a>
+          <a href="favorite.php" class="hide-on-med-and-down"><i class="material-icons">favorite</i></a>
         </li>
         <li>
-          <a href="#" class="hide-on-med-and-down"><i class="material-icons">settings</i></a>
+          <a href="setting.php" class="hide-on-med-and-down"><i class="material-icons">settings</i></a>
         </li>
       </ul>
 
@@ -115,66 +116,118 @@
   <br>
   <div class="container">
     <div class="row">
-
-      <div class="col s12 m12 l12">
-        <div class="card">
-          <form method="post" action="./php/signupfunc.php">
-            <div class="card-content">
-              <div class="input-field">
-                <label for="id">Enter ID</label>
-                <input id="id" type="text" class="validate" name="id" maxlength="40" value="">
-              </div>
-              ※英数字6~30文字
-              <div class="input-field">
-                <label for="passwd">Enter Password</label>
-                <input id="passwd" type="password" class="validate" name="passwd" maxlength="40" value="">
-              </div>
-              <div class="input-field">
-                <label for="passwd2">Enter Confirm Password</label>
-                <input id="passwd2" type="password" class="validate" name="passwd2" maxlength="40" value="">
-              </div>
-              ※英数字6~30文字
-            </div>
-            <div class="card-action center">
-              <button class="waves-effect waves-light btn-large orange darken-2" type="submit" name="action">
-                <i class="material-icons left">lock_open</i>登録
-              </button>
-            </div>
-          </form>
+    
+		<?php
+			require_once('./php/Image.class.php');
+			require_once('./php/ImageDao.class.php');
+			require_once('./php/Comment.class.php');
+			require_once('./php/CommentDao.class.php');
+			require_once('./php/Favorite.class.php');
+			require_once('./php/FavoriteDao.class.php');
+			require_once('./php/DaoFactory.class.php');
             
+            $pageNum = 0;
+            if(isset($_GET['pageNum'])){
+                $pageNum = $_GET['pageNum'];
+            }
+            $daoFactory = DaoFactory::getDaoFactory();
+            $dao = $daoFactory->createImageDao();
+            if (isset($_SESSION['userId'])) {
+				$userId = $_SESSION['userId'];
+                $imageArray = $dao->favoriteSelect($userId, $pageNum);
+                $rowCount = $dao->favoriteRows($userId);
+                echo "<div class='center'>お気に入り" . $rowCount . "件</div>";
+                $dao = $daoFactory->createCommentDao();
+                $commentArray = $dao->select();
+                
+                $cnt = 1;
+                foreach($imageArray as $imageRow){
+        ?>
+      
+      <div class="col s12 m6 l6">
+        <div class="card sticky-action hoverable z-depth-1">
+          <div class="card-image waves-effect waves-block waves-light">
+            <img data-lity src="./Images/Upload/<?php echo $imageRow->getImageName(); ?>">
+          </div>
+          <div class="card-content">
+            <div class="center">
+              <span class="activator">
+                <span class="black-text">
+                  <!-- 料理名は一行で収まるように -->
+                  <?php echo $imageRow->getCategory(); ?>(Category)
+                </span>
+                <i class="material-icons right">more_vert</i>
+              </span>
+            </div>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title">
+              <span class="black-text">photo by <?php echo $imageRow->getUserId(); ?></span>
+              <i class="material-icons right">close</i>
+              <!-- 料理の詳細は以降に記述 -->
+            </span>
+              <p><?php echo $imageRow->getUploadDate(); ?></p>
             <?php
-                if(isset($_GET['err'])){
-                    switch($_GET['err']){
-                        case 'idNullErr':
-                            $errStr = 'ユーザIDが不正です';
-                            break;
-                        case 'pass1Err':
-                            $errStr = 'パスワードが不正です';
-                            break;
-                        case 'pass2Err':
-                            $errStr = '確認用パスワードが不正です';
-                            break;
-                        case 'passMismatchErr':
-                            $errStr = '確認用パスワードが異なります';
-                            break;
-                        case 'idOvelapErr':
-                            $errStr = '登録済みIDです';
-                            break;
-                        case 'dbErr':
-                            $errStr = 'DBエラー';
-                            break;
+                if(isset($commentArray[$imageRow->getImageName()])){
+                    echo "<p>コメント<br>";
+                    $oneImageComment = $commentArray[$imageRow->getImageName()];
+                    foreach($oneImageComment as $commentRow){
+                            echo "<b>". $commentRow->getUserId(). "</b> ". $commentRow->getComment(). "<br>";
                     }
-                    echo "<p class='err_text'>" . $errStr . "</p>";
+                }else{
+                    echo "<p>コメントなし";
                 }
             ?>
+             <form method="get" action="./php/commentfunc.php">
+                <div class="input-field">
+                    <i class="material-icons prefix">mode_edit</i>
+                    <label for="comment<?php echo $cnt; ?>">コメント</label>
+                    <input id="comment<?php echo $cnt; ?>" type="text" class="validate" name="comment" value="">
+                </div>
+                <input type="hidden" name="imageName" value="<?php echo $imageRow->getImageName(); ?>">
+                <button class="waves-effect waves-light btn orange accent-4" type="submit" name="action">コメント追加</button>
+            </form>
+
+          </div>
         </div>
       </div>
-      
+	<?php
+		$cnt++;
+		}
+    ?>
     </div>
+        <div class="center">
+            <ul class="pagination">
+            
+				<?php
+						if($pageNum == 0){
+							echo "<li class='disabled'><i class='material-icons'>chevron_left</i></li>";
+						}else{
+							echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
+						}
+						for($count = 0; $count < ceil($rowCount / 12); $count++){
+							if($count == $pageNum){
+								echo "<li class='active orange'>";
+							}else{
+								echo "<li class='waves-effect'>";
+							}
+							echo "<a href='./index.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
+						}
+						if($pageNum >= ceil($rowCount / 12) - 1){
+							echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
+						";
+						}else{
+							echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
+						";
+						}
+					}
+                ?>
+        
+          </ul>
+      </div>
   </div>
 </main>
 
-<!--
 <div class="fixed-action-btn hide-on-large-only">
   <a class="btn-floating btn-large orange">
     <i class="large material-icons">mode_edit</i>
@@ -186,7 +239,6 @@
     <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
   </ul>
 </div>
--->
 
 <!--
 <footer class="page-footer orange darken-2">

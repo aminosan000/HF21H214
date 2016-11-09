@@ -15,6 +15,7 @@ class ImageDao{
 		$this->user = $user;
 		$this->password = $password;
 	}
+	// 行数取得
 	public function rows(){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
@@ -27,11 +28,33 @@ class ImageDao{
 		$dbh = null;
 		return $rowCount;
 	}
+	// 全データ取得
+	public function select($pageNum){
+		try{
+			$dbh = new PDO($this->dsn, $this->user, $this->password);
+			foreach($dbh->query('SELECT * FROM Image ORDER BY UploadDate DESC LIMIT ' . $pageNum*12 . ',12') as $row) {
+				// 取り出したデータをクラスインスタンスの配列に入れる
+				$image = new Image();
+				$image->setImageName($row['ImageName']);
+				$image->setUserId($row['UserId']);
+				$image->setUploadDate($row['UploadDate']);
+				$image->setCategory($row['Category']);
+				$imageArray[] = $image;
+			}
+		}catch (PDOException $e){
+			print('Connection failed:'.$e->getMessage());
+			die();
+		}
+		$dbh = null;
+		return $imageArray;
+	}
+	// キーワード検索時行数取得
 	public function searchRows($word){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
-			$stmt = $dbh->prepare('SELECT COUNT(*) FROM Image WHERE UserId LIKE ? OR Category LIKE ?');
-			$stmt->execute(array("%{$word}%", "%{$word}%"));
+			$stmt = $dbh->prepare('SELECT COUNT(*) FROM Image WHERE UserId LIKE ? OR Category LIKE ? OR ImageName IN (
+SELECT ImageName FROM Comment WHERE Comment LIKE ?)');
+			$stmt->execute(array("%{$word}%", "%{$word}%", "%{$word}%"));
 			$rowCount = $stmt->fetchColumn();
 		}catch (PDOException $e){
 			print('Connection failed:'.$e->getMessage());
@@ -40,11 +63,14 @@ class ImageDao{
 		$dbh = null;
 		return $rowCount;
 	}
+	// キーワード検索
 	public function search($word, $pageNum){
+		$imageArray = array();
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
-			$stmt = $dbh->prepare('SELECT * FROM Image WHERE UserId LIKE ? OR Category LIKE ? ORDER BY UploadDate DESC LIMIT ' . $pageNum*12 . ',12');
-			$stmt->execute(array("%{$word}%", "%{$word}%"));
+			$stmt = $dbh->prepare('SELECT * FROM Image WHERE UserId LIKE ? OR Category LIKE ? OR ImageName IN (
+SELECT ImageName FROM Comment WHERE Comment LIKE ?)ORDER BY UploadDate DESC LIMIT ' . $pageNum*12 . ',12');
+			$stmt->execute(array("%{$word}%", "%{$word}%", "%{$word}%"));
 			while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 				// 取り出したデータをクラスインスタンスの配列に入れる
 				$image = new Image();
@@ -61,10 +87,28 @@ class ImageDao{
 		$dbh = null;
 		return $imageArray;
 	}
-	public function select($pageNum){
+	// お気に入り件数取得
+	public function favoriteRows($userId){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
-			foreach($dbh->query('SELECT * FROM Image ORDER BY UploadDate DESC LIMIT ' . $pageNum*12 . ',12') as $row) {
+			$stmt = $dbh->prepare('SELECT COUNT(*) FROM Image WHERE ImageName IN (SELECT ImageName FROM Favorite WHERE UserId = ?)');
+			$stmt->execute(array($userId));
+			$rowCount = $stmt->fetchColumn();
+		}catch (PDOException $e){
+			print('Connection failed:'.$e->getMessage());
+			die();
+		}
+		$dbh = null;
+		return $rowCount;
+	}
+	// お気に入り取得
+	public function favoriteSelect($userId, $pageNum){
+		$imageArray = array();
+		try{
+			$dbh = new PDO($this->dsn, $this->user, $this->password);
+			$stmt = $dbh->prepare('SELECT * FROM Image WHERE ImageName IN (SELECT ImageName FROM Favorite WHERE UserId = ?)ORDER BY UploadDate DESC LIMIT ' . $pageNum*12 . ',12');
+			$stmt->execute(array($userId));
+			while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 				// 取り出したデータをクラスインスタンスの配列に入れる
 				$image = new Image();
 				$image->setImageName($row['ImageName']);
