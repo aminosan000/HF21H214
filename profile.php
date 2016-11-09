@@ -2,7 +2,7 @@
 	require_once('./php/secureFunc.php');
 	require_logined_session();
 	
-	ini_set("display_errors", On);
+	ini_set("display_errors", 1);
 	error_reporting(E_ALL);
 ?>
 <!DOCTYPE html>
@@ -68,7 +68,7 @@
           <a href="profile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a>
         </li>
         <li class="nav-position">
-          <a href="upload.php" class="navigation-link"><i class="material-icons">cloud_upload</i>アップロード</a>
+          <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a>
         </li>
         <li class="nav-position">
           <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
@@ -87,7 +87,7 @@
           <a href="search.php" class="hide-on-med-and-down"><i class="material-icons">search</i></a>
         </li>
         <li>
-          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">cloud_upload</i></a>
+          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a>
         </li>
         <li>
           <a href="profile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a>
@@ -118,13 +118,145 @@
 <main>
   <br>
   <div class="container">
-    <div class="row">
- 
-        <h2>ようこそ,<?=h($_SESSION['userId'])?>さん</h2>
-        <h4><a href="./php/logout.php">ログアウト</a></h4>
 
+    <div class="row">
+      <div class="col s12 m12 l6 center">
+        <img class="circle" src="Images/avator.jpg" alt="">
       </div>
-  </div>
+      <div class="col s12 m12 l6">
+        <div class="card small white">
+          <div class="card-content">
+            <span class="card-title"><?=h($_SESSION['userId'])?></span>
+            <!--
+            <button class="waves-effect waves-light btn-flat dropdown-button right" data-activates='dropdown-desktop'>
+              詳細を表示する
+            </button>
+            <ul id='dropdown-desktop' class='dropdown-content'>
+              <li><a class="grey-text" href="#!">ユーザ情報変更</a></li>
+            </ul>
+            -->
+            <span class="grey text-darken-2">
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 今までの投稿 開始 -->
+    <div class="row">
+
+		<?php
+            require_once('./php/Image.class.php');
+            require_once('./php/ImageDao.class.php');
+            require_once('./php/Comment.class.php');
+            require_once('./php/CommentDao.class.php');
+            require_once('./php/DaoFactory.class.php');
+            
+            $pageNum = 0;
+            if(isset($_GET['pageNum'])){
+                $pageNum = $_GET['pageNum'];
+            }
+            $daoFactory = DaoFactory::getDaoFactory();
+            $dao = $daoFactory->createImageDao();
+            if (isset($_SESSION['userId'])) {
+                $userId = $_SESSION['userId'];
+                $imageArray = $dao->userSelect($userId, $pageNum);
+                $rowCount = $dao->userRows($userId);
+                echo "<div class='center'>あなたの投稿 : " . $rowCount . "件</div>";
+                $dao = $daoFactory->createCommentDao();
+                $commentArray = $dao->select();
+            
+                $cnt = 1;
+                foreach($imageArray as $imageRow){
+        ?>
+        
+        <div class="col s12 m6 l6">
+        <div class="card sticky-action hoverable z-depth-1">
+          <div class="card-image waves-effect waves-block waves-light">
+            <img data-lity src="./Images/Upload/<?php echo $imageRow->getImageName(); ?>">
+          </div>
+          <div class="card-content">
+            <div class="center">
+              <span class="activator">
+                <span class="black-text">
+                  <!-- 料理名は一行で収まるように -->
+                  <?php echo $imageRow->getCategory(); ?>(Category)
+                </span>
+                <i class="material-icons right">more_vert</i>
+              </span>
+            </div>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title">
+              <span class="black-text">photo by <?php echo $imageRow->getUserId(); ?></span>
+              <i class="material-icons right">close</i>
+              <!-- 料理の詳細は以降に記述 -->
+            </span>
+              <p><?php echo $imageRow->getUploadDate(); ?></p>
+            <?php
+                if(isset($commentArray[$imageRow->getImageName()])){
+                    echo "<p>コメント<br>";
+                    $oneImageComment = $commentArray[$imageRow->getImageName()];
+                    foreach($oneImageComment as $commentRow){
+                            echo "<b>". $commentRow->getUserId(). "</b> ". $commentRow->getComment(). "<br>";
+                    }
+                }else{
+                    echo "<p>コメントなし";
+                }
+            ?>
+             <form method="get" action="./php/commentfunc.php">
+                <div class="input-field">
+                    <i class="material-icons prefix">mode_edit</i>
+                    <label for="comment<?php echo $cnt; ?>">コメント</label>
+                    <input id="comment<?php echo $cnt; ?>" type="text" class="validate" name="comment" value="">
+                </div>
+                <input type="hidden" name="imageName" value="<?php echo $imageRow->getImageName(); ?>">
+                <button class="waves-effect waves-light btn orange accent-4" type="submit" name="action">コメント追加</button>
+            </form>
+        
+          </div>
+        </div>
+        </div>
+        <?php
+        $cnt++;
+        }
+        ?>
+
+      <!-- 今までの投稿 終了 -->
+    </div><!-- div.row end -->
+
+    <div class="center">
+        <ul class="pagination">
+        
+            <?php
+                if($pageNum == 0){
+                    echo "<li class='disabled'><i class='material-icons'>chevron_left</i></li>";
+                }else{
+                    echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
+                }
+                for($count = 0; $count < ceil($rowCount / 12); $count++){
+                    if($count == $pageNum){
+                        echo "<li class='active orange'>";
+                    }else{
+                        echo "<li class='waves-effect'>";
+                    }
+                    echo "<a href='./index.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
+                }
+                if($pageNum >= ceil($rowCount / 12) - 1){
+                    echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
+                ";
+                }else{
+                    echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
+                ";
+                }
+                }
+            ?>
+    
+      </ul>
+    </div>
+
+  </div><!-- div.container end -->
 </main>
 
 <div class="fixed-action-btn hide-on-large-only">

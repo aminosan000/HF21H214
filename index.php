@@ -65,7 +65,7 @@
           <a href="profile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a>
         </li>
         <li class="nav-position">
-          <a href="upload.php" class="navigation-link"><i class="material-icons">cloud_upload</i>アップロード</a>
+          <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a>
         </li>
         <li class="nav-position">
           <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
@@ -84,7 +84,7 @@
           <a href="search.php" class="hide-on-med-and-down"><i class="material-icons">search</i></a>
         </li>
         <li>
-          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">cloud_upload</i></a>
+          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a>
         </li>
         <li>
           <a href="profile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a>
@@ -122,6 +122,8 @@
             require_once('./php/ImageDao.class.php');
             require_once('./php/Comment.class.php');
             require_once('./php/CommentDao.class.php');
+			require_once('./php/Favorite.class.php');
+            require_once('./php/FavoriteDao.class.php');
             require_once('./php/DaoFactory.class.php');
             
             ini_set("display_errors", 1);
@@ -140,19 +142,25 @@
                 $imageArray = $dao->select($pageNum);
                 $rowCount = $dao->rows();
             }
-            $dao = $daoFactory->createCommentDao();
-            $commentArray = $dao->select();
+			$dao = $daoFactory->createCommentDao();
+			$commentArray = $dao->select();
+			if(isset($_SESSION['userId'])){
+				$userId = h($_SESSION['userId']);
+				$dao = $daoFactory->createFavoriteDao();
+				$favoriteArray = $dao->select($userId);
+			}
             if($rowCount == 0){
                 echo "<div class='center'>該当結果０件</div>";
             }
             $cnt = 1;
             foreach($imageArray as $imageRow){
+				$imageName = $imageRow->getImageName();
         ?>
       
       <div class="col s12 m6 l6">
         <div class="card sticky-action hoverable z-depth-1">
           <div class="card-image waves-effect waves-block waves-light">
-            <img data-lity src="./Images/Upload/<?php echo $imageRow->getImageName(); ?>">
+            <img data-lity src="./Images/Upload/<?php echo $imageName; ?>">
           </div>
           <div class="card-content">
             <div class="center">
@@ -191,8 +199,16 @@
                 </div>
                 <input type="hidden" name="imageName" value="<?php echo $imageRow->getImageName(); ?>">
                 <button class="waves-effect waves-light btn orange accent-4" type="submit" name="action">コメント追加</button>
+            <?php
+				if(isset($_SESSION['userId'])){
+					if(!isset($favoriteArray[$imageName])){
+						echo "<a href='./php/favoriteFunc.php?imageName=" . $imageName . "&flg=0'><img class='right' src='./Images/favorite_off.png'></a>";
+					}else{
+						echo "<a href='./php/favoriteFunc.php?imageName=" . $imageName . "&flg=1'><img class='right' src='./Images/favorite_on.png'></a>";
+					}
+				}
+            ?>
             </form>
-
           </div>
         </div>
       </div>
