@@ -135,6 +135,8 @@
             require_once('./php/ImageDao.class.php');
             require_once('./php/Comment.class.php');
             require_once('./php/CommentDao.class.php');
+			require_once('./php/Favorite.class.php');
+            require_once('./php/FavoriteDao.class.php');
             require_once('./php/DaoFactory.class.php');
             
             ini_set("display_errors", 1);
@@ -149,31 +151,31 @@
             if (isset($_GET['word'])) {
                 $imageArray = $dao->search($_GET['word'], $pageNum);
                 $rowCount = $dao->searchRows($_GET['word']);
-		       //if($rowCount == 0){
                 echo "<div class='center'>該当結果" . $rowCount . "件</div>";
-            		//}
-            /*}else{	
-                $imageArray = $dao->select($pageNum);
-                $rowCount = $dao->rows();
-            }*/
-            $dao = $daoFactory->createCommentDao();
-            $commentArray = $dao->select();
+				$dao = $daoFactory->createCommentDao();
+				$commentArray = $dao->select();
+				if(isset($_SESSION['userId'])){
+					$userId = h($_SESSION['userId']);
+					$dao = $daoFactory->createFavoriteDao();
+					$favoriteArray = $dao->select($userId);
+				}
 
             $cnt = 1;
             foreach($imageArray as $imageRow){
+				$imageName = $imageRow->getImageName();
         ?>
       
       <div class="col s12 m6 l6">
         <div class="card sticky-action hoverable z-depth-1">
           <div class="card-image waves-effect waves-block waves-light">
-            <img data-lity src="./Images/Upload/<?php echo $imageRow->getImageName(); ?>">
+            <img data-lity src="./Images/Upload/<?=$imageName?>">
           </div>
           <div class="card-content">
             <!--<div class="center">-->
               <!--<span class="activator">-->
                 <span class="card-title activator black-text">
                   <!-- 料理名は一行で収まるように -->
-                  <?php echo $imageRow->getCategory(); ?>(Category)
+                  <?=$imageRow->getCategory()?>(Category)
                 <!--</span>-->
                 <i class="material-icons right">more_vert</i>
               </span>
@@ -181,15 +183,15 @@
           </div>
           <div class="card-reveal">
             <span class="card-title">
-              <span class="black-text">photo by <?php echo $imageRow->getUserId(); ?></span>
+              <span class="black-text">photo by <?=$imageRow->getUserId()?></span>
               <i class="material-icons right">close</i>
               <!-- 料理の詳細は以降に記述 -->
             </span>
-              <p><?php echo $imageRow->getUploadDate(); ?></p>
+              <p><?=$imageRow->getUploadDate()?></p>
             <?php
-				if(isset($commentArray[$imageRow->getImageName()])){
+				if(isset($commentArray[$imageName])){
 					echo "<p>コメント<br>";
-					$oneImageComment = $commentArray[$imageRow->getImageName()];
+					$oneImageComment = $commentArray[$imageName];
 					foreach($oneImageComment as $commentRow){
 							echo "<b>". $commentRow->getUserId(). "</b> ". $commentRow->getComment(). "<br>";
 					}
@@ -200,11 +202,20 @@
              <form method="get" action="./php/commentfunc.php">
                 <div class="input-field">
                     <i class="material-icons prefix">mode_edit</i>
-                    <label for="comment<?php echo $cnt; ?>">コメント</label>
-                    <input id="comment<?php echo $cnt; ?>" type="text" class="validate" name="comment" value="">
+                    <label for="comment<?=$cnt?>">コメント</label>
+                    <input id="comment<?=$cnt?>" type="text" class="validate" name="comment" value="">
                 </div>
-                <input type="hidden" name="imageName" value="<?php echo $imageRow->getImageName(); ?>">
+                <input type="hidden" name="imageName" value="<?=$imageName?>">
                 <button class="waves-effect waves-light btn orange accent-4" type="submit" name="action">コメント追加</button>
+				<?php
+                    if(isset($_SESSION['userId'])){
+                        if(!isset($favoriteArray[$imageName])){
+                            echo "<a href='./php/favoriteFunc.php?imageName=" . $imageName . "&flg=0'><img class='right' src='./Images/favorite_off.png'></a>";
+                        }else{
+                            echo "<a href='./php/favoriteFunc.php?imageName=" . $imageName . "&flg=1'><img class='right' src='./Images/favorite_on.png'></a>";
+                        }
+                    }
+                ?>
             </form>
 
           </div>
@@ -219,26 +230,26 @@
             <ul class="pagination">
             
 				<?php
-					if($pageNum == 0){
-						echo "<li class='disabled'><i class='material-icons'>chevron_left</i></li>";
-					}else{
-						echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
-					}
-					for($count = 0; $count < ceil($rowCount / 12); $count++){
-						if($count == $pageNum){
-							echo "<li class='active orange'>";
+						if($pageNum == 0){
+							echo "<li class='disabled'><i class='material-icons'>chevron_left</i></li>";
 						}else{
-							echo "<li class='waves-effect'>";
+							echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
 						}
-						echo "<a href='./index.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
-					}
-					if($pageNum >= ceil($rowCount / 12) - 1){
-						echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
-					";
-					}else{
-						echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
-					";
-					}
+						for($count = 0; $count < ceil($rowCount / 12); $count++){
+							if($count == $pageNum){
+								echo "<li class='active orange'>";
+							}else{
+								echo "<li class='waves-effect'>";
+							}
+							echo "<a href='./index.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
+						}
+						if($pageNum >= ceil($rowCount / 12) - 1){
+							echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
+						";
+						}else{
+							echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
+						";
+						}
 					}
                 ?>
         

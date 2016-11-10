@@ -139,22 +139,25 @@
                 echo "<div class='center'>お気に入り" . $rowCount . "件</div>";
                 $dao = $daoFactory->createCommentDao();
                 $commentArray = $dao->select();
+				$dao = $daoFactory->createFavoriteDao();
+				$favoriteArray = $dao->select($userId);
                 
                 $cnt = 1;
                 foreach($imageArray as $imageRow){
+					$imageName = $imageRow->getImageName();
         ?>
       
       <div class="col s12 m6 l6">
         <div class="card sticky-action hoverable z-depth-1">
           <div class="card-image waves-effect waves-block waves-light">
-            <img data-lity src="./Images/Upload/<?php echo $imageRow->getImageName(); ?>">
+            <img data-lity src="./Images/Upload/<?=$imageName?>">
           </div>
           <div class="card-content">
             <!--<div class="center">-->
               <!--<span class="activator">-->
                 <span class="card-title activator black-text">
                   <!-- 料理名は一行で収まるように -->
-                  <?php echo $imageRow->getCategory(); ?>(Category)
+                  <?=$imageRow->getCategory()?>(Category)
                 <!--</span>-->
                 <i class="material-icons right">more_vert</i>
               </span>
@@ -162,15 +165,15 @@
           </div>
           <div class="card-reveal">
             <span class="card-title">
-              <span class="black-text">photo by <?php echo $imageRow->getUserId(); ?></span>
+              <span class="black-text">photo by <?=$imageRow->getUserId()?></span>
               <i class="material-icons right">close</i>
               <!-- 料理の詳細は以降に記述 -->
             </span>
-              <p><?php echo $imageRow->getUploadDate(); ?></p>
+              <p><?=$imageRow->getUploadDate()?></p>
             <?php
-                if(isset($commentArray[$imageRow->getImageName()])){
+                if(isset($commentArray[$imageName])){
                     echo "<p>コメント<br>";
-                    $oneImageComment = $commentArray[$imageRow->getImageName()];
+                    $oneImageComment = $commentArray[$imageName];
                     foreach($oneImageComment as $commentRow){
                             echo "<b>". $commentRow->getUserId(). "</b> ". $commentRow->getComment(). "<br>";
                     }
@@ -181,11 +184,20 @@
              <form method="get" action="./php/commentfunc.php">
                 <div class="input-field">
                     <i class="material-icons prefix">mode_edit</i>
-                    <label for="comment<?php echo $cnt; ?>">コメント</label>
-                    <input id="comment<?php echo $cnt; ?>" type="text" class="validate" name="comment" value="">
+                    <label for="comment<?=$cnt?>">コメント</label>
+                    <input id="comment<?=$cnt?>" type="text" class="validate" name="comment" value="">
                 </div>
-                <input type="hidden" name="imageName" value="<?php echo $imageRow->getImageName(); ?>">
+                <input type="hidden" name="imageName" value="<?=$imageName?>">
                 <button class="waves-effect waves-light btn orange accent-4" type="submit" name="action">コメント追加</button>
+				<?php
+                    if(isset($_SESSION['userId'])){
+                        if(!isset($favoriteArray[$imageName])){
+                            echo "<a href='./php/favoriteFunc.php?imageName=" . $imageName . "&flg=0'><img class='right' src='./Images/favorite_off.png'></a>";
+                        }else{
+                            echo "<a href='./php/favoriteFunc.php?imageName=" . $imageName . "&flg=1'><img class='right' src='./Images/favorite_on.png'></a>";
+                        }
+                    }
+                ?>
             </form>
 
           </div>
