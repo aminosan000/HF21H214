@@ -163,15 +163,15 @@
             <img data-lity src="./Images/Upload/<?php echo $imageName; ?>">
           </div>
           <div class="card-content">
-            <div class="center">
-              <span class="activator">
-                <span class="black-text">
+            <!--<div class="center">-->
+              <!--<span class="activator">-->
+                <span class="card-title activator black-text">
                   <!-- 料理名は一行で収まるように -->
                   <?php echo $imageRow->getCategory(); ?>(Category)
-                </span>
+                <!--</span>-->
                 <i class="material-icons right">more_vert</i>
               </span>
-            </div>
+            <!--</div>-->
           </div>
           <div class="card-reveal">
             <span class="card-title">

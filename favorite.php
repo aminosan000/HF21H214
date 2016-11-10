@@ -65,7 +65,7 @@
           <a href="profile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a>
         </li>
         <li class="nav-position">
-          <a href="upload.php" class="navigation-link"><i class="material-icons">cloud_upload</i>アップロード</a>
+          <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a>
         </li>
         <li class="nav-position">
           <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
@@ -84,7 +84,7 @@
           <a href="search.php" class="hide-on-med-and-down"><i class="material-icons">search</i></a>
         </li>
         <li>
-          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">cloud_upload</i></a>
+          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a>
         </li>
         <li>
           <a href="profile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a>
@@ -150,15 +150,15 @@
             <img data-lity src="./Images/Upload/<?php echo $imageRow->getImageName(); ?>">
           </div>
           <div class="card-content">
-            <div class="center">
-              <span class="activator">
-                <span class="black-text">
+            <!--<div class="center">-->
+              <!--<span class="activator">-->
+                <span class="card-title activator black-text">
                   <!-- 料理名は一行で収まるように -->
                   <?php echo $imageRow->getCategory(); ?>(Category)
-                </span>
+                <!--</span>-->
                 <i class="material-icons right">more_vert</i>
               </span>
-            </div>
+            <!--</div>-->
           </div>
           <div class="card-reveal">
             <span class="card-title">
