@@ -135,10 +135,11 @@
               <li><a class="grey-text" href="#!">ユーザ情報変更</a></li>
             </ul>
             -->
-            <span class="text-darken-2">
+            <span class="left text-darken-2">
 				フォロー : 0人<br>
-                フォロワー : 0人
-            </span>
+                フォロワー : 0人<br><br>
+             </span>
+             <a href="./php/logout.php"><button class="waves-effect waves-light btn orange accent-4 right" name="action">ログアウト</button></a>
           </div>
         </div>
       </div>
