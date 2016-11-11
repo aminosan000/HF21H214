@@ -62,10 +62,10 @@
           <a href="search.php" class="navigation-link"><i class="material-icons">search</i>検索する</a>
         </li>
         <li class="nav-position">
-          <a href="profile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a>
+          <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a>
         </li>
         <li class="nav-position">
-          <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a>
+          <a href="profile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a>
         </li>
         <li class="nav-position">
           <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
@@ -167,8 +167,8 @@
       
       <div class="col s12 m6 l6">
         <div class="card sticky-action hoverable z-depth-1">
-          <div class="card-image waves-effect waves-block waves-light">
-            <img data-lity src="./Images/Upload/<?=$imageName?>">
+          <div class="card-image">
+            <a href="./Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="./Images/Thumbnail/<?=$imageName?>"></a>
           </div>
           <div class="card-content">
             <!--<div class="center">-->
