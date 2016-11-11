@@ -157,7 +157,7 @@
               <!--<span class="activator">-->
                 <span class="card-title activator black-text">
                   <!-- 料理名は一行で収まるように -->
-                  <?=$imageRow->getCategory()?>(Category)
+                  @<?=$imageRow->getUserId()?>
                 <!--</span>-->
                 <i class="material-icons right">more_vert</i>
               </span>
@@ -170,6 +170,7 @@
               <!-- 料理の詳細は以降に記述 -->
             </span>
               <p><?=$imageRow->getUploadDate()?></p>
+              <p>カテゴリ:<?=$imageRow->getCategory()?></p>
             <?php
                 if(isset($commentArray[$imageName])){
                     echo "<p>コメント<br>";

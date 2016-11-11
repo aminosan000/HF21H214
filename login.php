@@ -64,7 +64,7 @@
           <a href="profile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a>
         </li>
         <li class="nav-position">
-          <a href="upload.php" class="navigation-link"><i class="material-icons">cloud_upload</i>アップロード</a>
+          <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a>
         </li>
         <li class="nav-position">
           <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
@@ -83,7 +83,7 @@
           <a href="search.php" class="hide-on-med-and-down"><i class="material-icons">search</i></a>
         </li>
         <li>
-          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">cloud_upload</i></a>
+          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a>
         </li>
         <li>
           <a href="profile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a>
@@ -121,10 +121,12 @@
           <form method="post" action="./php/loginfunc.php">
             <div class="card-content">
               <div class="input-field">
+              	<i class="material-icons prefix">account_circle</i>
                 <label for="id">Enter ID</label>
                 <input id="id" type="text" class="validate" name="id" maxlength="40" value="">
               </div>
               <div class="input-field">
+              	<i class="material-icons prefix">vpn_key</i>
                 <label for="passwd">Enter Password</label>
                 <input id="passwd" type="password" class="validate" name="passwd" maxlength="40" value="">
               </div>

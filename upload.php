@@ -65,7 +65,7 @@
           <a href="profile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a>
         </li>
         <li class="nav-position">
-          <a href="upload.php" class="navigation-link"><i class="material-icons">cloud_upload</i>アップロード</a>
+          <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a>
         </li>
         <li class="nav-position">
           <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
@@ -84,7 +84,7 @@
           <a href="search.php" class="hide-on-med-and-down"><i class="material-icons">search</i></a>
         </li>
         <li>
-          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">cloud_upload</i></a>
+          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a>
         </li>
         <li>
           <a href="profile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a>
@@ -152,6 +152,9 @@
         <?php
 			if(isset($_GET['err'])){
 				switch($_GET['err']){
+					case 'safeSearchErr';
+						$errStr = '性的または暴力的な画像は投稿できません';
+						break;
 					case 'sizeErr':
 						$errStr = 'サイズが大きすぎます';
 						break;
