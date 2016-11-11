@@ -29,7 +29,7 @@ if(isset($userData)){
 		// ユーザ名をセット
 		$_SESSION['userId'] = $userId;
 		// ログイン完了時トップページに遷移
-		header('Location: ./');
+		header('Location: ' . $_SESSION['return']);
 		exit;
 	}else{
 		$err = 'passErr';
