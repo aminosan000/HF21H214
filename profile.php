@@ -201,7 +201,19 @@
               <!-- 料理の詳細は以降に記述 -->
             </span>
               <p><?=$imageRow->getUploadDate()?></p>
-              <p>カテゴリ:<?=$imageRow->getCategory()?></p>
+              <p>カテゴリ:
+			  <?php
+			  	$categories = preg_split("/[#]+/", $imageRow->getCategory(), -1, PREG_SPLIT_NO_EMPTY);
+				$cnt2 = 1;
+              	foreach($categories as $category){
+					echo "<a href='./search.php?word=%23" . $category . "'>#" . $category . "</a>";
+					if($cnt2 < count($categories)){
+						echo ", ";
+					}
+					$cnt2++;
+				}
+			  ?>
+			  </p>
             <?php
                 if(isset($commentArray[$imageName])){
                     echo "<p>コメント<br>";
