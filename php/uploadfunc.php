@@ -19,7 +19,7 @@ try{
 	if(is_uploaded_file($_FILES['file']['tmp_name'])){
 		// 拡張子チェック
 		$fileType = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-		if ($fileType == 'jpg' || $fileType == 'JPG' || $fileType == 'png' || $fileType == 'PNG' || $fileType == 'gif' || $fileType == 'GIF') {
+		if ($fileType == 'jpg' || $fileType == 'JPG' || $fileType == 'jpeg' || $fileType == 'JPEG' || $fileType == 'png' || $fileType == 'PNG' || $fileType == 'gif' || $fileType == 'GIF') {
 			// 拡張子がjpgまたはpngまたはgifの場合ファイルサイズチェック
 			if ($_FILES['file']['size'] < 6291456) {
 				// ファイル名生成
@@ -27,6 +27,7 @@ try{
 				$imagePath = '../Images/Upload/' . $imageName;
 				// サイズも拡張子もOKならファイルアップロード
 				move_uploaded_file($_FILES['file']['tmp_name'], $imagePath);
+				// 画像の向きを正す
 				orientationFixedImage($imagePath, $imagePath);
 				// サムネイル生成
 				makeThumbnail($imageName);
