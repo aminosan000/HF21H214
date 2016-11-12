@@ -133,7 +133,8 @@
                 <label for="passwd2">Enter Confirm Password</label>
                 <input id="passwd2" type="password" class="validate" name="passwd2" maxlength="40" value="">
               </div>
-              ※英数字6~30文字
+              ※英数字6~30文字<br>
+              ※SSL/TLS等の暗号化通信は行っていません。学内LANや公衆無線LAN等の不特定多数の接続するネットワークでログインする際盗聴される危険性があるため、パスワードは他のサービスと同一のものは使用しないでください。
             </div>
             <div class="card-action center">
               <button class="waves-effect waves-light btn-large orange darken-2" type="submit" name="action">
