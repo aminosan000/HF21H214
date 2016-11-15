@@ -18,6 +18,7 @@
   <script src="JavaScript/jquery.js"></script>
   <script src="JavaScript/materialize.js"></script>
   <script src="JavaScript/lity.js"></script>
+  <script src="JavaScript/favorite.js"></script>
   <!--Let browser know website is optimized for mobile-->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -202,17 +203,15 @@
                 </div>
                 <input type="hidden" name="imageName" value="<?=$imageName?>">
                 <button class="waves-effect waves-light btn orange accent-4" type="submit" name="action">コメント追加</button>
-				<?php
-                    if(isset($_SESSION['userId'])){
-                        if(!isset($favoriteArray[$imageName])){
-                            echo "<a href='./php/favoriteFunc.php?imageName=" . $imageName . "&flg=0'><img class='right' src='./Images/favorite_off.png'></a>";
-                        }else{
-                            echo "<a href='./php/favoriteFunc.php?imageName=" . $imageName . "&flg=1'><img class='right' src='./Images/favorite_on.png'></a>";
-                        }
-                    }
-                ?>
+                <?php
+					if(isset($favoriteArray[$imageName])){
+						$condition = 'true';
+					}else{
+						$condition = 'false';
+					}
+				?>
+                <img class="right" onclick="favoritefunc(this)" data-condition=<?=$condition?> data-imagename=<?=$imageName?> src="Images/favorite_<?=$condition?>.png">
             </form>
-
           </div>
         </div>
       </div>

@@ -6,25 +6,47 @@ require_once('secureFunc.php');
 date_default_timezone_set('Asia/Tokyo');
 
 session_start();
-$userId = 'guest';
+
 if (isset($_SESSION['userId'])) {
 	$userId = h($_SESSION['userId']);
 	$today = date("Y-m-d H:i:s");
 	$imageName = $_GET['imageName'];
-	try{
-		// DBへ登録
-		$favorite = new Favorite();
-		$favorite->setImageName($imageName);
-		$favorite->setUserId($userId);
-		$favorite->setFavoriteDate($today);
-		$daoFactory = DaoFactory::getDaoFactory();
-		$dao = $daoFactory->createFavoriteDao();
-		$dao->insert($favorite);
-	}catch(Exception $e) {
-		//echo 'エラー:', $e->getMessage().PHP_EOL;
+	if($_GET['condition'] == 'false'){
+		try{
+			// DBへ登録
+			$favorite = new Favorite();
+			$favorite->setImageName($imageName);
+			$favorite->setUserId($userId);
+			$favorite->setFavoriteDate($today);
+			$daoFactory = DaoFactory::getDaoFactory();
+			$dao = $daoFactory->createFavoriteDao();
+			$dao->insert($favorite);
+			echo 'success';
+		}catch(Exception $e) {
+			echo 'err';
+			//echo 'エラー:', $e->getMessage().PHP_EOL;
+		}
+	}else{
+		try{
+			// DBから削除
+			$favorite = new Favorite();
+			$favorite->setImageName($imageName);
+			$favorite->setUserId($userId);
+			$favorite->setFavoriteDate($today);
+			$daoFactory = DaoFactory::getDaoFactory();
+			$dao = $daoFactory->createFavoriteDao();
+			$dao->delete($favorite);
+			echo 'success';
+		}catch(Exception $e) {
+			echo 'err';
+			//echo 'エラー:', $e->getMessage().PHP_EOL;
+		}
 	}
+}else{
+	echo 'err';
 }
-
+/*
 header('Location: ../');
 exit;
+*/
 ?>

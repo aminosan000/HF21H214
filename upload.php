@@ -18,6 +18,39 @@
   <script src="JavaScript/jquery.js"></script>
   <script src="JavaScript/materialize.js"></script>
   <script src="JavaScript/lity.js"></script>
+  <script type="text/javascript">
+	function uploadfunc(){
+		// ローディングマークを表示
+		var elm = document.getElementById("loading");
+		elm.innerHTML = "<img src='./Images/load.gif'><br><p class='text'>画像解析中・・・</p>";
+		// フォームデータを取得
+		var formdata = new FormData(document.getElementById("upload"));
+		// XMLHttpRequestによるアップロード処理
+		var xhttpreq = new XMLHttpRequest();
+		xhttpreq.onreadystatechange = function() {
+			if (xhttpreq.readyState == 4 && xhttpreq.status == 200) {
+				var res = xhttpreq.responseText;
+				var text = "";
+				// 投稿成功時
+				if(res == "success"){
+					text = "<p class='text'>投稿が完了しました</p>";
+				// 投稿失敗時はエラーごとにメッセージ表示
+				}else if(res == "dbErr"){
+					text = "<p class='err_text'>DBエラー</p>"
+				}else if(res == "typeErr"){
+					text = "<p class='err_text'>画像ファイルのみ投稿できます</p>"
+				}else if(res == "sizeErr"){
+					text = "<p class='err_text'>サイズが大きすぎます</p>"
+				}else if(res == "safeSearchErr"){
+					text = "<p class='err_text'>性的または暴力的な画像は投稿できません</p>"
+				}
+				elm.innerHTML = text;
+			}
+		};
+		xhttpreq.open("POST", "./php/uploadfunc.php", true);
+		xhttpreq.send(formdata);
+	}
+  </script>
   <!--Let browser know website is optimized for mobile-->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -120,7 +153,7 @@
     <div class="col s12 m12 l12">
       <div class="card">
 
-		<form action="./php/uploadfunc.php" method="POST" enctype="multipart/form-data">
+		<form id="upload">
           <div class="file-field file-path-wrapper">
             <div class="card-content">
               <div class="input-field">
@@ -143,32 +176,12 @@
             </div>
           </div>
           <div class="card-action center">
-            <button class="waves-effect waves-light btn-large orange darken-2" type="submit" name="action">
+            <button type="button" class="waves-effect waves-light btn-large orange darken-2" onclick="uploadfunc()">
               <i class="material-icons left">file_upload</i>UPLOAD
             </button>
           </div>
         </form>
-        
-        <?php
-			if(isset($_GET['err'])){
-				switch($_GET['err']){
-					case 'safeSearchErr';
-						$errStr = '性的または暴力的な画像は投稿できません';
-						break;
-					case 'sizeErr':
-						$errStr = 'サイズが大きすぎます';
-						break;
-					case 'typeErr':
-						$errStr = '画像ファイルのみ投稿できます';
-						break;
-					case 'dbErr':
-						$errStr = 'DBエラー';
-						break;
-				}
-				echo "<p class='err_text'>" . $errStr . "</p>";
-			}
-        ?>
-
+        <div id="loading" class="center"></div>
       </div>
     </div>
 

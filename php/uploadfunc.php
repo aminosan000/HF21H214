@@ -55,29 +55,31 @@ try{
 						$dao = $daoFactory->createCommentDao();
 						$dao->insert($comment);
 					}
+					// アップロード画面に結果を返す
+					echo "success";
 					// 投稿成功時はトップ画面へ遷移
-					header('Location: ../');
-					exit;
+					//header('Location: ../');
+					//exit;
 				} else {
 					unlink('../Images/Upload/' . $imageName);
-					$res = 'safeSearchErr';
+					echo "safeSearchErr";
 				}
 			} else {
 				// サイズが6MBを超えていたら
-				$res =  'sizeErr';
+				echo "sizeErr";
 			}
 		} else {
 			// jpg png gif 以外の場合
-			$res = 'typeErr';
+			echo "typeErr";
 		}
 	}
 }catch(Exception $e) {
 	// echo 'エラー:', $e->getMessage().PHP_EOL;
-	$res = 'dbErr';
+	echo "dbErr";
 }
 // 投稿失敗時はアップロード画面へ戻る
-header('Location: ../upload.php?err=' . $res);
-exit;
+//header('Location: ../upload.php?err=' . $res);
+//exit;
 
 /**
  * ランダム文字列生成 (英数字)
