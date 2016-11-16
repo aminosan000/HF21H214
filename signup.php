@@ -58,10 +58,10 @@
           <a href="./" class="navigation-link"><i class="material-icons">home</i>ホーム</a>
         </li>
         <li class="nav-position">
-          <a href="profile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a>
+          <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a>
         </li>
         <li class="nav-position">
-          <a href="upload.php" class="navigation-link"><i class="material-icons">cloud_upload</i>アップロード</a>
+          <a href="profile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a>
         </li>
       </ul>
 
@@ -71,7 +71,7 @@
           <a href="index.php" class="hide-on-med-and-down"><i class="material-icons">home</i></a>
         </li>
         <li>
-          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">cloud_upload</i></a>
+          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a>
         </li>
         <li>
           <a href="profile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a>
