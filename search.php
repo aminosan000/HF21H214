@@ -228,7 +228,7 @@
 						$condition = 'false';
 					}
 				?>
-                <img class="right" onclick="favoritefunc(this)" data-condition=<?=$condition?> data-imagename=<?=$imageName?> src="Images/favorite_<?=$condition?>.png">
+                <img class="right pointer" onclick="favoritefunc(this)" data-condition=<?=$condition?> data-imagename=<?=$imageName?> src="Images/favorite_<?=$condition?>.png">
             </form>
           </div>
         </div>

@@ -16,12 +16,38 @@
   <link type="text/css" rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
   <link type="text/css" rel="stylesheet" href="Stylesheet/lity.css"  media="screen,projection">
   <link type="text/css" rel="stylesheet" href="Stylesheet/Style.css" media="screen,projection">
+  <link type="text/css" rel="stylesheet" href="Stylesheet/jquery-confirm.css"/>
   <!-- Import JavaScript -->
   <script src="JavaScript/core.js"></script>
   <script src="JavaScript/jquery.js"></script>
+  <script src="JavaScript/jquery-confirm.js"></script>
   <script src="JavaScript/materialize.js"></script>
   <script src="JavaScript/lity.js"></script>
   <script src="JavaScript/favorite.js"></script>
+  <script type="text/javascript"><!--
+	function deletefunc(obj) {
+		$.confirm({
+			title: '確認',
+			content: '画像を削除してもよろしいですか？',
+			boxWidth: '30%',
+			opacity: 0.5,
+			buttons: {
+				deleteimage: {
+					text: 'OK',
+					btnClass: 'btn-orange',
+					action: function () {
+						location.href = "./php/deletefunc.php?imageName=" + obj.getAttribute('data-imagename');
+					}
+				},
+				cancel: {
+					text: 'キャンセル',
+					action: function () {
+					}
+				}
+			}
+		});
+	}
+ --></script>
   <!--Let browser know website is optimized for mobile-->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -168,7 +194,16 @@
                 $userId = $_SESSION['userId'];
                 $imageArray = $dao->userSelect($userId, $pageNum);
                 $rowCount = $dao->userRows($userId);
-                echo "<div class='center'>あなたの投稿 : " . $rowCount . "件</div>";
+				if(isset($_GET['result'])){
+					$res = "";
+					if($_GET['result'] == "success"){
+						$res .= "<p class='err_text'>画像を削除しました</p>";
+					}else if($_GET['result'] == "fail"){
+						$res .= "<p class='err_text'>画像の削除に失敗しました</p>";
+					}
+	                echo "<div class='center'>" . $res . "</div>";
+				}
+                echo "<div class='center'><p>あなたの投稿 : " . $rowCount . "件</p></div>";
                 $dao = $daoFactory->createCommentDao();
                 $commentArray = $dao->select();
 				$dao = $daoFactory->createFavoriteDao();
@@ -241,7 +276,8 @@
 						$condition = 'false';
 					}
 				?>
-                <img class="right" onclick="favoritefunc(this)" data-condition=<?=$condition?> data-imagename=<?=$imageName?> src="Images/favorite_<?=$condition?>.png">
+                <img class="right pointer" onclick="favoritefunc(this)" data-condition=<?=$condition?> data-imagename=<?=$imageName?> src="Images/favorite_<?=$condition?>.png">
+                <img class="right pointer" onclick="deletefunc(this)" data-imagename=<?=$imageName?> src="./Images/trash.png">
             </form>  
           </div>
         </div>

@@ -22,6 +22,9 @@ p.err_text {
   color: #FF0000;
 }
 
+img.pointer {
+	cursor: pointer;
+}
 
 .brand-logo-font {
   font-family: 'Yesteryear';
