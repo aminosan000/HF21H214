@@ -92,19 +92,10 @@
           <a href="./" class="navigation-link"><i class="material-icons">home</i>ホーム</a>
         </li>
         <li class="nav-position">
-          <a href="search.php" class="navigation-link"><i class="material-icons">search</i>検索する</a>
-        </li>
-        <li class="nav-position">
           <a href="profile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a>
         </li>
         <li class="nav-position">
           <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a>
-        </li>
-        <li class="nav-position">
-          <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
-        </li>
-        <li class="nav-position">
-          <a href="setting.php" class="navigation-link"><i class="material-icons">settings</i>設定</a>
         </li>
       </ul>
 
@@ -114,19 +105,10 @@
           <a href="./" class="hide-on-med-and-down"><i class="material-icons">home</i></a>
         </li>
         <li>
-          <a href="search.php" class="hide-on-med-and-down"><i class="material-icons">search</i></a>
-        </li>
-        <li>
           <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a>
         </li>
         <li>
           <a href="profile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a>
-        </li>
-        <li>
-          <a href="favorite.php" class="hide-on-med-and-down"><i class="material-icons">favorite</i></a>
-        </li>
-        <li>
-          <a href="setting.php" class="hide-on-med-and-down"><i class="material-icons">settings</i></a>
         </li>
       </ul>
 

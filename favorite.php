@@ -60,9 +60,6 @@
           <a href="./" class="navigation-link"><i class="material-icons">home</i>ホーム</a>
         </li>
         <li class="nav-position">
-          <a href="search.php" class="navigation-link"><i class="material-icons">search</i>検索する</a>
-        </li>
-        <li class="nav-position">
           <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a>
         </li>
         <li class="nav-position">
@@ -70,9 +67,6 @@
         </li>
         <li class="nav-position">
           <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
-        </li>
-        <li class="nav-position">
-          <a href="setting.php" class="navigation-link"><i class="material-icons">settings</i>設定</a>
         </li>
       </ul>
 
@@ -82,9 +76,6 @@
           <a href="./" class="hide-on-med-and-down"><i class="material-icons">home</i></a>
         </li>
         <li>
-          <a href="search.php" class="hide-on-med-and-down"><i class="material-icons">search</i></a>
-        </li>
-        <li>
           <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a>
         </li>
         <li>
@@ -92,9 +83,6 @@
         </li>
         <li>
           <a href="favorite.php" class="hide-on-med-and-down"><i class="material-icons">favorite</i></a>
-        </li>
-        <li>
-          <a href="setting.php" class="hide-on-med-and-down"><i class="material-icons">settings</i></a>
         </li>
       </ul>
 
@@ -176,7 +164,7 @@
 			  	$categories = preg_split("/[#]+/", $imageRow->getCategory(), -1, PREG_SPLIT_NO_EMPTY);
 				$cnt2 = 1;
               	foreach($categories as $category){
-					echo "<a href='./search.php?word=%23" . $category . "'>#" . $category . "</a>";
+					echo "<a href='./?word=%23" . $category . "'>#" . $category . "</a>";
 					if($cnt2 < count($categories)){
 						echo ", ";
 					}
