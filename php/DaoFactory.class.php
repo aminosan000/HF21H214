@@ -1,8 +1,8 @@
 <?PHP
 class DaoFactory{
-	private $dsn = 'mysql:dbname=gunmetal_bistro;host=mysql531.db.sakura.ne.jp;charset=utf8';
-	private $user = 'gunmetal';
-	private $password = 'yawaraka299';
+	private $dsn = 'mysql:dbname=bistro;host=localhost;charset=utf8';
+	private $user = 'root';
+	private $password = 'root';
 	
 	public static function getDaoFactory(){
 		return new DaoFactory;
