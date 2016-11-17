@@ -132,8 +132,9 @@
             $daoFactory = DaoFactory::getDaoFactory();
             $dao = $daoFactory->createImageDao();
             if (isset($_GET['word'])) {
-                $imageArray = $dao->search($_GET['word'], $pageNum);
-                $rowCount = $dao->searchRows($_GET['word']);
+				$word = $_GET['word'];
+                $imageArray = $dao->search($word, $pageNum);
+                $rowCount = $dao->searchRows($word);
 				echo "<div class='center'>該当結果" . $rowCount . "件</div>";
             }else{	
                 $imageArray = $dao->select($pageNum);
@@ -227,10 +228,14 @@
             <ul class="pagination">
             
 				<?php
+					$wordQuery = "";
+					if(isset($word)){
+						$wordQuery = "&word=" . $word;
+					}
 					if($pageNum == 0){
 						echo "<li class='disabled'><i class='material-icons'>chevron_left</i></li>";
 					}else{
-						echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
+						echo "<li class='waves-effect'><a href='./?pageNum=" . ($pageNum - 1) . $wordQuery . "'><i class='material-icons'>chevron_left</i></a></li>";
 					}
 					for($count = 0; $count < ceil($rowCount / 12); $count++){
 						if($count == $pageNum){
@@ -238,13 +243,13 @@
 						}else{
 							echo "<li class='waves-effect'>";
 						}
-						echo "<a href='./index.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
+						echo "<a href='./?pageNum=" . $count . $wordQuery . "'>" . ($count + 1) . "</a></li>";
 					}
 					if($pageNum >= ceil($rowCount / 12) - 1){
 						echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
 					";
 					}else{
-						echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
+						echo "<li class='waves-effect'><a href='./?pageNum=" . ($pageNum + 1). $wordQuery . "'><i class='material-icons'>chevron_right</i></a></li>
 					";
 					}
                 ?>

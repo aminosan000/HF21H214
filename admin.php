@@ -1,10 +1,3 @@
-<?php
-	require_once('./php/secureFunc.php');
-	require_logined_session();
-	
-	ini_set("display_errors", 1);
-	error_reporting(E_ALL);
-?>
 <!DOCTYPE html>
 <html lang="jp">
 <head>
@@ -117,9 +110,6 @@
         <li class="nav-position">
           <a href="profile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a>
         </li>
-        <li class="nav-position">
-          <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a>
-        </li>
       </ul>
 
       <!-- navigation desktop-only -->
@@ -132,9 +122,6 @@
         </li>
         <li>
           <a href="profile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a>
-        </li>
-        <li>
-          <a href="favorite.php" class="hide-on-med-and-down"><i class="material-icons">favorite</i></a>
         </li>
       </ul>
 
@@ -156,7 +143,6 @@
 <main>
   <br>
   <div class="container">
-
     <div class="row">
       <div class="col s12 m12 l6 center">
         <img class="circle" src="Images/avator.png" alt="">
@@ -164,7 +150,7 @@
       <div class="col s12 m12 l6">
         <div class="card small white">
           <div class="card-content">
-            <span class="card-title">ユーザID : <?=h($_SESSION['userId'])?></span><br>
+            <span class="card-title">ADMINISTRATION</span><br>
             <!--
             <button class="waves-effect waves-light btn-flat dropdown-button right" data-activates='dropdown-desktop'>
               詳細を表示する
@@ -173,11 +159,6 @@
               <li><a class="grey-text" href="#!">ユーザ情報変更</a></li>
             </ul>
             -->
-            <span class="text-darken-2">
-				フォロー : 0人<br>
-                フォロワー : 0人<br><br>
-             </span>
-             <button type="button" class="waves-effect waves-light btn-large orange darken-2" onclick="logoutfunc()">ログアウト</button>
           </div>
         </div>
       </div>
@@ -185,8 +166,21 @@
 
     <!-- 今までの投稿 開始 -->
     <div class="row">
-
-		<?php
+     <form method="get" action="./admin.php">
+        <div class="card-content">
+          <div class="input-field">
+            <label for="word center">検索ワードを入力</label>
+            <input id="word" type="text" class="validate" class="validate" name="word" maxlength="40" value="">
+          </div>
+        </div>
+        <div class="card-action center">
+             <button class="waves-effect waves-light btn-large orange darken-2" type="submit">
+                <i class="material-icons left">search</i>検索
+             </button>
+        </div>
+      </form>
+    
+        <?php
             require_once('./php/Image.class.php');
             require_once('./php/ImageDao.class.php');
             require_once('./php/Comment.class.php');
@@ -194,38 +188,48 @@
 			require_once('./php/Favorite.class.php');
             require_once('./php/FavoriteDao.class.php');
             require_once('./php/DaoFactory.class.php');
+			require_once('./php/secureFunc.php');
             
+            ini_set("display_errors", 1);
+            error_reporting(E_ALL);
+			
+			if(isset($_GET['result'])){
+				$res = "";
+				if($_GET['result'] == "success"){
+					$res .= "<p class='err_text'>画像を削除しました</p>";
+				}else if($_GET['result'] == "fail"){
+					$res .= "<p class='err_text'>画像の削除に失敗しました</p>";
+				}
+				echo "<div class='center'>" . $res . "</div>";
+			}
             $pageNum = 0;
             if(isset($_GET['pageNum'])){
                 $pageNum = $_GET['pageNum'];
             }
             $daoFactory = DaoFactory::getDaoFactory();
             $dao = $daoFactory->createImageDao();
-            if (isset($_SESSION['userId'])) {
-                $userId = $_SESSION['userId'];
-                $imageArray = $dao->userSelect($userId, $pageNum);
-                $rowCount = $dao->userRows($userId);
-				if(isset($_GET['result'])){
-					$res = "";
-					if($_GET['result'] == "success"){
-						$res .= "<p class='err_text'>画像を削除しました</p>";
-					}else if($_GET['result'] == "fail"){
-						$res .= "<p class='err_text'>画像の削除に失敗しました</p>";
-					}
-	                echo "<div class='center'>" . $res . "</div>";
-				}
-                echo "<div class='center'><p>あなたの投稿 : " . $rowCount . "件</p></div>";
-                $dao = $daoFactory->createCommentDao();
-                $commentArray = $dao->select();
+            if (isset($_GET['word'])) {
+				$word = $_GET['word'];
+                $imageArray = $dao->search($word, $pageNum);
+                $rowCount = $dao->searchRows($word);
+				echo "<div class='center'>該当結果" . $rowCount . "件</div>";
+            }else{	
+                $imageArray = $dao->select($pageNum);
+                $rowCount = $dao->rows();
+            }
+			$dao = $daoFactory->createCommentDao();
+			$commentArray = $dao->select();
+			if(isset($_SESSION['userId'])){
+				$userId = h($_SESSION['userId']);
 				$dao = $daoFactory->createFavoriteDao();
 				$favoriteArray = $dao->select($userId);
-            
-                $cnt = 1;
-                foreach($imageArray as $imageRow){
-					$imageName = $imageRow->getImageName();
+			}
+            $cnt = 1;
+            foreach($imageArray as $imageRow){
+				$imageName = $imageRow->getImageName();
         ?>
-        
-        <div class="col s12 m6 l6">
+      
+      <div class="col s12 m6 l6">
         <div class="card sticky-action hoverable z-depth-1">
           <div class="card-image">
             <a href="./Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="./Images/Thumbnail/<?=$imageName?>"></a>
@@ -260,78 +264,60 @@
 					$cnt2++;
 				}
 			  ?>
-			  </p>
+              </p>
             <?php
-                if(isset($commentArray[$imageName])){
-                    echo "<p>コメント<br>";
-                    $oneImageComment = $commentArray[$imageName];
-                    foreach($oneImageComment as $commentRow){
-                            echo "<b>". $commentRow->getUserId(). "</b> ". $commentRow->getComment(). "<br>";
-                    }
-                }else{
-                    echo "<p>コメントなし";
-                }
-            ?>
-             <form method="get" action="./php/commentfunc.php">
-                <div class="input-field">
-                    <i class="material-icons prefix">mode_edit</i>
-                    <label for="comment<?=$cnt?>">コメント</label>
-                    <input id="comment<?=$cnt?>" type="text" class="validate" name="comment" value="">
-                </div>
-                <input type="hidden" name="imageName" value="<?=$imageName?>">
-                <button class="waves-effect waves-light btn orange accent-4" type="submit" name="action">コメント追加</button>
-                <?php
-					if(isset($favoriteArray[$imageName])){
-						$condition = 'true';
-					}else{
-						$condition = 'false';
+				if(isset($commentArray[$imageName])){
+					echo "<p>コメント<br>";
+					$oneImageComment = $commentArray[$imageName];
+					foreach($oneImageComment as $commentRow){
+							echo "<b>". $commentRow->getUserId(). "</b> ". $commentRow->getComment(). "<br>";
 					}
-				?>
-                <img class="right pointer" onclick="favoritefunc(this)" data-condition=<?=$condition?> data-imagename=<?=$imageName?> src="Images/favorite_<?=$condition?>.png">
-                <img class="right pointer" onclick="deletefunc(this)" data-imagename=<?=$imageName?> src="./Images/trash.png">
-            </form>  
+				}else{
+					echo "<p>コメントなし";
+				}
+			?>
+            <img class="right pointer" onclick="deletefunc(this)" data-imagename=<?=$imageName?> src="./Images/trash.png">
           </div>
         </div>
-        </div>
-        <?php
-        $cnt++;
-        }
-        ?>
-
-      <!-- 今までの投稿 終了 -->
-    </div><!-- div.row end -->
-
-    <div class="center">
-        <ul class="pagination">
-        
-            <?php
-                if($pageNum == 0){
-                    echo "<li class='disabled'><i class='material-icons'>chevron_left</i></li>";
-                }else{
-                    echo "<li class='waves-effect'><a href='./profile.php?pageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
-                }
-                for($count = 0; $count < ceil($rowCount / 12); $count++){
-                    if($count == $pageNum){
-                        echo "<li class='active orange'>";
-                    }else{
-                        echo "<li class='waves-effect'>";
-                    }
-                    echo "<a href='./profile.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
-                }
-                if($pageNum >= ceil($rowCount / 12) - 1){
-                    echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
-                ";
-                }else{
-                    echo "<li class='waves-effect'><a href='./profile.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
-                ";
-                }
-                }
-            ?>
-    
-      </ul>
+      </div>
+	<?php
+		$cnt++;
+		}
+    ?>
     </div>
-
-  </div><!-- div.container end -->
+        <div class="center">
+            <ul class="pagination">
+            
+				<?php
+					$wordQuery = "";
+					if(isset($word)){
+						$wordQuery = "&word=" . $word;
+					}
+					if($pageNum == 0){
+						echo "<li class='disabled'><i class='material-icons'>chevron_left</i></li>";
+					}else{
+						echo "<li class='waves-effect'><a href='./admin.php?pageNum=" . ($pageNum - 1) . $wordQuery . "'><i class='material-icons'>chevron_left</i></a></li>";
+					}
+					for($count = 0; $count < ceil($rowCount / 12); $count++){
+						if($count == $pageNum){
+							echo "<li class='active orange'>";
+						}else{
+							echo "<li class='waves-effect'>";
+						}
+						echo "<a href='./admin.php?pageNum=" . $count . $wordQuery . "'>" . ($count + 1) . "</a></li>";
+					}
+					if($pageNum >= ceil($rowCount / 12) - 1){
+						echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
+					";
+					}else{
+						echo "<li class='waves-effect'><a href='./admin.php?pageNum=" . ($pageNum + 1). $wordQuery . "'><i class='material-icons'>chevron_right</i></a></li>
+					";
+					}
+                ?>
+        
+          </ul>
+      </div>
+  </div>
 </main>
 
 <div class="fixed-action-btn hide-on-large-only">

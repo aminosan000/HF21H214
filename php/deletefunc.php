@@ -3,11 +3,7 @@ require_once('Image.class.php');
 require_once('ImageDao.class.php');
 require_once('DaoFactory.class.php');
 require_once('secureFunc.php');
-require_logined_session();
 
-if (isset($_SESSION['userId'])) {
-	$userId = h($_SESSION['userId']);
-}
 $flg = false;
 try{
 	if(isset($_GET['imageName']) && $_GET['imageName'] != ''){
@@ -23,12 +19,13 @@ try{
 }catch(Exception $e) {
 	//echo 'エラー:', $e->getMessage().PHP_EOL;
 }
+$referer = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH);
 if($flg){
 	//echo "done";
-	header('Location: ../profile.php?result=success');
+	header('Location: ' .  $referer . '?result=success');
 }else{
 	//echo "fail";
-	header('Location: ../profile.php?result=fail');
+	header('Location: ' .  $referer . '?result=fail');
 }
 //exit;
 ?>

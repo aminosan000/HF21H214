@@ -215,7 +215,7 @@
 						if($pageNum == 0){
 							echo "<li class='disabled'><i class='material-icons'>chevron_left</i></li>";
 						}else{
-							echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
+							echo "<li class='waves-effect'><a href='./favorite.php?pageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
 						}
 						for($count = 0; $count < ceil($rowCount / 12); $count++){
 							if($count == $pageNum){
@@ -223,13 +223,13 @@
 							}else{
 								echo "<li class='waves-effect'>";
 							}
-							echo "<a href='./index.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
+							echo "<a href='./favorite.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
 						}
 						if($pageNum >= ceil($rowCount / 12) - 1){
 							echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
 						";
 						}else{
-							echo "<li class='waves-effect'><a href='./index.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
+							echo "<li class='waves-effect'><a href='./favorite.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
 						";
 						}
 					}
