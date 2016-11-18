@@ -1,0 +1,20 @@
+<form action="./php/avatorfunc.php" method="post" enctype="multipart/form-data">
+  <div class="file-field file-path-wrapper">
+    <div class="card-content">
+      <div class="input-field">
+        <!--
+        <i class="material-icons prefix">attach_file</i>
+        -->
+        <i class="material-icons prefix">camera_alt</i>
+        <input id="file" type="file" name="file" class="validate">
+        <label for="word">File Name</label>
+        <input type="text" class="file-path validate" class="validate" name="word" maxlength="40" value="">
+      </div>
+    </div>
+  </div>
+  <div class="card-action center">
+    <button type="button submit" class="waves-effect waves-light btn-large orange darken-2">
+      <i class="material-icons left">file_upload</i>UPLOAD
+    </button>
+  </div>
+</form>

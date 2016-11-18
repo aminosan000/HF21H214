@@ -1,11 +1,8 @@
 <?php
 require_once('Image.class.php');
 require_once('ImageDao.class.php');
-require_once('Comment.class.php');
-require_once('CommentDao.class.php');
 require_once('DaoFactory.class.php');
 require_once('secureFunc.php');
-require_once('cvFunc.php');
 date_default_timezone_set('Asia/Tokyo');
 
 session_start();
@@ -13,86 +10,39 @@ $userId = 'guest';
 if (isset($_SESSION['userId'])) {
 	$userId = h($_SESSION['userId']);
 }
-$today = date("Y-m-d H:i:s");
 
-try{
-	if(is_uploaded_file($_FILES['file']['tmp_name'])){
-		// 拡張子チェック
-		$fileType = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-		if ($fileType == 'jpg' || $fileType == 'JPG' || $fileType == 'jpeg' || $fileType == 'JPEG' || $fileType == 'png' || $fileType == 'PNG' || $fileType == 'gif' || $fileType == 'GIF') {
-			// 拡張子がjpgまたはpngまたはgifの場合ファイルサイズチェック
-			if ($_FILES['file']['size'] < 6291456) {
-				// ファイル名生成
-				$imageName = makeRandStr(10) . '.' . $fileType;
-				$imagePath = '../Images/Upload/' . $imageName;
-				// サイズも拡張子もOKならファイルアップロード
-				move_uploaded_file($_FILES['file']['tmp_name'], $imagePath);
-				// 画像の向きを正す
-				orientationFixedImage($imagePath, $imagePath);
-				// サムネイル生成
-				makeThumbnail($imageName);
-				// Google Cloud Vision へリクエストし画像認識結果取得
-				$cvArray = cvRequest($imageName);
-				// セーフサーチの結果が問題なければ
-				if($cvArray["adult"] == "UNKNOWN" || $cvArray["adult"] == "VERY_UNLIKELY" || $cvArray["adult"] == "UNLIKELY" and $cvArray["violence"] == "UNKNOWN" || $cvArray["violence"] == "VERY_UNLIKELY" || $cvArray["violence"] == "UNLIKELY"){
-					$category = $cvArray["category"];
-					// DBへ登録
-					$image = new Image();
-					$image->setImageName($imageName);
-					$image->setUserId($userId);
-					$image->setUploadDate($today);
-					$image->setCategory($category);
-					$daoFactory = DaoFactory::getDaoFactory();
-					$dao = $daoFactory->createImageDao();
-					$dao->insert($image);
-					// コメントが空じゃなければ、コメントも登録
-					if(isset($_POST['comment']) && $_POST['comment'] != ''){
-						$comment = new Comment();
-						$comment->setUserId($userId);
-						$comment->setCommentDate($today);
-						$comment->setComment(h($_POST['comment']));
-						$comment->setImageName($imageName);
-						$dao = $daoFactory->createCommentDao();
-						$dao->insert($comment);
-					}
-					// アップロード画面に結果を返す
-					echo "success";
-					// 投稿成功時はトップ画面へ遷移
-					//header('Location: ../');
-					//exit;
-				} else {
-					unlink('../Images/Upload/' . $imageName);
-					echo "safeSearchErr";
-				}
-			} else {
-				// サイズが6MBを超えていたら
-				echo "sizeErr";
-			}
+if(is_uploaded_file($_FILES['file']['tmp_name'])){
+	// 拡張子チェック
+	$fileType = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+	if ($fileType == 'jpg' || $fileType == 'JPG' || $fileType == 'jpeg' || $fileType == 'JPEG' || $fileType == 'png' || $fileType == 'PNG' || $fileType == 'gif' || $fileType == 'GIF') {
+		// 拡張子がjpgまたはpngまたはgifの場合ファイルサイズチェック
+		if ($_FILES['file']['size'] < 6291456) {
+			// ファイル名生成
+			$imageName = $userId . '.jpg';
+			$imagePath = '../Images/Avator/' . $imageName;
+			// サイズも拡張子もOKならファイルアップロード
+			move_uploaded_file($_FILES['file']['tmp_name'], $imagePath);
+			// 画像の向きを正す
+			orientationFixedImage($imagePath, $imagePath);
+			// 画像拡大縮小+トリミング
+			makeThumbnail($imageName);
+			// 投稿成功時プロフィール画面へ戻る
+			header('Location: ../profile.php');
+			exit;
 		} else {
-			// jpg png gif 以外の場合
-			echo "typeErr";
+			// サイズが6MBを超えていたら
+			$res = "sizeErr";
 		}
+	} else {
+		// jpg png gif 以外の場合
+		$res = "typeErr";
 	}
-}catch(Exception $e) {
-	// echo 'エラー:', $e->getMessage().PHP_EOL;
-	echo "dbErr";
+} else {
+	$res = "fileErr";
 }
-// 投稿失敗時はアップロード画面へ戻る
-//header('Location: ../upload.php?err=' . $res);
-//exit;
-
-/**
- * ランダム文字列生成 (英数字)
- * $length: 生成する文字数
- */
-function makeRandStr($length) {
-    $str = array_merge(range('a', 'z'), range('0', '9'));
-    $r_str = null;
-    for ($i = 0; $i < $length; $i++) {
-        $r_str .= $str[rand(0, count($str) - 1)];
-    }
-    return $r_str;
-}
+// 投稿失敗時はエラー内容をセットしてプロフィール画面へ戻る
+header('Location: ../profile.php?err=' . $res);
+exit;
 
 /**
  * 画像の方向を正す
@@ -183,15 +133,15 @@ function image_rotate($image, $angle, $bgd_color){
 }
 
 /**
- * サムネイル生成 (480x320)
+ * サムネイル生成 (100x100)
  *  $imageName: サムネイル生成元画像ファイル名
  */
 function makeThumbnail($imageName){
 	// 保存先パス
-	$savePath = "../Images/Thumbnail/";
+	$savePath = "../Images/Avator/";
 	
 	// 生成元パス
-	$orgFile = '../Images/Upload/' . $imageName;
+	$orgFile = '../Images/Avator/' . $imageName;
 	
 	// 画像のピクセルサイズ情報を取得
 	$imginfo = getimagesize( $orgFile );
@@ -203,16 +153,16 @@ function makeThumbnail($imageName){
 	$width  = imagesx( $ImageResource );    // 横幅
 	$height = imagesy( $ImageResource );    // 縦幅
 	
-	if ($width >= ($height * 4 / 3)) {
-		// 4:3より横長の場合
-		$x = floor($width / 2 - ($height * 4 / 3) / 2);
+	if ($width >= $height) {
+		// 横長の場合
+		$x = floor(($width - $height) / 2);
 		$y = 0;
-		$width = $height * 4 / 3;
+		$width = $height;
 	} else {
 		// 4:3より縦長の場合
-		$y = floor($height / 2 - ($width * 3 / 4) / 2);
+		$y = floor(($height - $width) / 2);
 		$x = 0;
-		$height = $width * 3 / 4;
+		$height = $width;
 	}
 	
 	switch ( $imginfo[2] ) {
@@ -220,8 +170,8 @@ function makeThumbnail($imageName){
 		// jpeg
 		case 2:
 			// 出力ピクセルサイズで新規画像作成
-			$square_width  = 640;
-			$square_height = 480;
+			$square_width  = 350;
+			$square_height = 350;
 			$square_new = imagecreatetruecolor( $square_width, $square_height );
 			imagecopyresized( $square_new, $ImageResource, 0, 0, $x, $y, $square_width, $square_height, $width, $height );
 			imagejpeg($square_new, $savePath . $imageName, 100);
@@ -230,8 +180,8 @@ function makeThumbnail($imageName){
 		// gif
 		case 1:
 			// 出力ピクセルサイズで新規画像作成
-			$square_width  = 640;
-			$square_height = 480;
+			$square_width  = 350;
+			$square_height = 350;
 			$square_new = imagecreatetruecolor( $square_width, $square_height );
 			imagecopyresampled($square_new, $ImageResource, 0, 0, $x, $y, $square_width, $square_height, $width, $height);
 			imagegif($square_new, $savePath . $imageName, 100);
@@ -240,8 +190,8 @@ function makeThumbnail($imageName){
 		// png
 		case 3:
 			// 出力ピクセルサイズで新規画像作成
-			$square_width  = 640;
-			$square_height = 480;
+			$square_width  = 350;
+			$square_height = 350;
 			$square_new = imagecreatetruecolor( $square_width, $square_height );
 			imagealphablending($square_new, false);        // アルファブレンディングを無効
 			imageSaveAlpha($square_new, true);             // アルファチャンネルを有効

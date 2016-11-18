@@ -4,6 +4,15 @@
 	
 	ini_set("display_errors", 1);
 	error_reporting(E_ALL);
+	
+	$userId = "guest";
+	$avatorImage = "guest.png";
+	if(isset($_SESSION['userId'])){
+		$userId = h($_SESSION['userId']);
+	}
+	if(file_exists("./Images/Avator/" . $userId . ".jpg")){
+		$avatorImage = $userId . ".jpg";
+	}
 ?>
 <!DOCTYPE html>
 <html lang="jp">
@@ -70,6 +79,20 @@
 			}
 		});
 	}
+	
+	function avatorfunc() {
+		$.confirm({
+			title: false,
+			content: 'url:avator.html',
+			buttons: {
+				cancel: {
+					text: 'キャンセル',
+					action: function() {
+					}
+				}
+			}
+		});
+	}
  --></script>
   <!--Let browser know website is optimized for mobile-->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -93,15 +116,8 @@
             <!--<div class="background">
               <img src="Images/office.jpg">
             </div>-->
-            <img class="circle" src="Images/guest.png">
-            <span class="black-text name">User Name : 
-            <?php
-				if(isset($_SESSION['userId'])){
-					echo h($_SESSION['userId']);
-				}else{
-					echo 'guest';
-				}
-            ?>
+            <img class="circle" src="./Images/Avator/<?=$avatorImage?>">
+            <span class="black-text name">User Name : <?=$userId?>
             </span>
           </div>
         </li>
@@ -159,12 +175,12 @@
 
     <div class="row">
       <div class="col s12 m12 l6 center">
-        <img class="circle" src="Images/avator.png" alt="">
+        <img onclick="avatorfunc()" class="circle pointer" src="./Images/Avator/<?=$avatorImage?>" alt="">
       </div>
       <div class="col s12 m12 l6">
         <div class="card small white">
           <div class="card-content">
-            <span class="card-title">ユーザID : <?=h($_SESSION['userId'])?></span><br>
+            <span class="card-title">ユーザID : <?=$userId?></span><br>
             <!--
             <button class="waves-effect waves-light btn-flat dropdown-button right" data-activates='dropdown-desktop'>
               詳細を表示する
