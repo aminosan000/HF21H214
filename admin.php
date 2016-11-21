@@ -145,7 +145,7 @@
   <div class="container">
     <div class="row">
       <div class="col s12 m12 l6 center">
-        <img class="circle" src="Images/avator.png" alt="">
+        <img class="circle" src="Images/Avator/guest.png" alt="">
       </div>
       <div class="col s12 m12 l6">
         <div class="card small white">
