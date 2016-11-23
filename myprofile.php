@@ -1,15 +1,24 @@
 <?php
 	require_once('./php/secureFunc.php');
+	require_once('./php/Follow.class.php');
+	require_once('./php/FollowDao.class.php');
+	require_once('./php/DaoFactory.class.php');
 	require_logined_session();
 	
 	$userId = "guest";
 	$avatorImage = "guest.png";
+	$loginFlg = false;
 	if(isset($_SESSION['userId'])){
 		$userId = h($_SESSION['userId']);
+		$loginFlg = true;
 	}
 	if(file_exists("./Images/Avator/" . $userId . ".png")){
 		$avatorImage = $userId . ".png";
 	}
+	$daoFactory = DaoFactory::getDaoFactory();
+	$dao = $daoFactory->createFollowDao();
+	$followCount = $dao->followRows($userId);
+	$followerCount = $dao->followerRows($userId);
 ?>
 <!DOCTYPE html>
 <html lang="jp">
@@ -121,7 +130,10 @@
 				<li class="nav-position"> <a href="./" class="navigation-link"><i class="material-icons">home</i>ホーム</a> </li>
 				<li class="nav-position"> <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a> </li>
 				<li class="nav-position"> <a href="myprofile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a> </li>
+				<?php if($loginFlg){ ?>
 				<li class="nav-position"> <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a> </li>
+				<li class="nav-position"> <a href="follow.php" class="navigation-link"><i class="material-icons">group</i>フォロー</a> </li>
+				<?php } ?>
 			</ul>
 			
 			<!-- navigation desktop-only -->
@@ -129,7 +141,10 @@
 				<li> <a href="./" class="hide-on-med-and-down"><i class="material-icons">home</i></a> </li>
 				<li> <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a> </li>
 				<li> <a href="myprofile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a> </li>
+				<?php if($loginFlg){ ?>
 				<li> <a href="favorite.php" class="hide-on-med-and-down"><i class="material-icons">favorite</i></a> </li>
+				<li> <a href="follow.php" class="hide-on-med-and-down"><i class="material-icons">group</i></a> </li>
+				<?php } ?>
 			</ul>
 		</div>
 	</nav>
@@ -163,8 +178,8 @@
               <li><a class="grey-text" href="#!">ユーザ情報変更</a></li>
             </ul>
             --> 
-						<span class="text-darken-2"> フォロー : 0人<br>
-						フォロワー : 0人<br>
+						<span class="text-darken-2"><a href="./follow.php"> フォロー : <?=$followCount?>人</a><br>
+						<a href="./follow.php?flg=false">フォロワー : <?=$followerCount?>人</a><br>
 						<br>
 						</span>
 						<button type="button" class="waves-effect waves-light btn-large orange darken-2" onclick="logoutfunc()">ログアウト</button>
@@ -182,7 +197,6 @@
             require_once('./php/CommentDao.class.php');
 			require_once('./php/Favorite.class.php');
             require_once('./php/FavoriteDao.class.php');
-            require_once('./php/DaoFactory.class.php');
             
             $pageNum = 0;
             if(isset($_GET['pageNum'])){

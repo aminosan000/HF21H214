@@ -1,13 +1,24 @@
 <?php
 	require_once('./php/secureFunc.php');
+	require_once('./php/Follow.class.php');
+	require_once('./php/FollowDao.class.php');
+	require_once('./php/DaoFactory.class.php');
 	session_start();
+	
+	ini_set("display_errors", 1);
+	error_reporting(E_ALL);
 	
 	$userId = "guest";
 	$avatorImage = "guest.png";
 	$profId = "";
 	$profImage = "guest.png";
+	$followFlg = "false";
+	$followIcon = "person_add";
+	$followText = "フォローする";
+	$loginFlg = false;
 	if(isset($_SESSION['userId'])){
 		$userId = h($_SESSION['userId']);
+		$loginFlg = true;
 		if($_GET['profId'] == $userId){
 			header('Location: ./myprofile.php');
 		}
@@ -21,6 +32,19 @@
 	if(file_exists("./Images/Avator/" . $profId . ".png")){
 		$profImage = $profId . ".png";
 	}
+	
+	$daoFactory = DaoFactory::getDaoFactory();
+	$dao = $daoFactory->createFollowDao();
+	$followArray = $dao->followSearch($userId);
+	foreach($followArray as $follow){
+		if($follow->getUserId() == $profId){
+			$followFlg = "true";
+			$followIcon = "group";
+			$followText = "フォロー中";
+		}
+	}
+	$followCount = $dao->followRows($profId);
+	$followerCount = $dao->followerRows($profId);
 ?>
 <!DOCTYPE html>
 <html lang="jp">
@@ -41,6 +65,46 @@
 <script src="JavaScript/materialize.js"></script>
 <script src="JavaScript/lity.js"></script>
 <script src="JavaScript/favorite.js"></script>
+<script type="text/javascript"><!--
+function followfunc(){
+	// 送るデータ
+	var obj = document.getElementById("follow");
+	var obj2 = document.getElementById("followText");
+	var userId = "<?=$profId?>";
+	var followFlg = obj.getAttribute("data-follow");
+	var data = {"userId": userId, "followFlg": followFlg};
+	var path = "./php/followfunc.php";
+	
+	// jqueryの.ajaxでAjax実行
+	$.ajax({
+		type: "GET",
+		url: path,
+		cache: false,
+		data: data
+	})
+	// 成功時
+    .done(function(data, textStatus, jqXHR){
+        	console.log(data);
+		if(data == "success"){
+			if(followFlg == "false"){
+				obj.setAttribute("data-follow", "true");
+				obj.innerHTML = "group";
+				obj2.innerHTML = "フォロー中";
+			}else if(followFlg == "true"){
+				obj.setAttribute("data-follow", "false");
+				obj.innerHTML = "person_add";
+				obj2.innerHTML = "フォローする";
+			}
+		}
+		return false;
+    })
+	// 失敗時
+    .fail(function(jqXHR, textStatus, errorThrown){
+		console.log(data);
+		return false;
+	});
+}
+--></script>
  <!--Let browser know website is optimized for mobile-->
  <meta http-equiv="X-UA-Compatible" content="IE=edge">
  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -71,7 +135,10 @@
 				<li class="nav-position"> <a href="./" class="navigation-link"><i class="material-icons">home</i>ホーム</a> </li>
 				<li class="nav-position"> <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a> </li>
 				<li class="nav-position"> <a href="myprofile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a> </li>
+				<?php if($loginFlg){ ?>
 				<li class="nav-position"> <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a> </li>
+				<li class="nav-position"> <a href="follow.php" class="navigation-link"><i class="material-icons">group</i>フォロー</a> </li>
+				<?php } ?>
 			</ul>
 			
 			<!-- navigation desktop-only -->
@@ -79,7 +146,10 @@
 				<li> <a href="./" class="hide-on-med-and-down"><i class="material-icons">home</i></a> </li>
 				<li> <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a> </li>
 				<li> <a href="myprofile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a> </li>
+				<?php if($loginFlg){ ?>
 				<li> <a href="favorite.php" class="hide-on-med-and-down"><i class="material-icons">favorite</i></a> </li>
+				<li> <a href="follow.php" class="hide-on-med-and-down"><i class="material-icons">group</i></a> </li>
+				<?php } ?>
 			</ul>
 		</div>
 	</nav>
@@ -102,21 +172,21 @@
 			<div class="col s12 m12 l6 center"> <img class="circle" src="./Images/Avator/<?=$profImage?>" alt=""> </div>
 			<div class="col s12 m12 l6">
 				<div class="card small white">
-					<div class="card-content"> <span class="card-title">ユーザID :
-						<?=$profId?>
-						</span><br>
-						<!--
-            <button class="waves-effect waves-light btn-flat dropdown-button right" data-activates='dropdown-desktop'>
-              詳細を表示する
-            </button>
-            <ul id='dropdown-desktop' class='dropdown-content'>
-              <li><a class="grey-text" href="#!">ユーザ情報変更</a></li>
-            </ul>
-            --> 
-						<span class="text-darken-2"> フォロー : 0人<br>
-						フォロワー : 0人<br>
-						<br>
+					<div class="card-content">
+						<div class="left">
+						<span class="card-title">ユーザID : <?=$profId?></span><br>
+						<span class="text-darken-2">
+							<a href="./follow.php?userId=<?=$profId?>">フォロー : <?=$followCount?>人</a><br>
+							<a href="./follow.php?userId=<?=$profId?>&flg=false">フォロワー : <?=$followerCount?>人</a><br>
+							<br>
 						</span>
+						</div>
+						<div class="followbox right pointer" onclick="followfunc()">
+							<div class="center">
+								<i id="follow" class="material-icons md-dark md-48" data-follow="<?=$followFlg?>"><?=$followIcon?></i>
+							</div>
+							<p id="followText" class="follow center"><?=$followText?></p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -131,13 +201,11 @@
             require_once('./php/CommentDao.class.php');
 			require_once('./php/Favorite.class.php');
             require_once('./php/FavoriteDao.class.php');
-            require_once('./php/DaoFactory.class.php');
             
             $pageNum = 0;
             if(isset($_GET['pageNum'])){
                 $pageNum = $_GET['pageNum'];
             }
-            $daoFactory = DaoFactory::getDaoFactory();
             $dao = $daoFactory->createImageDao();
             if (isset($_GET['profId'])) {
                 $profId = $_GET['profId'];
