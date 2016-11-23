@@ -7,8 +7,8 @@
 	if(isset($_SESSION['userId'])){
 		$userId = h($_SESSION['userId']);
 	}
-	if(file_exists("./Images/Avator/" . $userId . ".jpg")){
-		$avatorImage = $userId . ".jpg";
+	if(file_exists("./Images/Avator/" . $userId . ".png")){
+		$avatorImage = $userId . ".png";
 	}
 ?>
 <!DOCTYPE html>
@@ -116,8 +116,8 @@
 					$imageName = $imageRow->getImageName();
 					$uploadUser = $imageRow->getUserId();
 					$uploadAvator = "guest.png";
-					if(file_exists("./Images/Avator/" . $uploadUser . ".jpg")){
-						$uploadAvator = $uploadUser . ".jpg";
+					if(file_exists("./Images/Avator/" . $uploadUser . ".png")){
+						$uploadAvator = $uploadUser . ".png";
 					}
         ?>
 			<div class="col s12 m6 l6">

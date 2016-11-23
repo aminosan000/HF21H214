@@ -18,16 +18,24 @@ if(is_uploaded_file($_FILES['file']['tmp_name'])){
 		// 拡張子がjpgまたはpngまたはgifの場合ファイルサイズチェック
 		if ($_FILES['file']['size'] < 6291456) {
 			// ファイル名生成
-			$imageName = $userId . '.jpg';
+			$imageName = $userId . "." . $fileType;
 			$imagePath = '../Images/Avator/' . $imageName;
 			// サイズも拡張子もOKならファイルアップロード
 			move_uploaded_file($_FILES['file']['tmp_name'], $imagePath);
-			// 画像の向きを正す
-			orientationFixedImage($imagePath, $imagePath);
+			// スマホorタブレットで撮影した写真の向きを正す
+			if($fileType == 'jpg' || $fileType == 'JPG' || $fileType == 'jpeg' || $fileType == 'JPEG'){
+				orientationFixedImage($imagePath, $imagePath);
+			}
 			// 画像拡大縮小+トリミング
 			makeThumbnail($imageName);
+			// jpegに変換
+			if($fileType == 'jpg' || $fileType == 'JPG' || $fileType == 'jpeg' || $fileType == 'JPEG' || $fileType == 'gif' || $fileType == 'GIF'){
+				$imageResource = imagecreatefromstring(file_get_contents($imagePath));
+				imagepng($imageResource, '../Images/Avator/' . $userId . ".png");
+				unlink($imagePath);
+			}
 			// 投稿成功時プロフィール画面へ戻る
-			header('Location: ../profile.php');
+			header('Location: ../myprofile.php');
 			exit;
 		} else {
 			// サイズが6MBを超えていたら
@@ -41,7 +49,7 @@ if(is_uploaded_file($_FILES['file']['tmp_name'])){
 	$res = "fileErr";
 }
 // 投稿失敗時はエラー内容をセットしてプロフィール画面へ戻る
-header('Location: ../profile.php?err=' . $res);
+header('Location: ../myprofile.php?err=' . $res);
 exit;
 
 /**
@@ -133,8 +141,8 @@ function image_rotate($image, $angle, $bgd_color){
 }
 
 /**
- * サムネイル生成 (100x100)
- *  $imageName: サムネイル生成元画像ファイル名
+ *  画像リサイズ (100x100)
+ *  $imageName: 元画像ファイル名
  */
 function makeThumbnail($imageName){
 	// 保存先パス
@@ -147,7 +155,7 @@ function makeThumbnail($imageName){
 	$imginfo = getimagesize( $orgFile );
 	
 	// イメージリソース取得
-	$ImageResource = imagecreatefromjpeg( $orgFile );
+	$ImageResource = imagecreatefromstring(file_get_contents($orgFile));
 	
 	// イメージリソースから、横、縦ピクセルサイズ取得
 	$width  = imagesx( $ImageResource );    // 横幅

@@ -27,8 +27,10 @@ try{
 				$imagePath = '../Images/Upload/' . $imageName;
 				// サイズも拡張子もOKならファイルアップロード
 				move_uploaded_file($_FILES['file']['tmp_name'], $imagePath);
-				// 画像の向きを正す
-				orientationFixedImage($imagePath, $imagePath);
+				// スマホorタブレットで撮影した写真の向きを正す
+				if($fileType == 'jpg' || $fileType == 'JPG' || $fileType == 'jpeg' || $fileType == 'JPEG'){
+					orientationFixedImage($imagePath, $imagePath);
+				}
 				// サムネイル生成
 				makeThumbnail($imageName);
 				// Google Cloud Vision へリクエストし画像認識結果取得
@@ -197,7 +199,7 @@ function makeThumbnail($imageName){
 	$imginfo = getimagesize( $orgFile );
 	
 	// イメージリソース取得
-	$ImageResource = imagecreatefromjpeg( $orgFile );
+	$ImageResource = imagecreatefromstring(file_get_contents($orgFile));
 	
 	// イメージリソースから、横、縦ピクセルサイズ取得
 	$width  = imagesx( $ImageResource );    // 横幅

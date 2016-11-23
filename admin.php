@@ -204,8 +204,8 @@
             foreach($imageArray as $imageRow){
 				$imageName = $imageRow->getImageName();
 				$uploadAvator = "guest.png";
-				if(file_exists("./Images/Avator/" . $uploadUser . ".jpg")){
-					$uploadAvator = $uploadUser . ".jpg";
+				if(file_exists("./Images/Avator/" . $uploadUser . ".png")){
+					$uploadAvator = $uploadUser . ".png";
 				}
         ?>
 			<div class="col s12 m6 l6">
