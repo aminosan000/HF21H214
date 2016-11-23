@@ -26,6 +26,17 @@ img.pointer {
 	cursor: pointer;
 }
 
+.upload_avator {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+}
+
+div.upload_user {
+	padding: 12px 10px 0 10px;
+	font-size: 1.3em;
+}
+
 .brand-logo-font {
   font-family: 'Yesteryear';
 }

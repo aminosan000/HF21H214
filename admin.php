@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="jp">
 <head>
-  <meta charset="UTF-8">
-  <title>インスタグルメ</title>
-  <!-- Import Google Icon Font-->
-  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!-- Import materialize.css-->
-  <link type="text/css" rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
-  <link type="text/css" rel="stylesheet" href="Stylesheet/lity.css"  media="screen,projection">
-  <link type="text/css" rel="stylesheet" href="Stylesheet/Style.css" media="screen,projection">
-  <link type="text/css" rel="stylesheet" href="Stylesheet/jquery-confirm.css"/>
-  <!-- Import JavaScript -->
-  <script src="JavaScript/core.js"></script>
-  <script src="JavaScript/jquery.js"></script>
-  <script src="JavaScript/jquery-confirm.js"></script>
-  <script src="JavaScript/materialize.js"></script>
-  <script src="JavaScript/lity.js"></script>
-  <script src="JavaScript/favorite.js"></script>
-  <script type="text/javascript"><!--
+<meta charset="UTF-8">
+<title>インスタグルメ</title>
+<!-- Import Google Icon Font-->
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- Import materialize.css-->
+<link type="text/css" rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
+<link type="text/css" rel="stylesheet" href="Stylesheet/lity.css"  media="screen,projection">
+<link type="text/css" rel="stylesheet" href="Stylesheet/Style.css" media="screen,projection">
+<link type="text/css" rel="stylesheet" href="Stylesheet/jquery-confirm.css"/>
+<!-- Import JavaScript -->
+<script src="JavaScript/core.js"></script>
+<script src="JavaScript/jquery.js"></script>
+<script src="JavaScript/jquery-confirm.js"></script>
+<script src="JavaScript/materialize.js"></script>
+<script src="JavaScript/lity.js"></script>
+<script src="JavaScript/favorite.js"></script>
+<script type="text/javascript"><!--
 	function deletefunc(obj) {
 		$.confirm({
 			title: '確認',
@@ -64,70 +64,53 @@
 		});
 	}
  --></script>
-  <!--Let browser know website is optimized for mobile-->
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-</head>
-<body>
+ <!--Let browser know website is optimized for mobile-->
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+ </head>
+ <body>
 
 <!-- navbar start -->
 <div class="navbar-fixed">
-  <nav class="navigation orange darken-2" role="navigation">
-    <div class="nav-wrapper container">
-      <a href="./" class="brand-logo white-text left brand-logo-font hide-on-med-and-down">Instagourmet</a>
-      <a href="./" class="brand-logo white-text center brand-logo-font hide-on-large-only">Instagourmet</a>
-
-      <!-- slide-nav mobile-only -->
-      <a href="#" data-activates="slide-nav" class="button-collapse-slidenav hide-on-large-only left"><i class="material-icons white-text">menu</i></a>
-      <ul id="slide-nav" class="side-nav">
-        <a class="right"><i class="material-icons">clear</i></a>
-        <li>
-          <div class="userView">
-            <!--<div class="background">
+	<nav class="navigation orange darken-2" role="navigation">
+		<div class="nav-wrapper container"> <a href="./" class="brand-logo white-text left brand-logo-font hide-on-med-and-down">Instagourmet</a> <a href="./" class="brand-logo white-text center brand-logo-font hide-on-large-only">Instagourmet</a> 
+			
+			<!-- slide-nav mobile-only --> 
+			<a href="#" data-activates="slide-nav" class="button-collapse-slidenav hide-on-large-only left"><i class="material-icons white-text">menu</i></a>
+			<ul id="slide-nav" class="side-nav">
+				<a class="right"><i class="material-icons">clear</i></a>
+				<li>
+					<div class="userView"> 
+						<!--<div class="background">
               <img src="Images/office.jpg">
-            </div>-->
-            <img class="circle" src="Images/guest.png">
-            <span class="black-text name">User Name : 
-            <?php
+            </div>--> 
+						<img class="circle" src="Images/Avator/guest.png"> <span class="black-text name">User Name :
+						<?php
 				if(isset($_SESSION['userId'])){
 					echo h($_SESSION['userId']);
 				}else{
 					echo 'guest';
 				}
             ?>
-            </span>
-          </div>
-        </li>
-        <li>
-          <div class="divider"></div>
-        </li>
-        <li class="nav-position">
-          <a href="./" class="navigation-link"><i class="material-icons">home</i>ホーム</a>
-        </li>
-        <li class="nav-position">
-          <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a>
-        </li>
-        <li class="nav-position">
-          <a href="profile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a>
-        </li>
-      </ul>
-
-      <!-- navigation desktop-only -->
-      <ul class="hide-on-med-and-down right">
-        <li>
-          <a href="./" class="hide-on-med-and-down"><i class="material-icons">home</i></a>
-        </li>
-        <li>
-          <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a>
-        </li>
-        <li>
-          <a href="profile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a>
-        </li>
-      </ul>
-
-    </div>
-  </nav>
-  <script>
+						</span> </div>
+				</li>
+				<li>
+					<div class="divider"></div>
+				</li>
+				<li class="nav-position"> <a href="./" class="navigation-link"><i class="material-icons">home</i>ホーム</a> </li>
+				<li class="nav-position"> <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a> </li>
+				<li class="nav-position"> <a href="myprofile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a> </li>
+			</ul>
+			
+			<!-- navigation desktop-only -->
+			<ul class="hide-on-med-and-down right">
+				<li> <a href="./" class="hide-on-med-and-down"><i class="material-icons">home</i></a> </li>
+				<li> <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a> </li>
+				<li> <a href="myprofile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a> </li>
+			</ul>
+		</div>
+	</nav>
+	<script>
     // Mobile
     $('.button-collapse-slidenav').sideNav({
           menuWidth: 305, // Default is 240
@@ -136,51 +119,44 @@
           draggable: true // Choose whether you can drag to open on touch screens
         }
     );
-  </script>
+  </script> 
 </div>
 <!-- navbar end -->
 
-<main>
-  <br>
-  <div class="container">
-    <div class="row">
-      <div class="col s12 m12 l6 center">
-        <img class="circle" src="Images/Avator/guest.png" alt="">
-      </div>
-      <div class="col s12 m12 l6">
-        <div class="card small white">
-          <div class="card-content">
-            <span class="card-title">ADMINISTRATION</span><br>
-            <!--
+<main> <br>
+	<div class="container">
+		<div class="row">
+			<div class="col s12 m12 l6 center"> <img class="circle" src="Images/Avator/guest.png" alt=""> </div>
+			<div class="col s12 m12 l6">
+				<div class="card small white">
+					<div class="card-content"> <span class="card-title">ADMINISTRATION</span><br>
+						<!--
             <button class="waves-effect waves-light btn-flat dropdown-button right" data-activates='dropdown-desktop'>
               詳細を表示する
             </button>
             <ul id='dropdown-desktop' class='dropdown-content'>
               <li><a class="grey-text" href="#!">ユーザ情報変更</a></li>
             </ul>
-            -->
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 今までの投稿 開始 -->
-    <div class="row">
-     <form method="get" action="./admin.php">
-        <div class="card-content">
-          <div class="input-field">
-            <label for="word center">検索ワードを入力</label>
-            <input id="word" type="text" class="validate" class="validate" name="word" maxlength="40" value="">
-          </div>
-        </div>
-        <div class="card-action center">
-             <button class="waves-effect waves-light btn-large orange darken-2" type="submit">
-                <i class="material-icons left">search</i>検索
-             </button>
-        </div>
-      </form>
-    
-        <?php
+            --> 
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 今までの投稿 開始 -->
+		<div class="row">
+			<form method="get" action="./admin.php">
+				<div class="card-content">
+					<div class="input-field">
+						<label for="word center">検索ワードを入力</label>
+						<input id="word" type="text" class="validate" class="validate" name="word" maxlength="40" value="">
+					</div>
+				</div>
+				<div class="card-action center">
+					<button class="waves-effect waves-light btn-large orange darken-2" type="submit"> <i class="material-icons left">search</i>検索 </button>
+				</div>
+			</form>
+			<?php
             require_once('./php/Image.class.php');
             require_once('./php/ImageDao.class.php');
             require_once('./php/Comment.class.php');
@@ -227,33 +203,35 @@
             $cnt = 1;
             foreach($imageArray as $imageRow){
 				$imageName = $imageRow->getImageName();
+				$uploadAvator = "guest.png";
+				if(file_exists("./Images/Avator/" . $uploadUser . ".jpg")){
+					$uploadAvator = $uploadUser . ".jpg";
+				}
         ?>
-      
-      <div class="col s12 m6 l6">
-        <div class="card sticky-action hoverable z-depth-1">
-          <div class="card-image">
-            <a href="./Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="./Images/Thumbnail/<?=$imageName?>"></a>
-          </div>
-          <div class="card-content">
-            <!--<div class="center">-->
-              <!--<span class="activator">-->
-                <span class="card-title activator black-text">
-                  <!-- 料理名は一行で収まるように -->
-                  @<?=$imageRow->getUserId()?>
-                <!--</span>-->
-                <i class="material-icons right">more_vert</i>
-              </span>
-            <!--</div>-->
-          </div>
-          <div class="card-reveal">
-            <span class="card-title">
-              <span class="black-text">photo by <?=$imageRow->getUserId()?></span>
-              <i class="material-icons right">close</i>
-              <!-- 料理の詳細は以降に記述 -->
-            </span>
-              <p><?=$imageRow->getUploadDate()?></p>
-              <p>カテゴリ:
-			  <?php
+			<div class="col s12 m6 l6">
+				<div class="card sticky-action hoverable z-depth-1">
+					<div class="card-image"> <a href="./Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="./Images/Thumbnail/<?=$imageName?>"></a> </div>
+					<div class="card-content">
+						<span class="card-title activator"><i class="material-icons right">keyboard_arrow_up</i></span>
+						<a href="./profile.php?profId=<?=$uploadUser?>">
+							<img class="upload_avator left" src="./Images/Avator/<?=$uploadAvator?>">
+							<div class="upload_user left">
+								<span class="black-text"><?=$uploadUser?></span>
+							</div>
+						</a>
+						<div class="clearfix"></div>
+					</div>
+					<div class="card-reveal"><span class="card-title"><i class="material-icons right">keyboard_arrow_down</i></span>
+						<a href="./profile.php?profId=<?=$uploadUser?>">
+							<img class="upload_avator left" src="./Images/Avator/<?=$uploadAvator?>">
+							<div class="upload_user left">
+								<span class="black-text"><?=$uploadUser?></span>
+							</div>
+						</a>
+						<div class="clearfix"></div>
+						<p><?=$imageRow->getUploadDate()?></p>
+						<p>カテゴリ:
+							<?php
 			  	$categories = preg_split("/[#]+/", $imageRow->getCategory(), -1, PREG_SPLIT_NO_EMPTY);
 				$cnt2 = 1;
               	foreach($categories as $category){
@@ -264,8 +242,8 @@
 					$cnt2++;
 				}
 			  ?>
-              </p>
-            <?php
+						</p>
+						<?php
 				if(isset($commentArray[$imageName])){
 					echo "<p>コメント<br>";
 					$oneImageComment = $commentArray[$imageName];
@@ -276,18 +254,16 @@
 					echo "<p>コメントなし";
 				}
 			?>
-            <img class="right pointer" onclick="deletefunc(this)" data-imagename=<?=$imageName?> src="./Images/trash.png">
-          </div>
-        </div>
-      </div>
-	<?php
+						<img class="right pointer" onclick="deletefunc(this)" data-imagename=<?=$imageName?> src="./Images/trash.png"> </div>
+				</div>
+			</div>
+			<?php
 		$cnt++;
 		}
     ?>
-    </div>
-        <div class="center">
-            <ul class="pagination">
-            
+		</div>
+		<div class="center">
+			<ul class="pagination">
 				<?php
 					$wordQuery = "";
 					if(isset($word)){
@@ -314,22 +290,17 @@
 					";
 					}
                 ?>
-        
-          </ul>
-      </div>
-  </div>
+			</ul>
+		</div>
+	</div>
 </main>
-
-<div class="fixed-action-btn hide-on-large-only">
-  <a class="btn-floating btn-large orange">
-    <i class="large material-icons">mode_edit</i>
-  </a>
-  <ul>
-    <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
-    <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
-    <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
-    <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
-  </ul>
+<div class="fixed-action-btn hide-on-large-only"> <a class="btn-floating btn-large orange"> <i class="large material-icons">mode_edit</i> </a>
+	<ul>
+		<li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+		<li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+		<li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+		<li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+	</ul>
 </div>
 
 <!--
