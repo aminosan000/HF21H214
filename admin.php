@@ -203,6 +203,7 @@
             $cnt = 1;
             foreach($imageArray as $imageRow){
 				$imageName = $imageRow->getImageName();
+				$uploadUser = $imageRow->getUserId();
 				$uploadAvator = "guest.png";
 				if(file_exists("./Images/Avator/" . $uploadUser . ".png")){
 					$uploadAvator = $uploadUser . ".png";
