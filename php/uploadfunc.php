@@ -6,6 +6,7 @@ require_once('CommentDao.class.php');
 require_once('DaoFactory.class.php');
 require_once('secureFunc.php');
 require_once('cvFunc.php');
+require_once('translateFunc.php');
 date_default_timezone_set('Asia/Tokyo');
 
 session_start();
@@ -37,7 +38,8 @@ try{
 				$cvArray = cvRequest($imageName);
 				// セーフサーチの結果が問題なければ
 				if($cvArray["adult"] == "UNKNOWN" || $cvArray["adult"] == "VERY_UNLIKELY" || $cvArray["adult"] == "UNLIKELY" and $cvArray["violence"] == "UNKNOWN" || $cvArray["violence"] == "VERY_UNLIKELY" || $cvArray["violence"] == "UNLIKELY"){
-					$category = $cvArray["category"];
+					// Microsoft Transrate へリクエストしカテゴリ名を翻訳
+					$category = translator($cvArray["category"]);
 					// DBへ登録
 					$image = new Image();
 					$image->setImageName($imageName);

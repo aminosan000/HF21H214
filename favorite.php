@@ -152,10 +152,10 @@
 						<p><?=$imageRow->getUploadDate()?></p>
 						<p>カテゴリ:
 							<?php
-			  	$categories = preg_split("/[#]+/", $imageRow->getCategory(), -1, PREG_SPLIT_NO_EMPTY);
+			  	$categories = preg_split("/#|、+/", $imageRow->getCategory(), -1, PREG_SPLIT_NO_EMPTY);
 				$cnt2 = 1;
               	foreach($categories as $category){
-					echo "<a href='./?word=%23" . $category . "'>#" . $category . "</a>";
+					echo "<a href='./?word=" . $category . "'>#" . $category . "</a>";
 					if($cnt2 < count($categories)){
 						echo ", ";
 					}

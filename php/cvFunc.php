@@ -80,7 +80,7 @@ function cvRequest($imageName){
 	$violence = $resArray["responses"][0]["safeSearchAnnotation"]["violence"];
 	
 	foreach($resArray['responses'][0]["labelAnnotations"] as $label){
-		$category .= " #" . $label["description"];
+		$category .= $label["description"] . ",";
 	}
 	
 	$array["category"] = $category;
