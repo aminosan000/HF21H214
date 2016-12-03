@@ -15,13 +15,7 @@ conn.onopen = function(e) {
 conn.onmessage = function(e) {
     console.log(e.data);
 	var obj = document.getElementById("video");
-	if(obj.getAttribute("src") == "./movie/sakana.mp4"){
-		obj.setAttribute("src", "./movie/sushi.mp4");
-	}else if(obj.getAttribute("src") == "./movie/sushi.mp4"){
-		obj.setAttribute("src", "./movie/beff.mp4");
-	}else{
-		obj.setAttribute("src", "./movie/sakana.mp4");
-	}
+	obj.setAttribute("src", "./movie/" + e.data + ".mp4");
 };
 --></script>
 <video id="video" src="./movie/sushi.mp4" preload="auto" autoplay loop width="100%"></video>

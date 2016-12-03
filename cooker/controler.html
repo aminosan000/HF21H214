@@ -17,10 +17,12 @@ conn.onmessage = function(e) {
     alert(e.data);
 };
 
-function s(){
-	conn.send('Hello World!');
+function send(obj){
+	conn.send(obj.getAttribute("id"));
 }
 </script>
-<button id="send-btn" onclick="s()">動画切替</button>
+<button id="sakana" onclick="send(this)">さかな</button><br>
+<button id="sushi" onclick="send(this)">すし</button><br>
+<button id="beff" onclick="send(this)">にく</button><br>
 </body>
 </html>
