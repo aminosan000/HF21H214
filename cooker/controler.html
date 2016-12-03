@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>操作画面</title>
+</head>
+
+<body>
+<script>
+var conn = new WebSocket('ws://gunmetal.sakura.ne.jp:8080');
+conn.onopen = function(e) {
+    console.log("Connection established!");
+};
+
+conn.onmessage = function(e) {
+    console.log(e.data);
+    alert(e.data);
+};
+
+function s(){
+	conn.send('Hello World!');
+}
+</script>
+<button id="send-btn" onclick="s()">動画切替</button>
+</body>
+</html>
