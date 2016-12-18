@@ -96,17 +96,17 @@
 				</li>
 				<li>
 					<div class="divider"></div>
-				</li>
+				</li><!--
 				<li class="nav-position"> <a href="./" class="navigation-link"><i class="material-icons">home</i>ホーム</a> </li>
 				<li class="nav-position"> <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a> </li>
-				<li class="nav-position"> <a href="myprofile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a> </li>
+				<li class="nav-position"> <a href="myprofile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a> </li>-->
 			</ul>
 			
 			<!-- navigation desktop-only -->
-			<ul class="hide-on-med-and-down right">
+			<ul class="hide-on-med-and-down right"><!--
 				<li> <a href="./" class="hide-on-med-and-down"><i class="material-icons">home</i></a> </li>
 				<li> <a href="upload.php" class="hide-on-med-and-down"><i class="material-icons">photo_camera</i></a> </li>
-				<li> <a href="myprofile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a> </li>
+				<li> <a href="myprofile.php" class="hide-on-med-and-down"><i class="material-icons">account_circle</i></a> </li>-->
 			</ul>
 		</div>
 	</nav>

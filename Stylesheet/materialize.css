@@ -2949,9 +2949,9 @@ ul.staggered-list li {
 }
 
 footer.page-footer {
-  margin-top: 20px;
+  margin-top: 0;
   padding-top: 20px;
-  background-color: #ee6e73;
+  background-color: #f0f0f0;
 }
 
 footer.page-footer .footer-copyright {
@@ -5001,6 +5001,15 @@ small {
   border-radius: 0;
 }
 
+.btn-floating.btn-superlarge {
+  width: 100px;
+  height: 100px;
+}
+
+.btn-floating.btn-superlarge i {
+  line-height: 100px;
+}
+
 .btn-floating.btn-large {
   width: 55.5px;
   height: 55.5px;
@@ -5033,8 +5042,8 @@ button.btn-floating {
 
 .fixed-action-btn.horizontal ul {
   text-align: right;
-  right: 64px;
-  top: 50%;
+  right: 104px;
+  top: 60%;
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%);
   height: 100%;

@@ -18,10 +18,10 @@ function favoritefunc(obj){
 		if(data == "success"){
 			if(condition == "false"){
 				obj.setAttribute("data-condition", "true");
-				obj.setAttribute("src", "Images/favorite_true.png");
+				obj.innerHTML = "<i class=\"material-icons red-text text-darken-1 md-24\">favorite</i>";
 			}else if(condition == "true"){
 				obj.setAttribute("data-condition", "false");
-				obj.setAttribute("src", "Images/favorite_false.png");
+				obj.innerHTML = "<i class=\"material-icons red-text text-darken-1 md-24\">favorite_border</i>";
 			}
 		}
 		return false;
