@@ -24,13 +24,39 @@
 <link type="text/css" rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/lity.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/balloon.css"  media="screen,projection">
+<link type="text/css" rel="stylesheet" href="Stylesheet/jquery-confirm.css"/>
 <link type="text/css" rel="stylesheet" href="Stylesheet/Style.css" media="screen,projection">
 <!-- Import JavaScript -->
 <script src="JavaScript/core.js"></script>
 <script src="JavaScript/jquery.js"></script>
+<script src="JavaScript/jquery-confirm.js"></script>
 <script src="JavaScript/materialize.js"></script>
 <script src="JavaScript/lity.js"></script>
 <script src="JavaScript/favorite.js"></script>
+<script type="text/javascript"><!--
+	function confirmfunc() {
+		$.confirm({
+			title: '',
+			content: 'ログインするとお気に入りに登録できます',
+			boxWidth: '30%',
+			opacity: 0.5,
+			buttons: {
+				deleteimage: {
+					text: 'ログイン',
+					btnClass: 'btn-orange',
+					action: function () {
+						location.href = "./login.php";
+					}
+				},
+				cancel: {
+					text: 'キャンセル',
+					action: function () {
+					}
+				}
+			}
+		});
+	}
+ --></script>
 <!--Let browser know website is optimized for mobile-->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -187,10 +213,20 @@
 							if($condition == 'false'){
 								$favorite = "favorite_border";
 							}
+							if($userId == "guest"){
+						?>
+						<button class="btn-flat waves-effect waves-light" onclick="confirmfunc()">
+						<i class="material-icons red-text text-darken-1 md-24">favorite_border</i>
+					  </button>
+					  <?php
+							}else{
 						?>
 					  <button class="btn-flat waves-effect waves-light" onclick="favoritefunc(this)" data-condition="<?=$condition?>" data-imagename="<?=$imageName?>">
 						<i class="material-icons red-text text-darken-1 md-24"><?=$favorite?></i>
 					  </button>
+					  <?php
+							}
+						?>
 					  <button data-target="modal-comment<?=$cnt?>" class="btn-flat waves-effect waves-light modal-trigger">
 						<i class="material-icons teal-text text-darken-1 md-24">comment</i>
 					  </button>
