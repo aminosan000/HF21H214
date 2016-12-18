@@ -41,6 +41,15 @@ p.err_text {
   border-radius: 50%;
 }
 
+.fixed-action-btn-mobile {
+  position: fixed;
+  right: 3px;
+  bottom: 3px;
+  padding-top: 15px;
+  margin-bottom: 0;
+  z-index: 998;
+}
+
 div.upload_user {
 	padding: 12px 10px 0 10px;
 	font-size: 1.3em;

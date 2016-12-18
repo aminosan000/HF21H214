@@ -188,11 +188,6 @@
             </div>
           </nav>
         </div>
-        <div class="row">
-          <div class="center">
-            <button class="btn-flat waves-effect waves-light"><i class="material-icons left">done</i>検索する</button>
-          </div>
-        </div>
       </div>
     </div>
 

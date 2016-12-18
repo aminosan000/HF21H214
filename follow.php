@@ -270,7 +270,14 @@ function followfunc(obj){
 			</div>
 		</div>
 	</div>
-  <div class="fixed-action-btn">
+  <!-- for Desktop and Tablet -->
+  <div class="fixed-action-btn hide-on-small-only">
+    <a class="btn-floating btn-superlarge orange darken-2" href="./upload.php">
+      <i class="material-icons md-48">photo_camera</i>
+    </a>
+	</div>
+	<!-- for Mobile -->
+  <div class="fixed-action-btn-mobile hide-on-med-and-up">
     <a class="btn-floating btn-superlarge orange darken-2" href="./upload.php">
       <i class="material-icons md-48">photo_camera</i>
     </a>
@@ -314,11 +321,6 @@ function followfunc(obj){
               </form>
             </div>
           </nav>
-        </div>
-        <div class="row">
-          <div class="center">
-            <button class="btn-flat waves-effect waves-light"><i class="material-icons left">done</i>検索する</button>
-          </div>
         </div>
       </div>
     </div>
