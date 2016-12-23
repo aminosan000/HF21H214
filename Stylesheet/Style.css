@@ -83,6 +83,14 @@ p.follow {
   font-family: 'Yesteryear';
 }
 
+nav.cook {
+  background-color: #b71c1c;
+}
+
+.red-btn {
+	background-color: #e53935;
+}
+
 .navigation {
   display: -webkit-flex;
   display: -ms-flexbox;

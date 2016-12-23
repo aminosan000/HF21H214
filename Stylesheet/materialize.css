@@ -4658,7 +4658,7 @@ small {
 }
 
 .card .card-content {
-  padding: 20px;
+  padding: 14px 10px 10px 16px;
   border-radius: 0 0 2px 2px;
 }
 
@@ -4675,7 +4675,7 @@ small {
   position: relative;
   background-color: inherit;
   border-top: 1px solid rgba(160, 160, 160, 0.2);
-  padding: 20px;
+  padding: 10px;
 }
 
 .card .card-action a:not(.btn):not(.btn-large):not(.btn-floating) {
@@ -4798,7 +4798,7 @@ small {
   position: relative;
   overflow-x: auto;
   overflow-y: hidden;
-  height: 48px;
+  height: 64px;
   background-color: #fff;
   margin: 0 auto;
   width: 100%;
@@ -4813,8 +4813,8 @@ small {
   display: block;
   float: left;
   text-align: center;
-  line-height: 48px;
-  height: 48px;
+  line-height: 64px;
+  height: 64px;
   padding: 0;
   margin: 0;
   text-transform: uppercase;
@@ -4848,7 +4848,7 @@ small {
   position: absolute;
   bottom: 0;
   height: 2px;
-  background-color: #f6b2b5;
+  background-color: #f0f0f0;
   will-change: left, right;
 }
 
