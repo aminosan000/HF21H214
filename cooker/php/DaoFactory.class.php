@@ -22,5 +22,8 @@ class DaoFactory{
 	public function createFollowDao(){
 		return new FollowDao($this->dsn, $this->user, $this->password);
 	}
+	public function createHistoryDao(){
+		return new HistoryDao($this->dsn, $this->user, $this->password);
+	}
 }
 ?>

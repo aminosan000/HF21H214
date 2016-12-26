@@ -52,7 +52,7 @@ class ImageDao{
 	public function random(){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
-			foreach($dbh->query('SELECT * FROM Image ORDER BY RAND() LIMIT 4') as $row) {
+			foreach($dbh->query('SELECT * FROM Image ORDER BY RAND() LIMIT 1') as $row) {
 				// 取り出したデータをクラスインスタンスの配列に入れる
 				$image = new Image();
 				$image->setImageName($row['ImageName']);

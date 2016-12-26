@@ -15,6 +15,12 @@
 <html lang="jp">
 <head>
 <meta charset="UTF-8">
+<!-- WebAppモード -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<!-- アイコン -->
+<link rel="shortcut icon" sizes="196x196" href="icon.png">
+<link rel="apple-touch-icon" sizes="144x144" href="apple-icon.png">
 <title>インスタグルメ</title>
 <!-- Import Google Icon Font-->
 <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -36,7 +42,7 @@
   <div class="navbar-fixed z-depth-0">
     <nav class="nav-extended">
       <div class="nav-wrapper red darken-4">
-	  	<a class="brand-logo white-text brand-logo-font center" href="./login.php">Instagourmet</a>
+	  	<a class="brand-logo white-text brand-logo-font center" href="./login.php">Bistro Instagourmet</a>
       </div>
     </nav>
   </div>

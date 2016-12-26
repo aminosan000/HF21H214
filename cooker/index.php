@@ -6,6 +6,8 @@
 	require_once('./php/CommentDao.class.php');
 	require_once('./php/Favorite.class.php');
 	require_once('./php/FavoriteDao.class.php');
+	require_once('./php/History.class.php');
+	require_once('./php/HistoryDao.class.php');
 	require_once('./php/DaoFactory.class.php');
 	
 	ini_set("display_errors", 1);
@@ -30,6 +32,12 @@
 <html lang="jp">
 <head>
 <meta charset="UTF-8">
+<!-- WebAppモード -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<!-- アイコン -->
+<link rel="shortcut icon" sizes="196x196" href="icon.png">
+<link rel="apple-touch-icon" sizes="144x144" href="apple-icon.png">
 <title>インスタグルメ</title>
 <!-- Import Google Icon Font-->
 <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -44,26 +52,41 @@
 <script src="JavaScript/materialize.js"></script>
 <script src="JavaScript/lity.js"></script>
 <script src="JavaScript/favorite.js"></script>
-<style>
-.iframe-content {
-    position: relative;
-    width: 100%;
-    padding: 100% 0 0 0;
+<script src="JavaScript/ajax.js"></script>
+<script>
+// ホログラム再生用ソケット
+var conn = new WebSocket('ws://localhost:8080');
+conn.onopen = function(e) {
+    console.log("Connection established!");
+};
+conn.onmessage = function(e) {
+    console.log(e.data);
+};
+
+// 調理確定時
+function cookfunc(obj){
+	var imageName = obj.getAttribute("data-imagename");
+	conn.send(obj.getAttribute("id"));
+	historyfunc(imageName);
 }
-.iframe-content iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+
+//調理ボタン押下時
+function foodfunc(obj){
+	var imagename =  obj.getAttribute("data-imagename");
+	var node = document.getElementById("modal1");
+	node.children[0].innerHTML = "<h5>この料理を作りますか？</h5>";
+	node.children[1].innerHTML = "<a class=\"modal-action modal-close waves-effect waves-light btn-flat\">キャンセル</a><a class=\"waves-effect waves-red btn-flat red-btn\" onclick=\"cookfunc(this)\" data-imagename=\"" + imagename + "\" id=\"sushi\">作る</a>";
 }
-</style>
+
+function closefunc(){
+	$('#modal1').closeModal();
+}
+</script>
 <!--Let browser know website is optimized for mobile-->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
-
 <!-- Navbar goes here -->
 <header id="header">
 
@@ -90,36 +113,24 @@
     <div class="row">
       <div id="home" class="col s12">
         <h4>今日のおすすめ料理</h4>
-        <div class="slider">
-          <ul class="slides">
+        <div class="center">
 		  <?php
 			$daoFactory = DaoFactory::getDaoFactory();
 			$dao = $daoFactory->createImageDao();
 			$imageArray = $dao->random();
-	
-			foreach($imageArray as $imageRow){
-				$imageName = $imageRow->getImageName();
+			
+			$imageName = $imageArray[0]->getImageName();
 		  ?>
-            <li>
-			<a data-target="modal1" class="modal-trigger" href="">
-              <img class="responsive-img" src="../Images/Thumbnail/<?=$imageName?>" alt="">
-              <div class="caption left-align">
-              </div>
-			  </a>
-            </li>
-			<?php
-				}
-			?>
-          </ul>
-        </div>
-        <script>
-            $(document).ready(function(){
-                $('.slider').slider({
-                    Indicators: true
-                });
-            });
-        </script>
-
+			<a data-target="modal1" data-imagename="<?=$imageName?>" class="modal-trigger" onclick="foodfunc(this)" href="">
+				<img class="responsive-img" src="../Images/Thumbnail/<?=$imageName?>" alt="">
+			</a>
+        </div><br>
+		<div class="valign-wrapper">
+			<div class="col s8">
+				<div class="arrow_box_left z-depth-1">今日のあなたへのオススメはこれです<br><br></div>
+			</div>
+			<div class="col s4"><img src="../Images/chef.png"></div>
+		</div>
       </div>
     <div id="cook" class="col s12"><h4>料理一覧</h4>
 		<div class="container">
@@ -140,11 +151,9 @@
 					}
 					$dao = $daoFactory->createCommentDao();
 					$commentArray = $dao->select();
-					if(isset($_SESSION['userId'])){
-						$userId = h($_SESSION['userId']);
-						$dao = $daoFactory->createFavoriteDao();
-						$favoriteArray = $dao->select($userId);
-					}
+					$dao = $daoFactory->createFavoriteDao();
+					$favoriteArray = $dao->select($userId);
+						
 					$cnt = 1;
 					foreach($imageArray as $imageRow){
 						$imageName = $imageRow->getImageName();
@@ -181,21 +190,11 @@
 								if($condition == 'false'){
 									$favorite = "favorite_border";
 								}
-								if($userId == "guest"){
-							?>
-							<button class="btn-flat waves-effect waves-light" onclick="confirmfunc()">
-							<i class="material-icons red-text text-darken-1 md-36">favorite_border</i>
-						  </button>
-						  <?php
-								}else{
 							?>
 						  <button class="btn-flat waves-effect waves-light" onclick="favoritefunc(this)" data-condition="<?=$condition?>" data-imagename="<?=$imageName?>">
 							<i class="material-icons red-text text-darken-1 md-36"><?=$favorite?></i>
 						  </button>
-						  <?php
-								}
-							?>
-						  <button data-target="modal1" class="btn-flat waves-effect waves-light modal-trigger">
+						  <button data-target="modal1" data-imagename="<?=$imageName?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="foodfunc(this)"  >
 							<i class="material-icons orange-text text-darken-1 md-24">restaurant</i>
 						  </button>
 						  <button data-target="modal-comment<?=$cnt?>" class="btn-flat waves-effect waves-light modal-trigger">
@@ -271,7 +270,7 @@
 						<div class="divider"></div>
 					
 						<div class="modal-footer">
-						  <button href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat right">閉じる</button>
+						  <button class=" modal-action modal-close waves-effect waves-green btn-flat right">閉じる</button>
 						</div>
 					</div><!-- class modal-comment end -->
 				<?php
@@ -312,68 +311,173 @@
 		</div>
 	</div>
 	<div id="favorite" class="col s12"><h4>お気に入り</h4>
-		<div class="container">
-			<div class="row">
+	<div class="container">
+		<div class="row">
+			<?php
+				$pageNum = 0;
+				if(isset($_GET['pageNum'])){
+					$pageNum = $_GET['pageNum'];
+				}
+				$dao = $daoFactory->createImageDao();
+				$imageArray = $dao->favoriteSelect($userId, $pageNum);
+				$rowCount = $dao->favoriteRows($userId);
+				echo "<div class='center'>お気に入り" . $rowCount . "件</div>";
+				$dao = $daoFactory->createCommentDao();
+				$commentArray = $dao->select();
+				$dao = $daoFactory->createFavoriteDao();
+				$favoriteArray = $dao->select($userId);
+				
+				$cnt = 1;
+				foreach($imageArray as $imageRow){
+					$imageName = $imageRow->getImageName();
+					$uploadUser = $imageRow->getUserId();
+					$uploadAvator = "guest.png";
+					if(file_exists("./Images/Avator/" . $uploadUser . ".png")){
+						$uploadAvator = $uploadUser . ".png";
+					}
+			?>
 				  <div class="col s12">
 					<div class="card">
 					  <div class="card-content">
 						<div class="valign-wrapper">
 							<div class="col s2">
-								<img class="upload_avator" src="../Images/Avator/guest.png">
+								<img class="upload_avator" src="../Images/Avator/<?=$uploadAvator?>">
 							</div>
 							<div class="col s10">
 								<span class="black-text">
-								<p>guest</p>
-								<p>2016-12-12 01:23:11</p></span>
+								<p><?=$uploadUser?></p>
+								<p><?=$imageRow->getUploadDate()?></p></span>
 							</div>
 						</div>
 					  </div>
 					  <div class="card-image"> <a href="../Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="../Images/Thumbnail/<?=$imageName?>"></a> </div>
 					  <div class="card-action">
 						<div class="center">
-						  <button class="btn-flat waves-effect waves-light" onclick="favoritefunc(this)" data-condition="true" data-imagename="<?=$imageName?>">
-							<i class="material-icons red-text text-darken-1 md-36">favorite</i>
+							<?php
+								if(isset($favoriteArray[$imageName])){
+									$condition = 'true';
+								}else{
+									$condition = 'false';
+								}
+								$favorite = "favorite";
+								if($condition == 'false'){
+									$favorite = "favorite_border";
+								}
+							?>
+						  <button class="btn-flat waves-effect waves-light" onclick="favoritefunc(this)" data-condition="<?=$condition?>" data-imagename="<?=$imageName?>">
+							<i class="material-icons red-text text-darken-1 md-36"><?=$favorite?></i>
 						  </button>
-						  <button data-target="modal1" class="btn-flat waves-effect waves-light modal-trigger">
+						  <button data-target="modal1" data-imagename="<?=$imageName?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="foodfunc(this)"  >
 							<i class="material-icons orange-text text-darken-1 md-24">restaurant</i>
 						  </button>
-						  <button data-target="modal-comment0" class="btn-flat waves-effect waves-light modal-trigger">
+						  <button data-target="modal-favorite-comment<?=$cnt?>" class="btn-flat waves-effect waves-light modal-trigger">
 							<i class="material-icons teal-text text-darken-1 md-36">list</i>
 						  </button>
 						</div>
 					  </div>
 					</div>
 				</div>
-					<div id="modal-comment0" class="modal">
+					  <div id="modal-favorite-comment<?=$cnt?>" class="modal">
 						<div class="modal-content">
-							<div class="container">
-								<div class="row">
-									<div class="col s9">
-										<div class="iframe-content">
-											<iframe src="chart.html" frameborder=0>
-												iframe 対応のブラウザをご利用ください。
-											</iframe>
-										</div>
-									</div>
-									<div class="col s3">
-										<p>カテゴリ<br>
-											<a href="./?word=にく">#にく</a><br>
-										</p>
-									</div>
-									<div class="divider"></div>
-									<p>コメントなし</p>
-								</div>
+						  <div class="container">
+							<div class="row"><div class="col s9">
+					<div class="iframe-content">
+						<iframe src="chart.html" frameborder=0>
+							iframe 対応のブラウザをご利用ください。
+						</iframe>
+						 </div>
+						 </div>
+							  <div class="col s3">
+							<p>カテゴリ<br>
+								<?php
+									// カテゴリ一覧表示
+									$categories = preg_split("/#|、+/", $imageRow->getCategory(), -1, PREG_SPLIT_NO_EMPTY);
+									$cnt2 = 1;
+									foreach($categories as $category){
+										echo "<a href='./?word=" . $category . "'>#" . $category . "</a>";
+										if($cnt2 < count($categories)){
+											echo "<br>";
+										}
+										$cnt2++;
+									}
+								  ?>
+							</p>
 							</div>
+							<div class="divider"></div>
+							<?php
+								// コメント一覧表示
+								if(isset($commentArray[$imageName])){
+									echo "<p>コメント</p>";
+									$oneImageComment = $commentArray[$imageName];
+									foreach($oneImageComment as $commentRow){
+										$commentUser = $commentRow->getUserId();
+										$commentAvator = "guest.png";
+										if(file_exists("../Images/Avator/" . $commentUser . ".png")){
+											$commentAvator = $commentUser . ".png";
+										}
+							?>
+							  <!-- コメント１件分ここから -->
+								<div class="row">
+									<a href="./profile.php?profId=<?=$commentUser?>">
+											<div class="col s2">
+												<img class="upload_avator" src="../Images/Avator/<?=$commentAvator?>">
+											</div>
+									</a>
+									<div class="col s10">
+										<span class="black-text">
+											<p><?=$commentRow->getComment()?></p>
+										</span>
+									</div>
+								</div>
+							  <!-- コメント１件分はここまで -->
+							<?php
+									}
+								}else{
+									echo "<p>コメントなし</p>";
+								}
+							?>
+								</div>
+						  </div>
 						</div>
-						
+					
 						<div class="divider"></div>
-						
+					
 						<div class="modal-footer">
-						  <button href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat right">閉じる</button>
+						  <button class=" modal-action modal-close waves-effect waves-green btn-flat right">閉じる</button>
 						</div>
 					</div><!-- class modal-comment end -->
-			</div>
-	  </div>
+			<?php
+				$cnt++;
+				}
+			?>
+		</div>
+		<div class="center">
+			<ul class="pagination">
+				<?php
+					if($pageNum == 0){
+						echo "<li class='disabled'><i class='material-icons'>chevron_left</i></li>";
+					}else{
+						echo "<li class='waves-effect'><a href='./favorite.php?pageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
+					}
+					for($count = 0; $count < ceil($rowCount / 12); $count++){
+						if($count == $pageNum){
+							echo "<li class='active orange'>";
+						}else{
+							echo "<li class='waves-effect'>";
+						}
+						echo "<a href='./favorite.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
+					}
+					if($pageNum >= ceil($rowCount / 12) - 1){
+						echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
+					";
+					}else{
+						echo "<li class='waves-effect'><a href='./favorite.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
+					";
+					}
+                ?>
+			</ul>
+		</div>
+	</div>
 	</div>
     <div id="history" class="col s12"><h4>履歴</h4>
 		<div class="card">
@@ -381,6 +485,10 @@
 				<div class="row">
 					<div class="col s6">
 						<div class="iframe-content"> 
+						<?php
+							$dao = $daoFactory->createHistoryDao();
+							$historyArray = $dao->select($userId);
+						?>
 							<iframe src="chart.html"frameborder=0>
 								この部分は iframe 対応のブラウザで見てください。
 							</iframe>	
@@ -406,29 +514,22 @@
 				</div>
 			</div>
 		</div>
-			<div class="row">
-				  <div class="col s6">
-					<div class="card">
-					  <div class="card-image"> <a href="../Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="../Images/Thumbnail/<?=$imageName?>"></a> </div>
-					</div>
-				</div>
-				  <div class="col s6">
-					<div class="card">
-					  <div class="card-image"> <a href="../Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="../Images/Thumbnail/<?=$imageName?>"></a> </div>
-					</div>
-				</div>
-				  <div class="col s6">
-					<div class="card">
-					  <div class="card-image"> <a href="../Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="../Images/Thumbnail/<?=$imageName?>"></a> </div>
-					</div>
-				</div>
-				  <div class="col s6">
-					<div class="card">
-					  <div class="card-image"> <a href="../Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="../Images/Thumbnail/<?=$imageName?>"></a> </div>
+		<div class="row">
+			<?php
+				$cnt = 1;
+				foreach($historyArray as $imageRow){
+					$imageName = $imageRow->getImageName();
+			?>
+			  <div class="col s6">
+				<div class="card">
+					<div class="card-image">
+						<a href="../Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="../Images/Thumbnail/<?=$imageName?>"></a>
+						<span class="card-title"><?=$cnt?>回前</span>
 					</div>
 				</div>
 			</div>
-	  
+		<?php $cnt++; } ?>
+		</div>
 	</div>
 		<div id="profile" class="col s12"><h4>プロフィール</h4>
 			<div class="valign-wrapper">
@@ -439,7 +540,7 @@
 					</div>
 				</div>
 				<div class="col s9">
-					<div class="arrow_box z-depth-1 center row">
+					<div class="arrow_box_right z-depth-1 center row">
 						<div class="col s3">
 							年齢<br>好きなもの<br>嫌いなもの<br>アレルギー
 						</div>
@@ -460,7 +561,7 @@
 					</div>
 				</div>
 				<div class="col s9">
-					<div class="arrow_box z-depth-1 center row">
+					<div class="arrow_box_right z-depth-1 center row">
 						<div class="col s3">
 							年齢<br>好きなもの<br>嫌いなもの<br>アレルギー
 						</div>
@@ -481,7 +582,7 @@
 					</div>
 				</div>
 				<div class="col s9">
-					<div class="arrow_box z-depth-1 center row">
+					<div class="arrow_box_right z-depth-1 center row">
 						<div class="col s3">
 							年齢<br>好きなもの<br>嫌いなもの<br>アレルギー
 						</div>
@@ -538,7 +639,7 @@
     <div class="divider"></div>
 
     <div class="modal-footer">
-      <button href="#" class=" modal-action modal-close waves-effect waves-light btn-flat right">閉じる</button>
+      <button class="modal-action modal-close waves-effect waves-light btn-flat right">閉じる</button>
     </div>
 
   </div><!-- class = modal-search end -->
@@ -548,7 +649,7 @@
       <h5>この料理を作りますか？</h5>
     </div>
     <div class="modal-footer">
-      <a href="#" class=" modal-action modal-close waves-effect waves-light btn-flat">キャンセル</a>
+      <a class="modal-action modal-close waves-effect waves-light btn-flat">キャンセル</a>
       <a href="" data-target="modal2" class="modal-trigger modal-close modal-action waves-effect waves-red btn-flat red-btn">作る</a>
     </div>
   </div>
@@ -558,7 +659,7 @@
       <h5>調理完了</h5>
     </div>
     <div class="modal-footer">
-      <a href="#" class=" modal-action modal-close waves-effect waves-light btn-flat">閉じる</a>
+      <a class="modal-action modal-close waves-effect waves-light btn-flat">閉じる</a>
     </div>
   </div>
 
@@ -584,8 +685,8 @@
     };
 	
 	$(document).ready(function(){
-    $('ul.tabs').tabs('select_tab', 'tab_id');
-  });
+		$('ul.tabs').tabs('select_tab', 'tab_id');
+	});
   </script>
 
 </div><!-- id = modal_parts end -->
