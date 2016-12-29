@@ -25,17 +25,16 @@
 <head>
 <meta charset="UTF-8">
 <title>インスタグルメ</title>
+<link rel="SHORTCUT ICON" href="./Images/favicon.ico">
 <!-- Import Google Icon Font-->
 <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- Import materialize.css-->
 <link type="text/css" rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/lity.css"  media="screen,projection">
-<link type="text/css" rel="stylesheet" href="Stylesheet/balloon.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/Style.css" media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/jquery-confirm.css"/>
 <!-- Import JavaScript -->
-<script src="JavaScript/core.js"></script>
-<script src="JavaScript/jquery.js"></script>
+<script src="JavaScript/jquery-3.1.1.min.js"></script>
 <script src="JavaScript/jquery-confirm.js"></script>
 <script src="JavaScript/materialize.js"></script>
 <script src="JavaScript/lity.js"></script>
@@ -212,47 +211,47 @@
 		<!-- 今までの投稿 開始 -->
 		<div class="row">
 			<?php
-            require_once('./php/Image.class.php');
-            require_once('./php/ImageDao.class.php');
-            require_once('./php/Comment.class.php');
-            require_once('./php/CommentDao.class.php');
-			require_once('./php/Favorite.class.php');
-            require_once('./php/FavoriteDao.class.php');
-            
-            $pageNum = 0;
-            if(isset($_GET['pageNum'])){
-                $pageNum = $_GET['pageNum'];
-            }
-            $daoFactory = DaoFactory::getDaoFactory();
-            $dao = $daoFactory->createImageDao();
-            if (isset($_SESSION['userId'])) {
-                $userId = $_SESSION['userId'];
-                $imageArray = $dao->userSelect($userId, $pageNum);
-                $rowCount = $dao->userRows($userId);
-				if(isset($_GET['result'])){
-					$res = "";
-					if($_GET['result'] == "success"){
-						$res .= "<p class='err_text'>画像を削除しました</p>";
-					}else if($_GET['result'] == "fail"){
-						$res .= "<p class='err_text'>画像の削除に失敗しました</p>";
-					}
-	                echo "<div class='center'>" . $res . "</div>";
+				require_once('./php/Image.class.php');
+				require_once('./php/ImageDao.class.php');
+				require_once('./php/Comment.class.php');
+				require_once('./php/CommentDao.class.php');
+				require_once('./php/Favorite.class.php');
+				require_once('./php/FavoriteDao.class.php');
+				
+				$pageNum = 0;
+				if(isset($_GET['pageNum'])){
+					$pageNum = $_GET['pageNum'];
 				}
-                echo "<div class='center'><p>あなたの投稿 : " . $rowCount . "件</p></div>";
-                $dao = $daoFactory->createCommentDao();
-                $commentArray = $dao->select();
-				$dao = $daoFactory->createFavoriteDao();
-				$favoriteArray = $dao->select($userId);
-            
-                $cnt = 1;
-                foreach($imageArray as $imageRow){
-					$imageName = $imageRow->getImageName();
-					$uploadUser = $imageRow->getUserId();
-					$uploadAvator = "guest.png";
-					if(file_exists("./Images/Avator/" . $uploadUser . ".png")){
-						$uploadAvator = $uploadUser . ".png";
+				$daoFactory = DaoFactory::getDaoFactory();
+				$dao = $daoFactory->createImageDao();
+				if (isset($_SESSION['userId'])) {
+					$userId = $_SESSION['userId'];
+					$imageArray = $dao->userSelect($userId, $pageNum);
+					$rowCount = $dao->userRows($userId);
+					if(isset($_GET['result'])){
+						$res = "";
+						if($_GET['result'] == "success"){
+							$res .= "<p class='err_text'>画像を削除しました</p>";
+						}else if($_GET['result'] == "fail"){
+							$res .= "<p class='err_text'>画像の削除に失敗しました</p>";
+						}
+						echo "<div class='center'>" . $res . "</div>";
 					}
-        ?>
+					echo "<div class='center'><p>あなたの投稿 : " . $rowCount . "件</p></div>";
+					$dao = $daoFactory->createCommentDao();
+					$commentArray = $dao->select();
+					$dao = $daoFactory->createFavoriteDao();
+					$favoriteArray = $dao->select($userId);
+				
+					$cnt = 1;
+					foreach($imageArray as $imageRow){
+						$imageName = $imageRow->getImageName();
+						$uploadUser = $imageRow->getUserId();
+						$uploadAvator = "guest.png";
+						if(file_exists("./Images/Avator/" . $uploadUser . ".png")){
+							$uploadAvator = $uploadUser . ".png";
+						}
+			?>
 			  <div class="col m6">
 				<div class="card sticky-action">
 				  <div class="card-content">
@@ -375,9 +374,9 @@
 				</div>
 			</div>
 			<?php
-        $cnt++;
-        }
-        ?>
+				$cnt++;
+				}
+			?>
 			
 			<!-- 今までの投稿 終了 --> 
 		</div>
@@ -386,28 +385,28 @@
 		<div class="center">
 			<ul class="pagination">
 				<?php
-                if($pageNum == 0){
-                    echo "<li class='disabled'><i class='material-icons'>chevron_left</i></li>";
-                }else{
-                    echo "<li class='waves-effect'><a href='./profile.php?pageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
-                }
-                for($count = 0; $count < ceil($rowCount / 12); $count++){
-                    if($count == $pageNum){
-                        echo "<li class='active orange'>";
-                    }else{
-                        echo "<li class='waves-effect'>";
-                    }
-                    echo "<a href='./profile.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
-                }
-                if($pageNum >= ceil($rowCount / 12) - 1){
-                    echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
-                ";
-                }else{
-                    echo "<li class='waves-effect'><a href='./profile.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
-                ";
-                }
-                }
-            ?>
+					if($pageNum == 0){
+						echo "<li class='disabled'><i class='material-icons'>chevron_left</i></li>";
+					}else{
+						echo "<li class='waves-effect'><a href='./profile.php?pageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
+					}
+					for($count = 0; $count < ceil($rowCount / 12); $count++){
+						if($count == $pageNum){
+							echo "<li class='active orange'>";
+						}else{
+							echo "<li class='waves-effect'>";
+						}
+						echo "<a href='./profile.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
+					}
+					if($pageNum >= ceil($rowCount / 12) - 1){
+						echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
+					";
+					}else{
+						echo "<li class='waves-effect'><a href='./profile.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
+					";
+					}
+					}
+				?>
 			</ul>
 		</div>
 	</div>

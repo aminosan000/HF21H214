@@ -8,6 +8,7 @@
 <!-- アイコン -->
 <link rel="shortcut icon" sizes="196x196" href="icon.png">
 <link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png">
+<link rel="SHORTCUT ICON" href="../Images/favicon.ico">
 <title>インスタグルメ</title>
 <!-- Import Google Icon Font-->
 <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

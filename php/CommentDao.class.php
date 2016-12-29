@@ -21,8 +21,8 @@ class CommentDao{
 			$imageName = '';
 			$cnt = 1;
 			// 行数を取得
-			$res = $dbh->query('SELECT COUNT(*) FROM Comment');
-			$rowCount = $res->fetchColumn();
+			$res = $dbh->query('SELECT * FROM Comment');
+			$rowCount = $res->rowCount();
 			$commentArray = array();
 			foreach($dbh->query('SELECT * FROM Comment ORDER BY ImageName') as $row) {
 				if($cnt == 1){

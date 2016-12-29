@@ -18,17 +18,16 @@
 <head>
 <meta charset="UTF-8">
 <title>インスタグルメ</title>
+<link rel="SHORTCUT ICON" href="./Images/favicon.ico">
 <!-- Import Google Icon Font-->
 <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- Import materialize.css-->
 <link type="text/css" rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/lity.css"  media="screen,projection">
-<link type="text/css" rel="stylesheet" href="Stylesheet/balloon.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/jquery-confirm.css"/>
 <link type="text/css" rel="stylesheet" href="Stylesheet/Style.css" media="screen,projection">
 <!-- Import JavaScript -->
-<script src="JavaScript/core.js"></script>
-<script src="JavaScript/jquery.js"></script>
+<script src="JavaScript/jquery-3.1.1.min.js"></script>
 <script src="JavaScript/jquery-confirm.js"></script>
 <script src="JavaScript/materialize.js"></script>
 <script src="JavaScript/lity.js"></script>
@@ -236,8 +235,23 @@
 					<div class="modal-content">
 					  <div class="container">
 						<div class="row">
+							<div>
+							料理名<h5>
+							<?php
+								$dishNameArray = preg_split("/#|、+/", $imageRow->getDishName(), -1, PREG_SPLIT_NO_EMPTY);
+								$cnt2 = 1;
+								foreach($dishNameArray as $dishName){
+									echo $dishName;
+									if($cnt2 < count($dishNameArray)){
+										echo " または ";
+									}
+									$cnt2++;
+								}
+							?>
+							</h5>
+							</div>
 						  <div class="valign-wrapper">
-						<p>カテゴリ<br>
+						<p>タグ<br>
 							<?php
 								// カテゴリ一覧表示
 								$categories = preg_split("/#|、+/", $imageRow->getCategory(), -1, PREG_SPLIT_NO_EMPTY);

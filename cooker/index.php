@@ -8,11 +8,14 @@
 	require_once('./php/FavoriteDao.class.php');
 	require_once('./php/History.class.php');
 	require_once('./php/HistoryDao.class.php');
+	require_once('./php/Profile.class.php');
+	require_once('./php/ProfileDao.class.php');
 	require_once('./php/DaoFactory.class.php');
 	
 	ini_set("display_errors", 1);
 	error_reporting(E_ALL);
 	
+	date_default_timezone_set('Asia/Tokyo');
 	session_start();
 	
 	$userId = "guest";
@@ -38,6 +41,7 @@
 <!-- アイコン -->
 <link rel="shortcut icon" sizes="196x196" href="icon.png">
 <link rel="apple-touch-icon" sizes="144x144" href="apple-icon.png">
+<link rel="SHORTCUT ICON" href="../Images/favicon.ico">
 <title>インスタグルメ</title>
 <!-- Import Google Icon Font-->
 <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -66,21 +70,27 @@ conn.onmessage = function(e) {
 // 調理確定時
 function cookfunc(obj){
 	var imageName = obj.getAttribute("data-imagename");
-	conn.send(obj.getAttribute("id"));
+	var holoNum = obj.getAttribute("data-holonum");
+	if(holoNum == 0){
+		holoNum = Math.floor(Math.random () * 10) + 1;
+	}
+	conn.send(holoNum);
 	historyfunc(imageName);
 }
 
 //調理ボタン押下時
 function foodfunc(obj){
 	var imagename =  obj.getAttribute("data-imagename");
+	var holonum = obj.getAttribute("data-holonum");
 	var node = document.getElementById("modal1");
 	node.children[0].innerHTML = "<h5>この料理を作りますか？</h5>";
-	node.children[1].innerHTML = "<a class=\"modal-action modal-close waves-effect waves-light btn-flat\">キャンセル</a><a class=\"waves-effect waves-red btn-flat red-btn\" onclick=\"cookfunc(this)\" data-imagename=\"" + imagename + "\" id=\"sushi\">作る</a>";
+	node.children[1].innerHTML = "<a class=\"modal-action modal-close waves-effect waves-light btn-flat\">キャンセル</a><a class=\"waves-effect waves-red btn-flat red-btn\" onclick=\"cookfunc(this)\" data-imagename=\"" + imagename + "\" data-holonum=\"" + holonum + "\">作る</a>";
 }
 
 function closefunc(){
 	$('#modal1').closeModal();
 }
+
 </script>
 <!--Let browser know website is optimized for mobile-->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -94,7 +104,7 @@ function closefunc(){
     <nav class="nav-extended">
       <div class="nav-wrapper red darken-4">
 		<ul class="tabs tabs-transparent">
-			<li class="tab red darken-4"><a class="active" href="#home"><i class="material-icons white-text">home</i></a> </li>
+			<li class="tab red darken-4"><a href="#home" class="active"><i class="material-icons white-text">home</i></a> </li>
 			<li class="tab red darken-4"><a href="#cook"><i class="material-icons white-text">restaurant</i></a> </li>
 			<li class="tab red darken-4"><a href="#favorite"><i class="material-icons white-text">favorite</i></a> </li>
 			<li class="tab red darken-4"><a href="#history"><i class="material-icons white-text">history</i></a> </li>
@@ -118,10 +128,11 @@ function closefunc(){
 			$daoFactory = DaoFactory::getDaoFactory();
 			$dao = $daoFactory->createImageDao();
 			$imageArray = $dao->random();
-			
-			$imageName = $imageArray[0]->getImageName();
+			$imageRow = $imageArray[0];
+			$imageName = $imageRow->getImageName();
+			$holoNum = $imageRow->getGroupNo();
 		  ?>
-			<a data-target="modal1" data-imagename="<?=$imageName?>" class="modal-trigger" onclick="foodfunc(this)" href="">
+			<a data-target="modal1" data-imagename="<?=$imageName?>" class="modal-trigger" data-holonum="<?=$holoNum?>" onclick="foodfunc(this)" href="">
 				<img class="responsive-img" src="../Images/Thumbnail/<?=$imageName?>" alt="">
 			</a>
         </div><br>
@@ -133,6 +144,13 @@ function closefunc(){
 		</div>
       </div>
     <div id="cook" class="col s12"><h4>料理一覧</h4>
+	
+		<!-- reload-btn -->
+		<div class="center reload">
+			<a class="btn-floating btn-large blue darken-4 modal-trigger" onclick="location.reload()">
+				<i class="material-icons md-48">refresh</i>
+			</a>
+		</div>
 		<div class="container">
 			<div class="row">
 				<?php
@@ -158,6 +176,7 @@ function closefunc(){
 					foreach($imageArray as $imageRow){
 						$imageName = $imageRow->getImageName();
 						$uploadUser = $imageRow->getUserId();
+						$holoNum = $imageRow->getGroupNo();
 						$uploadAvator = "guest.png";
 						if(file_exists("../Images/Avator/" . $uploadUser . ".png")){
 							$uploadAvator = $uploadUser . ".png";
@@ -194,7 +213,7 @@ function closefunc(){
 						  <button class="btn-flat waves-effect waves-light" onclick="favoritefunc(this)" data-condition="<?=$condition?>" data-imagename="<?=$imageName?>">
 							<i class="material-icons red-text text-darken-1 md-36"><?=$favorite?></i>
 						  </button>
-						  <button data-target="modal1" data-imagename="<?=$imageName?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="foodfunc(this)"  >
+						  <button data-target="modal1" data-imagename="<?=$imageName?>" data-holonum="<?=$holoNum?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="foodfunc(this)"  >
 							<i class="material-icons orange-text text-darken-1 md-24">restaurant</i>
 						  </button>
 						  <button data-target="modal-comment<?=$cnt?>" class="btn-flat waves-effect waves-light modal-trigger">
@@ -331,6 +350,7 @@ function closefunc(){
 				foreach($imageArray as $imageRow){
 					$imageName = $imageRow->getImageName();
 					$uploadUser = $imageRow->getUserId();
+					$holoNum = $imageRow->getGroupNo();
 					$uploadAvator = "guest.png";
 					if(file_exists("./Images/Avator/" . $uploadUser . ".png")){
 						$uploadAvator = $uploadUser . ".png";
@@ -367,7 +387,7 @@ function closefunc(){
 						  <button class="btn-flat waves-effect waves-light" onclick="favoritefunc(this)" data-condition="<?=$condition?>" data-imagename="<?=$imageName?>">
 							<i class="material-icons red-text text-darken-1 md-36"><?=$favorite?></i>
 						  </button>
-						  <button data-target="modal1" data-imagename="<?=$imageName?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="foodfunc(this)"  >
+						  <button data-target="modal1" data-imagename="<?=$imageName?>" class="btn-flat waves-effect waves-light modal-trigger" data-holonum="<?=$holoNum?>" onclick="foodfunc(this)"  >
 							<i class="material-icons orange-text text-darken-1 md-24">restaurant</i>
 						  </button>
 						  <button data-target="modal-favorite-comment<?=$cnt?>" class="btn-flat waves-effect waves-light modal-trigger">
@@ -532,11 +552,36 @@ function closefunc(){
 		</div>
 	</div>
 		<div id="profile" class="col s12"><h4>プロフィール</h4>
+		<?php
+				$dao = $daoFactory->createProfileDao();
+				$profileArray = $dao->select($userId);	
+				
+				$today = date("Ymd");
+				$cnt = 1;
+				foreach($profileArray as $profileRow){
+					// プロフィールデータ取り出し
+					$profNo = $profileRow->getProfNo();
+					$name = $profileRow->getName();
+					$relation = $profileRow->getRelation();
+					$birth = date("Ymd", strtotime($profileRow->getBirth()));
+					$favoriteFood = $profileRow->getFavorite();
+					$notFavoriteFood = $profileRow->getNotFavorite();
+					$allergy = $profileRow->getAllergy();
+					// 好物・苦手なもの・アレルギー分割
+					$favoriteFoodArray = preg_split('/[\s]+/', $favoriteFood, -1, PREG_SPLIT_NO_EMPTY);
+					$notFavoriteFoodArray = preg_split('/[\s]+/', $notFavoriteFood, -1, PREG_SPLIT_NO_EMPTY);
+					$allergyArray = preg_split('/[\s]+/', $allergy, -1, PREG_SPLIT_NO_EMPTY);
+					$icon = $profileRow->getIcon();
+					if($icon == ""){
+						$icon = "guest.png";
+					}
+					$age = floor(($today-$birth)/10000);
+			?>
 			<div class="valign-wrapper">
-				<div class="col s3">
+				<div class="col s2">
 					<div class="center">
-						<p>まゆみ</p>
-						<img class="upload_avator" src="../Images/Avator/guest.png"><br>自分<br>
+						<?=$name?><br>
+						<img class="upload_avator" src="../Images/Avator/<?=$icon?>"><br><?=$relation?><br>
 					</div>
 				</div>
 				<div class="col s9">
@@ -545,54 +590,136 @@ function closefunc(){
 							年齢<br>好きなもの<br>嫌いなもの<br>アレルギー
 						</div>
 						<div class="col s1">
-							:<br>:<br>:<br>:</div>
+							:<br>:<br>:<br>:
+						</div>
 						<div class="col s8">
-							32歳<br>オムライス<br>えび<br>なし
+							<?=$age?>歳<br>
+							<?php
+								$cnt2 = 1;
+								foreach($favoriteFoodArray as $row){
+									echo $row;
+									if($cnt2 < count($favoriteFoodArray)){
+										echo " , ";
+									}
+									$cnt2++;
+								}
+							?>
+							<br>
+							<?php
+								$cnt2 = 1;
+								foreach($notFavoriteFoodArray as $row){
+									echo $row;
+									if($cnt2 < count($notFavoriteFoodArray)){
+										echo " , ";
+									}
+									$cnt2++;
+								}
+							?>
+							<br>
+							<?php
+								$cnt2 = 1;
+								foreach($allergyArray as $row){
+									echo $row;
+									if($cnt2 < count($allergyArray)){
+										echo " , ";
+									}
+									$cnt2++;
+								}
+							?>
 						</div>
 						<div class="clearfix"></div>
 					</div>
+				</div>
+				<div class="col s1">
+					<a data-target="modal-profile<?=$cnt?>" class="btn-floating waves-effect waves-light yellow darken-2 modal-trigger"><i class="material-icons">edit</i></a>
+				</div>
+			</div>		
+			<div id="modal-profile<?=$cnt?>" class="modal">
+				<div class="modal-content">
+					<form id="prof<?=$cnt?>">
+						<h5><?=$name?>さんのプロフィールを編集</h5><br>
+						<div class="input-field">
+							<label for="name">名前<span class="red-text">（必須）</span></label>
+							<input id="name" type="text" class="validate" name="name" maxlength="20" value="<?=$name?>" placeholder="名前を入力">
+						</div>
+						<div class="input-field">
+							<select name="relation">
+								<option value="" disabled selected>続柄を選択</option>
+								<option value="自分" <?php if($relation == "自分"){ echo "selected"; } ?>>自分</option>
+								<option value="パパ" <?php if($relation == "パパ"){ echo "selected"; } ?>>パパ</option>
+								<option value="子供" <?php if($relation == "子供"){ echo "selected"; } ?>>子供</option>
+								<option value="おばあちゃん" <?php if($relation == "おばあちゃん"){ echo "selected"; } ?>>おばあちゃん</option>
+								<option value="おじいちゃん" <?php if($relation == "おじいちゃん"){ echo "selected"; } ?>>おじいちゃん</option>
+							</select>
+							<label>続柄<span class="red-text">（必須）</span></label>
+						</div>
+						<div class="input-field">
+							<label for="birth">生年月日<span class="red-text">（必須）</span></label>
+							<input id="birth" type="text" class="validate" name="birth" maxlength="20" value="<?=$birth?>" placeholder="半角数字8桁（例：20161201）">
+						</div>
+						<div class="input-field">
+							<label for="favorite">好きな食べ物</label>
+							<input id="favorite" type="text" class="validate" name="favorite" maxlength="20" value="<?=$favoriteFood?>" placeholder="好きな食べ物を入力（スペース区切りで複数入力）">
+						</div>
+						<div class="input-field">
+							<label for="notfavorite">嫌いな食べ物</label>
+							<input id="notfavorite" type="text" class="validate" name="notfavorite" maxlength="20" value="<?=$notFavoriteFood?>" placeholder="嫌いな食べ物を入力（スペース区切りで複数入力）">
+						</div>
+						<div class="input-field">
+							<label for="allergy">アレルギー</label>
+							<input id="allergy" type="text" class="validate" name="allergy" maxlength="20" value="<?=$allergy?>" placeholder="アレルギーがある場合は入力（スペース区切りで複数入力）">
+						</div>
+						<input type="hidden" name="icon" value="<?=$icon?>">
+						<input type="hidden" name="profno" value="<?=$profNo?>">
+					</form>
+					<button class="waves-effect waves-red red-btn btn-flat right" data-formid="prof<?=$cnt?>" onclick="profilefunc(this)">登録</button>
+					<button class="waves-effect waves-light btn-flat right modal-action modal-close">キャンセル</button><br><br>
+					<div id="loading-prof<?=$cnt?>" class="center"></div>
 				</div>
 			</div>
-			<div class="valign-wrapper">
-				<div class="col s3">
-					<div class="center">
-						<p>てつや</p>
-						<img class="upload_avator" src="../Images/Avator/guest.png"><br>パパ<br>
-					</div>
-				</div>
-				<div class="col s9">
-					<div class="arrow_box_right z-depth-1 center row">
-						<div class="col s3">
-							年齢<br>好きなもの<br>嫌いなもの<br>アレルギー
+			<?php $cnt++; } ?>
+			<div class="center">
+				<a data-target="modal-profile-add" class="btn-floating btn-large waves-effect waves-light yellow darken-2 modal-trigger"><i class="material-icons">person_add</i></a>
+			</div>	
+			<div id="modal-profile-add" class="modal">
+				<div class="modal-content">
+					<form id="prof-add">
+						<h5>家族を追加</h5><br>
+						<div class="input-field">
+							<label for="name">名前<span class="red-text">（必須）</span></label>
+							<input id="name" type="text" class="validate" name="name" maxlength="20" value="" placeholder="名前を入力" required>
 						</div>
-						<div class="col s1">
-							:<br>:<br>:<br>:</div>
-						<div class="col s8">
-							35歳<br>カレー<br>パクチー<br>なし
+						<div class="input-field">
+							<select name="relation">
+								<option value="" disabled selected>続柄を選択</option>
+								<option value="自分">自分</option>
+								<option value="パパ">パパ</option>
+								<option value="子供">子供</option>
+								<option value="おばあちゃん">おばあちゃん</option>
+								<option value="おじいちゃん">おじいちゃん</option>
+							</select>
+							<label>続柄<span class="red-text">（必須）</span></label>
 						</div>
-						<div class="clearfix"></div>
-					</div>
-				</div>
-			</div>
-			<div class="valign-wrapper">
-				<div class="col s3">
-					<div class="center">
-						<p>ひろゆき</p>
-						<img class="upload_avator" src="../Images/Avator/guest.png"><br>子供<br>
-					</div>
-				</div>
-				<div class="col s9">
-					<div class="arrow_box_right z-depth-1 center row">
-						<div class="col s3">
-							年齢<br>好きなもの<br>嫌いなもの<br>アレルギー
+						<div class="input-field">
+							<label for="birth">生年月日<span class="red-text">（必須）</span></label>
+							<input id="birth" type="text" class="validate" name="birth" maxlength="20" value="" placeholder="半角数字8桁（例：20161201）">
 						</div>
-						<div class="col s1">
-							:<br>:<br>:<br>:</div>
-						<div class="col s8">
-							8歳<br>鶏のからあげ<br>ピーマン<br>そば
+						<div class="input-field">
+							<label for="favorite">好きな食べ物</label>
+							<input id="favorite" type="text" class="validate" name="favorite" maxlength="20" value="" placeholder="好きな食べ物を入力（スペース区切りで複数入力）">
 						</div>
-						<div class="clearfix"></div>
-					</div>
+						<div class="input-field">
+							<label for="notfavorite">嫌いな食べ物</label>
+							<input id="notfavorite" type="text" class="validate" name="notfavorite" maxlength="20" value="" placeholder="嫌いな食べ物を入力（スペース区切りで複数入力）">
+						</div>
+						<div class="input-field">
+							<label for="allergy">アレルギー</label>
+							<input id="allergy" type="text" class="validate" name="allergy" maxlength="20" value="" placeholder="アレルギーがある場合は入力（スペース区切りで複数入力）">
+						</div>
+					</form>
+					<button class="waves-effect waves-red red-btn btn-flat right" data-formid="prof-add" onclick="profilefunc(this)">登録</button>
+					<button class="waves-effect waves-light btn-flat right modal-action modal-close">キャンセル</button><br><br>
+					<div id="loading-prof-add" class="center"></div>
 				</div>
 			</div>
 		</div>
@@ -600,24 +727,23 @@ function closefunc(){
 	</div>
 	
 	<!-- serch-btn -->
-  <div class="fixed-action-btn-mobile">
-    <a class="btn-floating btn-superlarge red darken-4 modal-trigger" data-target="modal-search" href="">
-      <i class="material-icons md-48">search</i>
-    </a>
-  </div>
+	<div class="fixed-action-btn-mobile">
+		<a class="btn-floating btn-superlarge red darken-4 modal-trigger" data-target="modal-search">
+		 	<i class="material-icons md-48">search</i>
+		</a>
+	</div>
 	
+  
 </main>
-<div id="modal_parts">
 
+<div id="modal_parts">
   <!-- 検索用モーダルウィンドウ -->
   <div id="modal-search" class="modal">
     <div class="modal-search">
       <div class="container">
         <div class="row">
-
         </div>
       </div>
-
       <!-- 検索バー -->
       <div class="container">
         <div class="row">
@@ -635,14 +761,11 @@ function closefunc(){
         </div>
       </div>
     </div>
-
     <div class="divider"></div>
-
     <div class="modal-footer">
       <button class="modal-action modal-close waves-effect waves-light btn-flat right">閉じる</button>
     </div>
-
-  </div><!-- class = modal-search end -->
+  </div><!-- id = modal-search end -->
  
   <div id="modal1" class="modal">
     <div class="modal-content">
@@ -663,7 +786,7 @@ function closefunc(){
     </div>
   </div>
 
-  </div>
+  </div><!-- id = modal-parts end -->
 
   <script>
     window.onload = function() {
@@ -686,6 +809,10 @@ function closefunc(){
 	
 	$(document).ready(function(){
 		$('ul.tabs').tabs('select_tab', 'tab_id');
+	});
+	
+	$(document).ready(function() {
+		$('select').material_select();
 	});
   </script>
 

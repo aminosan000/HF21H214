@@ -30,9 +30,32 @@ class ImageDao{
 	}
 	// 全データ取得
 	public function select($pageNum){
+		$imageArray = array();
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
 			foreach($dbh->query('SELECT * FROM Image ORDER BY UploadDate DESC LIMIT ' . $pageNum*12 . ',12') as $row) {
+				// 取り出したデータをクラスインスタンスの配列に入れる
+				$image = new Image();
+				$image->setImageName($row['ImageName']);
+				$image->setUserId($row['UserId']);
+				$image->setUploadDate($row['UploadDate']);
+				$image->setCategory($row['Category']);
+				$image->setDishName($row['DishName']);
+				$image->setGroupNo($row['GroupNo']);
+				$imageArray[] = $image;
+			}
+		}catch (PDOException $e){
+			print('Connection failed:'.$e->getMessage());
+			die();
+		}
+		$dbh = null;
+		return $imageArray;
+	}
+	// ランダムデータ取得
+	public function random(){
+		try{
+			$dbh = new PDO($this->dsn, $this->user, $this->password);
+			foreach($dbh->query('SELECT * FROM Image ORDER BY RAND() LIMIT 1') as $row) {
 				// 取り出したデータをクラスインスタンスの配列に入れる
 				$image = new Image();
 				$image->setImageName($row['ImageName']);
@@ -78,6 +101,47 @@ SELECT ImageName FROM Comment WHERE Comment LIKE ?)ORDER BY UploadDate DESC LIMI
 				$image->setUserId($row['UserId']);
 				$image->setUploadDate($row['UploadDate']);
 				$image->setCategory($row['Category']);
+				$image->setDishName($row['DishName']);
+				$image->setGroupNo($row['GroupNo']);
+				$imageArray[] = $image;
+			}
+		}catch (PDOException $e){
+			print('Connection failed:'.$e->getMessage());
+			die();
+		}
+		$dbh = null;
+		return $imageArray;
+	}
+	// １ユーザ分行数取得
+	public function userRows($userId){
+		try{
+			$dbh = new PDO($this->dsn, $this->user, $this->password);
+			$stmt = $dbh->prepare('SELECT COUNT(*) FROM Image WHERE UserId = ?');
+			$stmt->execute(array($userId));
+			$rowCount = $stmt->fetchColumn();
+		}catch (PDOException $e){
+			print('Connection failed:'.$e->getMessage());
+			die();
+		}
+		$dbh = null;
+		return $rowCount;
+	}
+	// １ユーザ分取得
+	public function userSelect($userId, $pageNum){
+		$imageArray = array();
+		try{
+			$dbh = new PDO($this->dsn, $this->user, $this->password);
+			$stmt = $dbh->prepare('SELECT * FROM Image WHERE UserId = ? ORDER BY UploadDate DESC LIMIT ' . $pageNum*12 . ',12');
+			$stmt->execute(array($userId));
+			while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+				// 取り出したデータをクラスインスタンスの配列に入れる
+				$image = new Image();
+				$image->setImageName($row['ImageName']);
+				$image->setUserId($row['UserId']);
+				$image->setUploadDate($row['UploadDate']);
+				$image->setCategory($row['Category']);
+				$image->setDishName($row['DishName']);
+				$image->setGroupNo($row['GroupNo']);
 				$imageArray[] = $image;
 			}
 		}catch (PDOException $e){
@@ -115,6 +179,8 @@ SELECT ImageName FROM Comment WHERE Comment LIKE ?)ORDER BY UploadDate DESC LIMI
 				$image->setUserId($row['UserId']);
 				$image->setUploadDate($row['UploadDate']);
 				$image->setCategory($row['Category']);
+				$image->setDishName($row['DishName']);
+				$image->setGroupNo($row['GroupNo']);
 				$imageArray[] = $image;
 			}
 		}catch (PDOException $e){
@@ -127,8 +193,8 @@ SELECT ImageName FROM Comment WHERE Comment LIKE ?)ORDER BY UploadDate DESC LIMI
 	public function insert($image){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
-			$stmt = $dbh->prepare('INSERT INTO Image (ImageName, UserId, UploadDate, Category) values (?, ?, ?, ?)');
-			$flag = $stmt->execute(array($image->getImageName(), $image->getUserId(), $image->getUploadDate(), $image->getCategory()));
+			$stmt = $dbh->prepare('INSERT INTO Image (ImageName, UserId, UploadDate, Category, DishName, GroupNo) values (?, ?, ?, ?, ?, ?)');
+			$flag = $stmt->execute(array($image->getImageName(), $image->getUserId(), $image->getUploadDate(), $image->getCategory(), $image->getDishName(), $image->getGroupNo()));
 		}catch (PDOException $e){
 			print('Connection failed:'.$e->getMessage());
 			die();
@@ -151,8 +217,8 @@ SELECT ImageName FROM Comment WHERE Comment LIKE ?)ORDER BY UploadDate DESC LIMI
 	public function update($image){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
-			$stmt = $dbh->prepare('UPDATE Image SET UserId = ?, UploadDate = ?, Category = ? WHERE ImageName = ?');
-			$flag = $stmt->execute(array($image->getUserId(), $image->getUploadDate(), $image->getCategory(),$image->getImageName()));
+			$stmt = $dbh->prepare('UPDATE Image SET UserId = ?, UploadDate = ?, Category = ?, DishName = ? WHERE ImageName = ?');
+			$flag = $stmt->execute(array($image->getUserId(), $image->getUploadDate(), $image->getCategory(), $image->getCategory(), $image->getImageName()));
 		}catch (PDOException $e){
 			print('Connection failed:'.$e->getMessage());
 			die();

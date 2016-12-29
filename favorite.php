@@ -18,16 +18,15 @@
 <head>
 <meta charset="UTF-8">
 <title>インスタグルメ</title>
+<link rel="SHORTCUT ICON" href="./Images/favicon.ico">
 <!-- Import Google Icon Font-->
 <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- Import materialize.css-->
 <link type="text/css" rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/lity.css"  media="screen,projection">
-<link type="text/css" rel="stylesheet" href="Stylesheet/balloon.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/Style.css" media="screen,projection">
 <!-- Import JavaScript -->
-<script src="JavaScript/core.js"></script>
-<script src="JavaScript/jquery.js"></script>
+<script src="JavaScript/jquery-3.1.1.min.js"></script>
 <script src="JavaScript/materialize.js"></script>
 <script src="JavaScript/lity.js"></script>
 <script src="JavaScript/favorite.js"></script>
@@ -116,108 +115,171 @@
 	<div class="container">
 		<div class="row">
 			<?php
-			require_once('./php/Image.class.php');
-			require_once('./php/ImageDao.class.php');
-			require_once('./php/Comment.class.php');
-			require_once('./php/CommentDao.class.php');
-			require_once('./php/Favorite.class.php');
-			require_once('./php/FavoriteDao.class.php');
-			require_once('./php/DaoFactory.class.php');
-            
-            $pageNum = 0;
-            if(isset($_GET['pageNum'])){
-                $pageNum = $_GET['pageNum'];
-            }
-            $daoFactory = DaoFactory::getDaoFactory();
-            $dao = $daoFactory->createImageDao();
-            if (isset($_SESSION['userId'])) {
-				$userId = $_SESSION['userId'];
-                $imageArray = $dao->favoriteSelect($userId, $pageNum);
-                $rowCount = $dao->favoriteRows($userId);
-                echo "<div class='center'>お気に入り" . $rowCount . "件</div>";
-                $dao = $daoFactory->createCommentDao();
-                $commentArray = $dao->select();
-				$dao = $daoFactory->createFavoriteDao();
-				$favoriteArray = $dao->select($userId);
-                
-                $cnt = 1;
-                foreach($imageArray as $imageRow){
-					$imageName = $imageRow->getImageName();
-					$uploadUser = $imageRow->getUserId();
-					$uploadAvator = "guest.png";
-					if(file_exists("./Images/Avator/" . $uploadUser . ".png")){
-						$uploadAvator = $uploadUser . ".png";
-					}
-        ?>
-			<div class="col s12 m6 l6">
-				<div class="card sticky-action hoverable z-depth-1">
-					<div class="card-image"> <a href="./Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="./Images/Thumbnail/<?=$imageName?>"></a> </div>
-					<div class="card-content">
-						<span class="card-title activator"><i class="material-icons right">keyboard_arrow_up</i></span>
-						<a href="./profile.php?profId=<?=$uploadUser?>">
-							<img class="upload_avator left" src="./Images/Avator/<?=$uploadAvator?>">
-							<div class="upload_user left">
-								<span class="black-text"><?=$uploadUser?></span>
-							</div>
-						</a>
-						<div class="clearfix"></div>
-					</div>
-					<div class="card-reveal"><span class="card-title"><i class="material-icons right">keyboard_arrow_down</i></span>
-						<a href="./profile.php?profId=<?=$uploadUser?>">
-							<img class="upload_avator left" src="./Images/Avator/<?=$uploadAvator?>">
-							<div class="upload_user left">
-								<span class="black-text"><?=$uploadUser?></span>
-							</div>
-						</a>
-						<div class="clearfix"></div>
-						<p><?=$imageRow->getUploadDate()?></p>
-						<p>カテゴリ:
-							<?php
-			  	$categories = preg_split("/#|、+/", $imageRow->getCategory(), -1, PREG_SPLIT_NO_EMPTY);
-				$cnt2 = 1;
-              	foreach($categories as $category){
-					echo "<a href='./?word=" . $category . "'>#" . $category . "</a>";
-					if($cnt2 < count($categories)){
-						echo ", ";
-					}
-					$cnt2++;
+				require_once('./php/Image.class.php');
+				require_once('./php/ImageDao.class.php');
+				require_once('./php/Comment.class.php');
+				require_once('./php/CommentDao.class.php');
+				require_once('./php/Favorite.class.php');
+				require_once('./php/FavoriteDao.class.php');
+				require_once('./php/DaoFactory.class.php');
+				
+				$pageNum = 0;
+				if(isset($_GET['pageNum'])){
+					$pageNum = $_GET['pageNum'];
 				}
-			  ?>
-						</p>
-						<?php
-                if(isset($commentArray[$imageName])){
-                    echo "<p>コメント<br>";
-                    $oneImageComment = $commentArray[$imageName];
-                    foreach($oneImageComment as $commentRow){
-                            echo "<b>". $commentRow->getUserId(). "</b> ". $commentRow->getComment(). "<br>";
-                    }
-                }else{
-                    echo "<p>コメントなし";
-                }
-            ?>
-						<form method="get" action="./php/commentfunc.php">
-							<div class="input-field"> <i class="material-icons prefix">mode_edit</i>
-								<label for="comment<?=$cnt?>">コメント</label>
-								<input id="comment<?=$cnt?>" type="text" class="validate" name="comment" value="">
+				$daoFactory = DaoFactory::getDaoFactory();
+				$dao = $daoFactory->createImageDao();
+				if (isset($_SESSION['userId'])) {
+					$userId = $_SESSION['userId'];
+					$imageArray = $dao->favoriteSelect($userId, $pageNum);
+					$rowCount = $dao->favoriteRows($userId);
+					echo "<div class='center'>お気に入り" . $rowCount . "件</div>";
+					$dao = $daoFactory->createCommentDao();
+					$commentArray = $dao->select();
+					$dao = $daoFactory->createFavoriteDao();
+					$favoriteArray = $dao->select($userId);
+					
+					$cnt = 1;
+					foreach($imageArray as $imageRow){
+						$imageName = $imageRow->getImageName();
+						$uploadUser = $imageRow->getUserId();
+						$uploadAvator = "guest.png";
+						if(file_exists("./Images/Avator/" . $uploadUser . ".png")){
+							$uploadAvator = $uploadUser . ".png";
+						}
+			?>
+			  <div class="col m6">
+				<div class="card sticky-action">
+				  <div class="card-content">
+					<div class="valign-wrapper">
+						<a href="./profile.php?profId=<?=$uploadUser?>">
+							<div class="col s3">
+								<img class="upload_avator" src="./Images/Avator/<?=$uploadAvator?>">
 							</div>
-							<input type="hidden" name="imageName" value="<?=$imageName?>">
-							<button class="waves-effect waves-light btn orange accent-4" type="submit" name="action">コメント追加</button>
-							<?php
-					if(isset($favoriteArray[$imageName])){
-						$condition = 'true';
-					}else{
-						$condition = 'false';
-					}
-				?>
-							<img class="right pointer" onclick="favoritefunc(this)" data-condition=<?=$condition?> data-imagename=<?=$imageName?> src="Images/favorite_<?=$condition?>.png">
-						</form>
+							<div class="col s9">
+								<span class="black-text">
+								<p><?=$uploadUser?></p>
+								<p><?=$imageRow->getUploadDate()?></p></span>
+							</div>
+						</a>
 					</div>
+				  </div>
+				  <div class="card-image"> <a href="./Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="./Images/Thumbnail/<?=$imageName?>"></a> </div>
+				  <div class="card-action">
+					<div class="center">
+						<?php
+							if(isset($favoriteArray[$imageName])){
+								$condition = 'true';
+							}else{
+								$condition = 'false';
+							}
+							$favorite = "favorite";
+							if($condition == 'false'){
+								$favorite = "favorite_border";
+							}
+							if($userId == "guest"){
+						?>
+						<button class="btn-flat waves-effect waves-light" onclick="confirmfunc()">
+						<i class="material-icons red-text text-darken-1 md-24">favorite_border</i>
+					  </button>
+					  <?php
+							}else{
+						?>
+					  <button class="btn-flat waves-effect waves-light" onclick="favoritefunc(this)" data-condition="<?=$condition?>" data-imagename="<?=$imageName?>">
+						<i class="material-icons red-text text-darken-1 md-24"><?=$favorite?></i>
+					  </button>
+					  <?php
+							}
+						?>
+					  <button data-target="modal-comment<?=$cnt?>" class="btn-flat waves-effect waves-light modal-trigger">
+						<i class="material-icons teal-text text-darken-1 md-24">comment</i>
+					  </button>
+					</div>
+				  </div>
+				  <div id="modal-comment<?=$cnt?>" class="modal">
+					<div class="modal-content">
+					  <div class="container">
+						<div class="row">
+						  <div class="valign-wrapper">
+						<p>カテゴリ<br>
+							<?php
+								// カテゴリ一覧表示
+								$categories = preg_split("/#|、+/", $imageRow->getCategory(), -1, PREG_SPLIT_NO_EMPTY);
+								$cnt2 = 1;
+								foreach($categories as $category){
+									echo "<a href='./?word=" . $category . "'>#" . $category . "</a>";
+									if($cnt2 < count($categories)){
+										echo ", ";
+									}
+									$cnt2++;
+								}
+							  ?>
+						</p>
+						</div>
+						<div class="divider"></div>
+						<?php
+							// コメント一覧表示
+							if(isset($commentArray[$imageName])){
+								echo "<p>コメント</p>";
+								$oneImageComment = $commentArray[$imageName];
+								foreach($oneImageComment as $commentRow){
+									$commentUser = $commentRow->getUserId();
+									$commentAvator = "guest.png";
+									if(file_exists("./Images/Avator/" . $commentUser . ".png")){
+										$commentAvator = $commentUser . ".png";
+									}
+						?>
+						  <!-- コメント１件分ここから -->
+							<div class="row">
+								<a href="./profile.php?profId=<?=$commentUser?>">
+										<div class="col s2">
+											<img class="upload_avator" src="./Images/Avator/<?=$commentAvator?>">
+										</div>
+								</a>
+								<div class="col s10">
+									<span class="black-text">
+										<p><?=$commentRow->getComment()?></p>
+									</span>
+								</div>
+							</div>
+						  <!-- コメント１件分はここまで -->
+						<?php
+								}
+							}else{
+								echo "<p>コメントなし</p>";
+							}
+						?>
+							</div>
+					  </div>
+				
+					  <!-- コメント投稿部分ここから -->
+					  <div class="container">
+						<div class="row">
+						<form method="get" action="./php/commentfunc.php">
+						  <div class="input-field col s12 m12 l12">
+							<i class="material-icons prefix">mode_edit</i>
+								<label for="comment">コメント</label>
+								<input placeholder="コメントを入力" id="comment" type="text" class="validate" name="comment">
+								<input type="hidden" name="imageName" value="<?=$imageName?>">
+						  </div>
+						  </form>
+						</div>
+					  </div>
+					</div>
+					<!-- コメント投稿部分ここまで -->
+				
+					<div class="divider"></div>
+				
+					<div class="modal-footer">
+					  <button href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat right">閉じる</button>
+					</div>
+				</div><!-- class modal-comment end -->
 				</div>
 			</div>
 			<?php
-		$cnt++;
-		}
-    ?>
+				$cnt++;
+				}
+			?>
 		</div>
 		<div class="center">
 			<ul class="pagination">

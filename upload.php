@@ -21,19 +21,52 @@
 <head>
 <meta charset="UTF-8">
 <title>インスタグルメ</title>
+<link rel="SHORTCUT ICON" href="./Images/favicon.ico">
 <!-- Import Google Icon Font-->
 <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- Import materialize.css-->
 <link type="text/css" rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/lity.css"  media="screen,projection">
-<link type="text/css" rel="stylesheet" href="Stylesheet/balloon.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/Style.css" media="screen,projection">
 <!-- Import JavaScript -->
-<script src="JavaScript/core.js"></script>
-<script src="JavaScript/jquery.js"></script>
+<script src="JavaScript/jquery-3.1.1.min.js"></script>
 <script src="JavaScript/materialize.js"></script>
 <script src="JavaScript/lity.js"></script>
 <script src="JavaScript/favorite.js"></script>
+<script type="text/javascript"><!--
+	function uploadfunc(){
+		// ローディングマークを表示
+		var elm = document.getElementById("loading");
+		elm.innerHTML = "<img src='./Images/load.gif'><br><h5 class='text'>画像解析中・・・</h5>";
+		// フォームデータを取得
+		var formdata = new FormData(document.getElementById("upload"));
+		// XMLHttpRequestによるアップロード処理
+		var xhttpreq = new XMLHttpRequest();
+		xhttpreq.onreadystatechange = function() {
+			if (xhttpreq.readyState == 4 && xhttpreq.status == 200) {
+				var res = xhttpreq.responseText;
+				console.log(res);
+				var text = "";
+				// 投稿成功時
+				if(res == "success"){
+					text = "<h5 class='text'>投稿が完了しました</h5>";
+				// 投稿失敗時はエラーごとにメッセージ表示
+				}else if(res == "dbErr"){
+					text = "<h5 class='err_text'>DBエラー</h5>"
+				}else if(res == "typeErr"){
+					text = "<h5 class='err_text'>画像ファイルのみ投稿できます</h5>"
+				}else if(res == "sizeErr"){
+					text = "<h5 class='err_text'>サイズが大きすぎます</h5>"
+				}else if(res == "safeSearchErr"){
+					text = "<h5 class='err_text'>性的または暴力的な画像は投稿できません</h5>"
+				}
+				elm.innerHTML = text;
+			}
+		};
+		xhttpreq.open("POST", "./php/uploadfunc.php", true);
+		xhttpreq.send(formdata);
+	}
+  --></script>
 <!--Let browser know website is optimized for mobile-->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>

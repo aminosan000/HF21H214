@@ -50,6 +50,14 @@ p.err_text {
   z-index: 998;
 }
 
+.reload {
+  position: relative;
+  top: -20px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  z-index: 1;
+}
+
 div.upload_user {
 	padding: 12px 10px 0 10px;
 	font-size: 1.3em;
@@ -168,7 +176,7 @@ nav.cook {
 
 /* 吹き出し右*/
 .arrow_box_right {
-	margin-top: 35px;
+	margin-top: 25px;
 	padding: 10px 0;
 	position: relative;
 	background: #fff;

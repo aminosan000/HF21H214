@@ -1,8 +1,8 @@
 <?PHP
 class DaoFactory{
-	private $dsn = 'mysql:dbname=bistro;host=localhost;charset=utf8';
-	private $user = 'root';
-	private $password = 'root';
+	private $dsn = 'mysql:dbname=gunmetal_bistro;host=mysql531.db.sakura.ne.jp;charset=utf8';
+	private $user = 'gunmetal';
+	private $password = 'yawaraka299';
 	
 	public static function getDaoFactory(){
 		return new DaoFactory;
@@ -24,6 +24,9 @@ class DaoFactory{
 	}
 	public function createHistoryDao(){
 		return new HistoryDao($this->dsn, $this->user, $this->password);
+	}
+	public function createProfileDao(){
+		return new ProfileDao($this->dsn, $this->user, $this->password);
 	}
 }
 ?>

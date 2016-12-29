@@ -16,16 +16,15 @@
 <head>
 <meta charset="UTF-8">
 <title>インスタグルメ</title>
+<link rel="SHORTCUT ICON" href="./Images/favicon.ico">
 <!-- Import Google Icon Font-->
 <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- Import materialize.css-->
 <link type="text/css" rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/lity.css"  media="screen,projection">
-<link type="text/css" rel="stylesheet" href="Stylesheet/balloon.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/Style.css" media="screen,projection">
 <!-- Import JavaScript -->
-<script src="JavaScript/core.js"></script>
-<script src="JavaScript/jquery.js"></script>
+<script src="JavaScript/jquery-3.1.1.min.js"></script>
 <script src="JavaScript/materialize.js"></script>
 <script src="JavaScript/lity.js"></script>
 <script src="JavaScript/favorite.js"></script>
@@ -131,18 +130,18 @@
 						</div>
 					</form>
 					<?php
-			if(isset($_GET['err'])){
-				switch($_GET['err']){
-					case 'idErr':
-						$errStr = 'ユーザIDが不正です';
-						break;
-					case 'passErr':
-						$errStr = 'パスワードが違います';
-						break;
-				}
-				echo "<p class='err_text'>" . $errStr . "</p>";
-			}
-  	      ?>
+						if(isset($_GET['err'])){
+							switch($_GET['err']){
+								case 'idErr':
+									$errStr = 'ユーザIDが不正です';
+									break;
+								case 'passErr':
+									$errStr = 'パスワードが違います';
+									break;
+							}
+							echo "<p class='err_text'>" . $errStr . "</p>";
+						}
+					  ?>
 					<div class="center">
 						<p class="text">アカウントを持っていない方は　<a href="./signup.php">新規登録</a></p>
 					</div>
@@ -222,7 +221,6 @@
   </script>
 
 </div><!-- id = modal_parts end -->
-
 
 </body>
 </html>

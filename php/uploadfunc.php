@@ -3,11 +3,16 @@ require_once('Image.class.php');
 require_once('ImageDao.class.php');
 require_once('Comment.class.php');
 require_once('CommentDao.class.php');
+require_once('Nutrition.class.php');
+require_once('NutritionDao.class.php');
 require_once('DaoFactory.class.php');
 require_once('secureFunc.php');
 require_once('cvFunc.php');
 require_once('translateFunc.php');
 date_default_timezone_set('Asia/Tokyo');
+
+ini_set("display_errors", 1);
+error_reporting(E_ALL);
 
 session_start();
 $userId = 'guest';
@@ -40,15 +45,42 @@ try{
 				if($cvArray["adult"] == "UNKNOWN" || $cvArray["adult"] == "VERY_UNLIKELY" || $cvArray["adult"] == "UNLIKELY" and $cvArray["violence"] == "UNKNOWN" || $cvArray["violence"] == "VERY_UNLIKELY" || $cvArray["violence"] == "UNLIKELY"){
 					// Microsoft Transrate へリクエストしカテゴリ名を翻訳
 					$category = translator($cvArray["category"]);
+					// カテゴリ分割
+					$categories = preg_split("/#|、+/", $category, -1, PREG_SPLIT_NO_EMPTY);
+					// dao生成
+					$daoFactory = DaoFactory::getDaoFactory();
+					$dao = $daoFactory->createNutritionDao();
+					// 料理名テーブルから一致を検索（料理名以外をトリミング）				
+					$nutritionArray = array();
+					foreach($categories as $word){
+						$nutrition = $dao->searchName($word);
+						if(isset($nutrition) && $nutrition->getFoodName() != "" && !isset($nutritionArray[$nutrition->getFoodName()])){
+							$nutritionArray[$nutrition->getFoodName()] = $nutrition;
+						}
+					}
+					$dishName = "";
+					$groupNo = 0;
+					$cnt = 0;
+					foreach($nutritionArray as $nutrition){					
+						$dishName .= '#'.$nutrition->getFoodName();
+						if($cnt == 0){
+							$groupNo = (int)$nutrition->getGroupNo();
+						}
+						$cnt++;
+					}
+					if(count($nutritionArray) == 0){
+						$dishName = "不明";
+					}
 					// DBへ登録
 					$image = new Image();
 					$image->setImageName($imageName);
 					$image->setUserId($userId);
 					$image->setUploadDate($today);
 					$image->setCategory($category);
-					$daoFactory = DaoFactory::getDaoFactory();
+					$image->setDishName($dishName);
+					$image->setGroupNo($groupNo);
 					$dao = $daoFactory->createImageDao();
-					$dao->insert($image);
+					$flg = $dao->insert($image);
 					// コメントが空じゃなければ、コメントも登録
 					if(isset($_POST['comment']) && $_POST['comment'] != ''){
 						$comment = new Comment();
@@ -60,7 +92,11 @@ try{
 						$dao->insert($comment);
 					}
 					// アップロード画面に結果を返す
-					echo "success";
+					if($flg){
+						echo "success";
+					}else{
+						echo "dbInsertErr";
+					}
 					// 投稿成功時はトップ画面へ遷移
 					//header('Location: ../');
 					//exit;

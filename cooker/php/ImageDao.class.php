@@ -30,6 +30,7 @@ class ImageDao{
 	}
 	// 全データ取得
 	public function select($pageNum){
+		$imageArray = array();
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
 			foreach($dbh->query('SELECT * FROM Image ORDER BY UploadDate DESC LIMIT ' . $pageNum*12 . ',12') as $row) {
@@ -39,6 +40,8 @@ class ImageDao{
 				$image->setUserId($row['UserId']);
 				$image->setUploadDate($row['UploadDate']);
 				$image->setCategory($row['Category']);
+				$image->setDishName($row['DishName']);
+				$image->setGroupNo($row['GroupNo']);
 				$imageArray[] = $image;
 			}
 		}catch (PDOException $e){
@@ -98,6 +101,8 @@ SELECT ImageName FROM Comment WHERE Comment LIKE ?)ORDER BY UploadDate DESC LIMI
 				$image->setUserId($row['UserId']);
 				$image->setUploadDate($row['UploadDate']);
 				$image->setCategory($row['Category']);
+				$image->setDishName($row['DishName']);
+				$image->setGroupNo($row['GroupNo']);
 				$imageArray[] = $image;
 			}
 		}catch (PDOException $e){
@@ -135,6 +140,8 @@ SELECT ImageName FROM Comment WHERE Comment LIKE ?)ORDER BY UploadDate DESC LIMI
 				$image->setUserId($row['UserId']);
 				$image->setUploadDate($row['UploadDate']);
 				$image->setCategory($row['Category']);
+				$image->setDishName($row['DishName']);
+				$image->setGroupNo($row['GroupNo']);
 				$imageArray[] = $image;
 			}
 		}catch (PDOException $e){
@@ -172,6 +179,8 @@ SELECT ImageName FROM Comment WHERE Comment LIKE ?)ORDER BY UploadDate DESC LIMI
 				$image->setUserId($row['UserId']);
 				$image->setUploadDate($row['UploadDate']);
 				$image->setCategory($row['Category']);
+				$image->setDishName($row['DishName']);
+				$image->setGroupNo($row['GroupNo']);
 				$imageArray[] = $image;
 			}
 		}catch (PDOException $e){
@@ -184,8 +193,8 @@ SELECT ImageName FROM Comment WHERE Comment LIKE ?)ORDER BY UploadDate DESC LIMI
 	public function insert($image){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
-			$stmt = $dbh->prepare('INSERT INTO Image (ImageName, UserId, UploadDate, Category) values (?, ?, ?, ?)');
-			$flag = $stmt->execute(array($image->getImageName(), $image->getUserId(), $image->getUploadDate(), $image->getCategory()));
+			$stmt = $dbh->prepare('INSERT INTO Image (ImageName, UserId, UploadDate, Category, DishName, GroupNo) values (?, ?, ?, ?, ?, ?)');
+			$flag = $stmt->execute(array($image->getImageName(), $image->getUserId(), $image->getUploadDate(), $image->getCategory(), $image->getDishName(), $image->getGroupNo()));
 		}catch (PDOException $e){
 			print('Connection failed:'.$e->getMessage());
 			die();
@@ -208,8 +217,8 @@ SELECT ImageName FROM Comment WHERE Comment LIKE ?)ORDER BY UploadDate DESC LIMI
 	public function update($image){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
-			$stmt = $dbh->prepare('UPDATE Image SET UserId = ?, UploadDate = ?, Category = ? WHERE ImageName = ?');
-			$flag = $stmt->execute(array($image->getUserId(), $image->getUploadDate(), $image->getCategory(),$image->getImageName()));
+			$stmt = $dbh->prepare('UPDATE Image SET UserId = ?, UploadDate = ?, Category = ?, DishName = ? WHERE ImageName = ?');
+			$flag = $stmt->execute(array($image->getUserId(), $image->getUploadDate(), $image->getCategory(), $image->getCategory(), $image->getImageName()));
 		}catch (PDOException $e){
 			print('Connection failed:'.$e->getMessage());
 			die();

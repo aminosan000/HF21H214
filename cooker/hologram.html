@@ -7,7 +7,7 @@
 
 <body>
 <script><!--
-var conn = new WebSocket('ws://gunmetal.sakura.ne.jp:8080');
+var conn = new WebSocket('ws://localhost:8080');
 conn.onopen = function(e) {
     console.log("Connection established!");
 };
@@ -18,6 +18,6 @@ conn.onmessage = function(e) {
 	obj.setAttribute("src", "./movie/" + e.data + ".mp4");
 };
 --></script>
-<video id="video" src="./movie/sushi.mp4" preload="auto" autoplay loop width="100%"></video>
+<video id="video" src="./movie/8.mp4" preload="auto" autoplay loop controls width="100%"></video>
 </body>
 </html>
