@@ -230,6 +230,43 @@ function chartfunc(obj){
 		return false;
 	});
 }
+
+// 検索処理時
+function searchfunc(){
+	var header = document.getElementById("header");
+	header.children[0].children[0].children[0].children[0].children[0].children[0].setAttribute("class", "");
+	header.children[0].children[0].children[0].children[0].children[1].children[0].setAttribute("class", "active");
+	
+}
+
+// 料理一覧更新
+/*function reloadfunc(){
+	var cook = document.getElementById("cook");
+	var date = cook.children[2].children[0].children[1].children[0].children[0].children[0].children[0].children[1].children[0].children[1].innerHTML;
+	var data = {"date": date};
+	var path = "./php/reloadfunc.php";
+	// jqueryの.ajaxでAjax実行
+	return $.ajax({
+		type: "GET",
+		url: path,
+		cache: false,
+		data: data,
+		dataType: "json"
+	})
+	// 成功時
+    .done(function(data, textStatus, jqXHR){
+		console.log(data);
+		for (key in data) {
+		  elm.innerHTML += ('key:' + key + ' value:' + data[key]);
+		}
+		return false;
+    })
+	// 失敗時
+    .fail(function(jqXHR, textStatus, errorThrown){
+		console.log(data);
+		return false;
+	});
+}*/
 </script>
 <!--Let browser know website is optimized for mobile-->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -243,9 +280,23 @@ function chartfunc(obj){
     <nav class="nav-extended">
       <div class="nav-wrapper red darken-4">
 		<ul class="tabs tabs-transparent">
+		<?php
+			if(isset($_GET['word']) || isset($_GET['pageNum'])){
+		?>
+			<li class="tab red darken-4"><a href="#home"><i class="material-icons white-text">home</i></a> </li>
+			<li class="tab red darken-4"><a href="#cook" class="active"><i class="material-icons white-text">restaurant</i></a> </li>
+			<li class="tab red darken-4"><a href="#favorite"><i class="material-icons white-text">favorite</i></a> </li>
+		<?php
+			}else if(isset($_GET['favPageNum'])){
+		?>
+			<li class="tab red darken-4"><a href="#home"><i class="material-icons white-text">home</i></a> </li>
+			<li class="tab red darken-4"><a href="#cook"><i class="material-icons white-text">restaurant</i></a> </li>
+			<li class="tab red darken-4"><a href="#favorite" class="active"><i class="material-icons white-text">favorite</i></a> </li>
+		<?php }else{ ?>
 			<li class="tab red darken-4"><a href="#home" class="active"><i class="material-icons white-text">home</i></a> </li>
 			<li class="tab red darken-4"><a href="#cook"><i class="material-icons white-text">restaurant</i></a> </li>
 			<li class="tab red darken-4"><a href="#favorite"><i class="material-icons white-text">favorite</i></a> </li>
+		<?php } ?>
 			<li class="tab red darken-4"><a href="#history"><i class="material-icons white-text">history</i></a> </li>
 			<li class="tab red darken-4"><a href="#profile"><i class="material-icons white-text">account_circle</i></a> </li>
 		</ul>
@@ -285,7 +336,7 @@ function chartfunc(obj){
 	
 		<!-- reload-btn -->
 		<div class="center reload">
-			<a class="btn-floating btn-large blue darken-4 modal-trigger" onclick="location.reload()">
+			<a class="btn-floating btn-large blue darken-4" href="./">
 				<i class="material-icons md-48">refresh</i>
 			</a>
 		</div>
@@ -304,6 +355,7 @@ function chartfunc(obj){
 					}else{	
 						$imageArray = $dao->select($pageNum);
 						$rowCount = $dao->rows();
+						echo "<div></div>";
 					}
 					$dao = $daoFactory->createCommentDao();
 					$commentArray = $dao->select();
@@ -332,8 +384,9 @@ function chartfunc(obj){
 							</div>
 							<div class="col s10">
 								<span class="black-text">
-								<p><?=$uploadUser?></p>
-								<p><?=$imageRow->getUploadDate()?></p></span>
+									<p><?=$uploadUser?></p>
+									<p><?=$imageRow->getUploadDate()?></p>
+								</span>
 							</div>
 						</div>
 					  </div>
@@ -477,8 +530,8 @@ function chartfunc(obj){
 		<div class="row">
 			<?php
 				$pageNum = 0;
-				if(isset($_GET['pageNum'])){
-					$pageNum = $_GET['pageNum'];
+				if(isset($_GET['favPageNum'])){
+					$pageNum = $_GET['favPageNum'];
 				}
 				$dao = $daoFactory->createImageDao();
 				$imageArray = $dao->favoriteSelect($userId, $pageNum);
@@ -625,7 +678,7 @@ function chartfunc(obj){
 					if($pageNum == 0){
 						echo "<li class='disabled'><i class='material-icons'>chevron_left</i></li>";
 					}else{
-						echo "<li class='waves-effect'><a href='./favorite.php?pageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
+						echo "<li class='waves-effect'><a href='./favorite.php?favPageNum=" . ($pageNum - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
 					}
 					for($count = 0; $count < ceil($rowCount / 12); $count++){
 						if($count == $pageNum){
@@ -633,13 +686,13 @@ function chartfunc(obj){
 						}else{
 							echo "<li class='waves-effect'>";
 						}
-						echo "<a href='./favorite.php?pageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
+						echo "<a href='./favorite.php?favPageNum=" . $count . "'>" . ($count + 1) . "</a></li>";
 					}
 					if($pageNum >= ceil($rowCount / 12) - 1){
 						echo "<li class='disabled'><i class='material-icons'>chevron_right</i></li>
 					";
 					}else{
-						echo "<li class='waves-effect'><a href='./favorite.php?pageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
+						echo "<li class='waves-effect'><a href='./favorite.php?favPageNum=" . ($pageNum + 1). "'><i class='material-icons'>chevron_right</i></a></li>
 					";
 					}
                 ?>
@@ -906,7 +959,7 @@ function chartfunc(obj){
             <div class="nav-wrapper">
               <form method="get" action="./">
                 <div class="input-field">
-                  <input id="search" type="search" name="word" required>
+                  <input id="search" type="search" name="word" onkeydown="searchfunc()" required>
                   <label for="search"><i class="material-icons">search</i></label>
                   <i class="material-icons">close</i>
                 </div>

@@ -51,6 +51,31 @@ class ImageDao{
 		$dbh = null;
 		return $imageArray;
 	}
+	// 新規投稿分取得
+	public function selectUpdate($date){
+		$imageArray = array();
+		try{
+			$dbh = new PDO($this->dsn, $this->user, $this->password);
+			$stmt = $dbh->prepare('SELECT * FROM Image WHERE UploadDate > ? ORDER BY UploadDate DESC LIMIT 12');
+			$stmt->execute(array($date));
+			while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				// 取り出したデータをクラスインスタンスの配列に入れる
+				$image = new Image();
+				$image->setImageName($row['ImageName']);
+				$image->setUserId($row['UserId']);
+				$image->setUploadDate($row['UploadDate']);
+				$image->setCategory($row['Category']);
+				$image->setDishName($row['DishName']);
+				$image->setGroupNo($row['GroupNo']);
+				$imageArray[] = $image;
+			}
+		}catch (PDOException $e){
+			print('Connection failed:'.$e->getMessage());
+			die();
+		}
+		$dbh = null;
+		return $imageArray;
+	}
 	// ランダムデータ取得
 	public function random(){
 		try{
