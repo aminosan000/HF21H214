@@ -35,21 +35,25 @@
 	$profileArray = $dao->select($userId);
 	// ユーザの年齢計算
 	$today = date("Ymd");
-	$birth = date("Ymd", strtotime($profileArray[0]->getBirth()));
-	$age = floor(($today-$birth)/10000);
-	// ユーザの性別設定
-	$relation = $profileArray[0]->getRelation();
-	switch($relation){
-		case "ママ":
-		case "娘":
-		case "おばあちゃん": 
-			$gender = "女性";
-			break;
-		case "パパ":
-		case "息子":
-		case "おじいちゃん":
-			$gender = "男性";
-			break;
+	$age = 20;
+	$gender = "女性";
+	if(isset($profileArray[0])){
+		$birth = date("Ymd", strtotime($profileArray[0]->getBirth()));
+		$age = floor(($today-$birth)/10000);
+		// ユーザの性別設定
+		$relation = $profileArray[0]->getRelation();
+		switch($relation){
+			case "ママ":
+			case "娘":
+			case "おばあちゃん": 
+				$gender = "女性";
+				break;
+			case "パパ":
+			case "息子":
+			case "おじいちゃん":
+				$gender = "男性";
+				break;
+		}
 	}
 ?>
 <!DOCTYPE html>
