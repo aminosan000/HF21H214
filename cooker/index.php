@@ -92,9 +92,13 @@ conn.onmessage = function(e) {
     console.log(e.data);
 };
 
-// 履歴レーダーチャート生成
+// 読み込み時履歴レーダーチャート生成
 $(document).ready(function(){
-	console.log("loaded");
+	historychart();
+});
+
+// 履歴レーダーチャート生成
+function historychart(){
 	// 書き換え対象のiframe要素取得
 	var elm1 = document.getElementById("historychart");
 	var elm2 = document.getElementById("nutritionbox").children[1];
@@ -149,7 +153,7 @@ $(document).ready(function(){
 		console.log(data);
 		return false;
 	});
-});
+}
 
 // 調理確定時
 function cookfunc(obj){
@@ -159,7 +163,7 @@ function cookfunc(obj){
 	if(holoNum == 0){
 		holoNum = Math.floor(Math.random () * 9) + 1;
 	}
-	//conn.send(holoNum);
+	conn.send(holoNum);
 }
 
 //調理ボタン押下時
@@ -309,6 +313,8 @@ function chartfunc(obj){
 					$cnt = 1;
 					foreach($imageArray as $imageRow){
 						$imageName = $imageRow->getImageName();
+						$splitImageName = preg_split("/\./", $imageName);
+						$imageId = $splitImageName[0];
 						$uploadUser = $imageRow->getUserId();
 						$holoNum = $imageRow->getGroupNo();
 						$uploadAvator = "guest.png";
@@ -316,6 +322,7 @@ function chartfunc(obj){
 							$uploadAvator = $uploadUser . ".png";
 						}
 				?>
+				<div id="food<?=$imageName?>">
 				  <div class="col s12">
 					<div class="card">
 					  <div class="card-content">
@@ -350,14 +357,14 @@ function chartfunc(obj){
 						  <button data-target="modal1" data-imagename="<?=$imageName?>" data-holonum="<?=$holoNum?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="foodfunc(this)"  >
 							<i class="material-icons orange-text text-darken-1 md-24">restaurant</i>
 						  </button>
-						  <button data-target="modal-comment<?=$cnt?>" data-holonum="<?=$holoNum?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="chartfunc(this)">
+						  <button data-target="modal-comment<?=$imageId?>" data-holonum="<?=$holoNum?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="chartfunc(this)">
 							<i class="material-icons teal-text text-darken-1 md-36">list</i>
 						  </button>
 						</div>
 					  </div>
 					</div>
 				</div>
-				<div id="modal-comment<?=$cnt?>" class="modal">
+				<div id="modal-comment<?=$imageId?>" class="modal">
 					<div class="modal-content">
 					  <div class="container">
 						<div class="row">
@@ -427,6 +434,7 @@ function chartfunc(obj){
 						  <button class=" modal-action modal-close waves-effect waves-green btn-flat right">閉じる</button>
 						</div>
 					</div><!-- class modal-comment end -->
+				</div>
 				<?php
 					$cnt++;
 					}
@@ -484,6 +492,8 @@ function chartfunc(obj){
 				$cnt = 1;
 				foreach($imageArray as $imageRow){
 					$imageName = $imageRow->getImageName();
+					$splitImageName = preg_split("/\./", $imageName);
+					$imageId = $splitImageName[0];
 					$uploadUser = $imageRow->getUserId();
 					$holoNum = $imageRow->getGroupNo();
 					$uploadAvator = "guest.png";
@@ -491,6 +501,7 @@ function chartfunc(obj){
 						$uploadAvator = $uploadUser . ".png";
 					}
 			?>
+			<div id="favorite<?=$imageName?>">
 				  <div class="col s12">
 					<div class="card">
 					  <div class="card-content">
@@ -525,14 +536,14 @@ function chartfunc(obj){
 						  <button data-target="modal1" data-imagename="<?=$imageName?>" class="btn-flat waves-effect waves-light modal-trigger" data-holonum="<?=$holoNum?>" onclick="foodfunc(this)"  >
 							<i class="material-icons orange-text text-darken-1 md-24">restaurant</i>
 						  </button>
-						  <button data-target="modal-favorite-comment<?=$cnt?>" data-holonum="<?=$holoNum?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="chartfunc(this)">
+						  <button data-target="modal-favorite-comment<?=$imageId?>" data-holonum="<?=$holoNum?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="chartfunc(this)">
 							<i class="material-icons teal-text text-darken-1 md-36">list</i>
 						  </button>
 						</div>
 					  </div>
 					</div>
 				</div>
-				<div id="modal-favorite-comment<?=$cnt?>" class="modal">
+				<div id="modal-favorite-comment<?=$imageId?>" class="modal">
 					<div class="modal-content">
 						<div class="container">
 							<div class="row">
@@ -602,6 +613,7 @@ function chartfunc(obj){
 						  <button class=" modal-action modal-close waves-effect waves-green btn-flat right">閉じる</button>
 						</div>
 					</div><!-- class modal-comment end -->
+				</div>
 			<?php
 				$cnt++;
 				}
@@ -713,11 +725,12 @@ function chartfunc(obj){
 					}
 					$age = floor(($today-$birth)/10000);
 			?>
-			<div class="valign-wrapper">
+			<div id="prof<?=$cnt?>" class="valign-wrapper">
 				<div class="col s2">
 					<div class="center">
-						<?=$name?><br>
-						<img class="upload_avator" src="../Images/Avator/<?=$icon?>"><br><?=$relation?><br>
+						<p class="prof_text"><?=$name?></p>
+						<img class="upload_avator" src="../Images/Avator/<?=$icon?>">
+						<p class="prof_text"><?=$relation?></p>
 					</div>
 				</div>
 				<div class="col s9">
@@ -729,7 +742,8 @@ function chartfunc(obj){
 							:<br>:<br>:<br>:
 						</div>
 						<div class="col s8">
-							<?=$age?>歳<br>
+							<p class="prof_text"><?=$age?>歳</p>
+							<p class="prof_text">
 							<?php
 								$cnt2 = 1;
 								foreach($favoriteFoodArray as $row){
@@ -740,7 +754,8 @@ function chartfunc(obj){
 									$cnt2++;
 								}
 							?>
-							<br>
+							</p>
+							<p class="prof_text">
 							<?php
 								$cnt2 = 1;
 								foreach($notFavoriteFoodArray as $row){
@@ -751,7 +766,8 @@ function chartfunc(obj){
 									$cnt2++;
 								}
 							?>
-							<br>
+							</p>
+							<p class="prof_text">
 							<?php
 								$cnt2 = 1;
 								foreach($allergyArray as $row){
@@ -762,6 +778,7 @@ function chartfunc(obj){
 									$cnt2++;
 								}
 							?>
+							</p>
 						</div>
 						<div class="clearfix"></div>
 					</div>
@@ -772,14 +789,14 @@ function chartfunc(obj){
 			</div>		
 			<div id="modal-profile<?=$cnt?>" class="modal">
 				<div class="modal-content">
-					<form id="prof<?=$cnt?>">
+					<form id="form-prof<?=$cnt?>" name="form-prof<?=$cnt?>">
 						<h5><?=$name?>さんのプロフィールを編集</h5><br>
 						<div class="input-field">
-							<label for="name">名前<span class="red-text">（必須）</span></label>
-							<input id="name" type="text" class="validate" name="name" maxlength="20" value="<?=$name?>" placeholder="名前を入力">
+							<label for="name<?=$cnt?>">名前<span class="red-text">（必須）</span></label>
+							<input id="name<?=$cnt?>" type="text" class="validate" name="name" maxlength="20" value="<?=$name?>" placeholder="名前を入力">
 						</div>
 						<div class="input-field">
-							<select name="relation">
+							<select id="relation<?=$cnt?>" name="relation">
 								<option value="" disabled selected>続柄を選択</option>
 								<option value="ママ" <?php if($relation == "ママ"){ echo "selected"; } ?>>ママ</option>
 								<option value="パパ" <?php if($relation == "パパ"){ echo "selected"; } ?>>パパ</option>
@@ -791,25 +808,25 @@ function chartfunc(obj){
 							<label>続柄<span class="red-text">（必須）</span></label>
 						</div>
 						<div class="input-field">
-							<label for="birth">生年月日<span class="red-text">（必須）</span></label>
-							<input id="birth" type="text" class="validate" name="birth" maxlength="20" value="<?=$birth?>" placeholder="半角数字8桁（例：20161201）">
+							<label for="birth<?=$cnt?>">生年月日<span class="red-text">（必須）</span></label>
+							<input id="birth<?=$cnt?>" type="text" class="validate" name="birth" maxlength="20" value="<?=$birth?>" placeholder="半角数字8桁（例：20161201）">
 						</div>
 						<div class="input-field">
-							<label for="favorite">好きな食べ物</label>
-							<input id="favorite" type="text" class="validate" name="favorite" maxlength="20" value="<?=$favoriteFood?>" placeholder="好きな食べ物を入力（スペース区切りで複数入力）">
+							<label for="favorite<?=$cnt?>">好きな食べ物</label>
+							<input id="favorite<?=$cnt?>" type="text" class="validate" name="favorite" maxlength="20" value="<?=$favoriteFood?>" placeholder="好きな食べ物を入力（スペース区切りで複数入力）">
 						</div>
 						<div class="input-field">
-							<label for="notfavorite">嫌いな食べ物</label>
-							<input id="notfavorite" type="text" class="validate" name="notfavorite" maxlength="20" value="<?=$notFavoriteFood?>" placeholder="嫌いな食べ物を入力（スペース区切りで複数入力）">
+							<label for="notfavorite<?=$cnt?>">嫌いな食べ物</label>
+							<input id="notfavorite<?=$cnt?>" type="text" class="validate" name="notfavorite" maxlength="20" value="<?=$notFavoriteFood?>" placeholder="嫌いな食べ物を入力（スペース区切りで複数入力）">
 						</div>
 						<div class="input-field">
-							<label for="allergy">アレルギー</label>
-							<input id="allergy" type="text" class="validate" name="allergy" maxlength="20" value="<?=$allergy?>" placeholder="アレルギーがある場合は入力（スペース区切りで複数入力）">
+							<label for="allergy<?=$cnt?>">アレルギー</label>
+							<input id="allergy<?=$cnt?>" type="text" class="validate" name="allergy" maxlength="20" value="<?=$allergy?>" placeholder="アレルギーがある場合は入力（スペース区切りで複数入力）">
 						</div>
 						<input type="hidden" name="icon" value="<?=$icon?>">
 						<input type="hidden" name="profno" value="<?=$profNo?>">
 					</form>
-					<button class="waves-effect waves-red red-btn btn-flat right" data-formid="prof<?=$cnt?>" onclick="profilefunc(this)">登録</button>
+					<button class="waves-effect waves-red red-btn btn-flat right" data-profid="<?=$cnt?>" onclick="profilefunc(this)">登録</button>
 					<button class="waves-effect waves-light btn-flat right modal-action modal-close">キャンセル</button><br><br>
 					<div id="loading-prof<?=$cnt?>" class="center"></div>
 				</div>
@@ -820,7 +837,7 @@ function chartfunc(obj){
 			</div>	
 			<div id="modal-profile-add" class="modal">
 				<div class="modal-content">
-					<form id="prof-add">
+					<form id="form-prof0">
 						<h5>家族を追加</h5><br>
 						<div class="input-field">
 							<label for="name">名前<span class="red-text">（必須）</span></label>
@@ -855,9 +872,9 @@ function chartfunc(obj){
 							<input id="allergy" type="text" class="validate" name="allergy" maxlength="20" value="" placeholder="アレルギーがある場合は入力（スペース区切りで複数入力）">
 						</div>
 					</form>
-					<button class="waves-effect waves-red red-btn btn-flat right" data-formid="prof-add" onclick="profilefunc(this)">登録</button>
+					<button class="waves-effect waves-red red-btn btn-flat right" data-profid="0" onclick="profilefunc(this)">登録</button>
 					<button class="waves-effect waves-light btn-flat right modal-action modal-close">キャンセル</button><br><br>
-					<div id="loading-prof-add" class="center"></div>
+					<div id="loading-prof0" class="center"></div>
 				</div>
 			</div>
 		</div>

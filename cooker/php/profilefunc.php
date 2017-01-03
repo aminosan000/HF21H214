@@ -54,7 +54,7 @@ if(!isset($_POST['name']) || $_POST['name'] == ""){
 				$profile->setProfNo($profNo);
 				$dao->update($profile);
 			}
-			echo 'success';
+			echo 'success';	
 		}catch(Exception $e) {
 			echo 'dbErr';
 			//echo 'エラー:', $e->getMessage().PHP_EOL;

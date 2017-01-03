@@ -167,7 +167,7 @@ function getReference($gender, $age){
 
 // 栄養素データ取り出し
 function getHistoryNutrition($userId){
-	// 索引番号から栄養素検索
+	// ユーザIDから履歴検索
 	$daoFactory = DaoFactory::getDaoFactory();
 	$dao = $daoFactory->createNutritionDao();
 	return $dao->selectHistory($userId);

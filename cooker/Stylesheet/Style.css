@@ -31,6 +31,10 @@ p.err_text {
   color: #FF0000;
 }
 
+p.prof_text {
+	margin: 0;
+}
+
 .pointer {
 	cursor: pointer;
 }

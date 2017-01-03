@@ -101,7 +101,7 @@ class NutritionDao{
 		$nutritionArray = array();
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
-			$stmt = $dbh->prepare('SELECT * FROM History AS H LEFT OUTER JOIN Nutrition AS N ON H.GroupNo = N.FoodNo WHERE UserId = ? ORDER BY H.HistoryDate');
+			$stmt = $dbh->prepare('SELECT * FROM History AS H LEFT OUTER JOIN Nutrition AS N ON H.GroupNo = N.FoodNo WHERE UserId = ? ORDER BY H.HistoryDate DESC LIMIT 7');
 			$stmt->execute(array($userId));
 			while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 				// 取り出したデータをクラスインスタンスの配列に入れる
