@@ -62,6 +62,7 @@ class ImageDao{
 				$image->setUserId($row['UserId']);
 				$image->setUploadDate($row['UploadDate']);
 				$image->setCategory($row['Category']);
+				$image->setGroupNo($row['GroupNo']);
 				$imageArray[] = $image;
 			}
 		}catch (PDOException $e){

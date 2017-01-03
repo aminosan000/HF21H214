@@ -1,5 +1,4 @@
 <?PHP
-
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
 
@@ -54,6 +53,76 @@ class NutritionDao{
 				$nutrition->setSaturatedFatAcid($row['SaturatedFatAcid']);
 				$nutrition->setSalt($row['Salt']);
 
+				$nutritionArray[] = $nutrition;
+			}
+		}catch (PDOException $e){
+			print('Connection failed:'.$e->getMessage());
+			die();
+		}
+		$dbh = null;
+		return $nutritionArray;
+	}
+	// FoodNoからデータ取得
+	public function selectByNo($foodNo){
+		$nutrition = new Nutrition();
+		try{
+			$dbh = new PDO($this->dsn, $this->user, $this->password);
+			$stmt = $dbh->prepare('SELECT * FROM Nutrition WHERE FoodNo = ?');
+			$stmt->execute(array($foodNo));
+			while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+				// 取り出したデータをクラスインスタンスの配列に入れる
+				$nutrition->setFoodNo($row['FoodNo']);
+				$nutrition->setGroupNo($row['GroupNo']);
+				$nutrition->setFoodName($row['FoodName']);
+				$nutrition->setEnergy($row['Energy']);
+				$nutrition->setProtein($row['Protein']);
+				$nutrition->setFat($row['Fat']);
+				$nutrition->setCarbohydrate($row['Carbohydrate']);
+				$nutrition->setCalcium($row['Calcium']);
+				$nutrition->setIron($row['Iron']);
+				$nutrition->setVitaminA($row['VitaminA']);
+				$nutrition->setVitaminE($row['VitaminE']);
+				$nutrition->setVitaminB1($row['VitaminB1']);
+				$nutrition->setVitaminB2($row['VitaminB2']);
+				$nutrition->setVitaminC($row['VitaminC']);
+				$nutrition->setFiber($row['Fiber']);
+				$nutrition->setSaturatedFatAcid($row['SaturatedFatAcid']);
+				$nutrition->setSalt($row['Salt']);
+			}
+		}catch (PDOException $e){
+			print('Connection failed:'.$e->getMessage());
+			die();
+		}
+		$dbh = null;
+		return $nutrition;
+	}
+	// FoodNoからデータ取得
+	public function selectHistory($userId){
+		$nutritionArray = array();
+		try{
+			$dbh = new PDO($this->dsn, $this->user, $this->password);
+			$stmt = $dbh->prepare('SELECT * FROM History AS H LEFT OUTER JOIN Nutrition AS N ON H.GroupNo = N.FoodNo WHERE UserId = ? ORDER BY H.HistoryDate');
+			$stmt->execute(array($userId));
+			while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+				// 取り出したデータをクラスインスタンスの配列に入れる
+				$nutrition = new Nutrition();
+				$nutrition->setFoodNo($row['FoodNo']);
+				$nutrition->setGroupNo($row['GroupNo']);
+				$nutrition->setFoodName($row['FoodName']);
+				$nutrition->setEnergy($row['Energy']);
+				$nutrition->setProtein($row['Protein']);
+				$nutrition->setFat($row['Fat']);
+				$nutrition->setCarbohydrate($row['Carbohydrate']);
+				$nutrition->setCalcium($row['Calcium']);
+				$nutrition->setIron($row['Iron']);
+				$nutrition->setVitaminA($row['VitaminA']);
+				$nutrition->setVitaminE($row['VitaminE']);
+				$nutrition->setVitaminB1($row['VitaminB1']);
+				$nutrition->setVitaminB2($row['VitaminB2']);
+				$nutrition->setVitaminC($row['VitaminC']);
+				$nutrition->setFiber($row['Fiber']);
+				$nutrition->setSaturatedFatAcid($row['SaturatedFatAcid']);
+				$nutrition->setSalt($row['Salt']);
 				$nutritionArray[] = $nutrition;
 			}
 		}catch (PDOException $e){

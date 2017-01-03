@@ -27,6 +27,7 @@ class HistoryDao{
 				$history->setImageName($row['ImageName']);
 				$history->setUserId($row['UserId']);
 				$history->setHistoryDate($row['HistoryDate']);
+				$history->setGroupNo($row['GroupNo']);
 				$historyArray[] = $history;
 			}
 		}catch (PDOException $e){
@@ -39,8 +40,8 @@ class HistoryDao{
 	public function insert($history){
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
-			$stmt = $dbh->prepare('INSERT INTO History (UserId, HistoryDate, ImageName) values (?, ?, ?)');
-			$flag = $stmt->execute(array($history->getUserId(), $history->getHistoryDate(), $history->getImageName()));
+			$stmt = $dbh->prepare('INSERT INTO History (UserId, HistoryDate, ImageName, GroupNo) values (?, ?, ?, ?)');
+			$flag = $stmt->execute(array($history->getUserId(), $history->getHistoryDate(), $history->getImageName(), $history->getGroupNo()));
 		}catch (PDOException $e){
 			print('Connection failed:'.$e->getMessage());
 			die();

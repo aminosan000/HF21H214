@@ -30,6 +30,27 @@
 	if(file_exists("../Images/Avator/" . $userId . ".png")){
 		$avatorImage = $userId . ".png";
 	}
+	$daoFactory = DaoFactory::getDaoFactory();
+	$dao = $daoFactory->createProfileDao();
+	$profileArray = $dao->select($userId);
+	// ユーザの年齢計算
+	$today = date("Ymd");
+	$birth = date("Ymd", strtotime($profileArray[0]->getBirth()));
+	$age = floor(($today-$birth)/10000);
+	// ユーザの性別設定
+	$relation = $profileArray[0]->getRelation();
+	switch($relation){
+		case "ママ":
+		case "娘":
+		case "おばあちゃん": 
+			$gender = "女性";
+			break;
+		case "パパ":
+		case "息子":
+		case "おじいちゃん":
+			$gender = "男性";
+			break;
+	}
 ?>
 <!DOCTYPE html>
 <html lang="jp">
@@ -67,15 +88,74 @@ conn.onmessage = function(e) {
     console.log(e.data);
 };
 
+// 履歴レーダーチャート生成
+$(document).ready(function(){
+	console.log("loaded");
+	// 書き換え対象のiframe要素取得
+	var elm1 = document.getElementById("historychart");
+	var elm2 = document.getElementById("nutritionbox").children[1];
+	// 栄養素データを取得する料理番号取得
+	var userId = "<?=$userId?>";
+	var gender = "<?=$gender?>";
+	var age = <?=$age?>;
+	// リクエストするデータをobjectに詰める
+	var data = {"gender": gender, "age": age, "userId": userId};
+	var path = "./php/historychartfunc.php";
+	// jqueryの.ajaxでAjax実行
+	return $.ajax({
+		type: "GET",
+		url: path,
+		cache: false,
+		data: data,
+		dataType: "json"
+	})
+	// 成功時
+    .done(function(data, textStatus, jqXHR){
+		console.log(data);
+		var per = data["per_nutrition"];
+		var sum = data["sum_nutrition"];
+		
+		var ene = per["energy"];
+		var pro = per["protein"];
+		var fat = per["fat"];
+		var car = per["carbohydrate"];
+		var cal = per["calcium"];
+		var iro = per["iron"];
+		var via = per["vitaminA"];
+		var vie = per["vitaminE"];
+		var vib1 = per["vitaminB1"];
+		var vib2 = per["vitaminB2"];
+		var vic = per["vitaminC"];
+		var fib = per["fiber"];
+		var sat = per["saturatedFatAcid"];
+		var sal = per["salt"];
+		// レーダーチャート描写
+		elm1.setAttribute("src", "chart.php?ene="+ene+"&pro="+pro+"&fat="+fat+"&car="+car+"&cal="+cal+"&iro="+iro+"&via="+via+"&vie="+vie+"&vib1="+vib1+"&vib2="+vib2+"&vic="+vic+"&fib="+fib+"&sat="+sat+"&sal="+sal);
+		// 栄養素表示
+		elm2.innerHTML = "カロリー&#8195;&#8195;:	&#8195;"+sum["energy"]+"kcal<br>たんぱく質&#8195;:&#8195;"+sum["protein"]+"g<br>脂質&#8195;&#8195;&#8195;&#8195;:&#8195;"+sum["fat"]+"g<br>炭水化物&#8195;&#8195;:&#8195;"+sum["carbohydrate"]+"g<br>カルシウム&#8195;:&#8195;"+sum["calcium"]+"g<br>鉄分&#8195;&#8195;&#8195;&#8195;:&#8195;"+sum["iron"]+"g<br>ビタミンA&#8194;&#8195;:&#8195;"+sum["vitaminA"]+"μg<br>ビタミンE&#8194;&#8195;:&#8195;"+sum["vitaminE"]+"mg<br>ビタミンB1&#8195;:&#8195;"+sum["vitaminB1"]+"mg<br>ビタミンB2&#8195;:&#8195;"+sum["vitaminB2"]+"mg<br>ビタミンC&#8194;&#8195;:&#8195;"+sum["vitaminC"]+"mg<br>食物繊維&#8201;&#8195;&#8195;:&#8195;"+sum["fiber"]+"mg<br>塩分&#8201;&#8195;&#8195;&#8195;&#8195;:&#8195;"+sum["salt"]+"mg";
+		
+		/*
+		for (key in data) {
+		  elm.innerHTML += ('key:' + key + ' value:' + data[key]);
+		}*/
+		return false;
+    })
+	// 失敗時
+    .fail(function(jqXHR, textStatus, errorThrown){
+		console.log(data);
+		return false;
+	});
+});
+
 // 調理確定時
 function cookfunc(obj){
 	var imageName = obj.getAttribute("data-imagename");
 	var holoNum = obj.getAttribute("data-holonum");
+	historyfunc(imageName, holoNum);
 	if(holoNum == 0){
-		holoNum = Math.floor(Math.random () * 10) + 1;
+		holoNum = Math.floor(Math.random () * 9) + 1;
 	}
-	conn.send(holoNum);
-	historyfunc(imageName);
+	//conn.send(holoNum);
 }
 
 //調理ボタン押下時
@@ -91,6 +171,57 @@ function closefunc(){
 	$('#modal1').closeModal();
 }
 
+// 料理ごとの栄養素レーダーチャート表示
+function chartfunc(obj){
+	// 書き換え対象のiframe要素取得
+	var target = obj.getAttribute("data-target");
+	var node = document.getElementById(target);
+	var elm = node.children[0].children[0].children[0].children[0].children[0].children[0];
+	// 栄養素データを取得する料理番号取得
+	var foodNo = obj.getAttribute("data-holonum");
+	var gender = "<?=$gender?>";
+	var age = <?=$age?>;
+	// リクエストするデータをobjectに詰める
+	var data = {"gender": gender, "age": age, "foodNo": foodNo};
+	var path = "./php/nutritionfunc.php";
+	// jqueryの.ajaxでAjax実行
+	return $.ajax({
+		type: "GET",
+		url: path,
+		cache: false,
+		data: data,
+		dataType: "json"
+	})
+	// 成功時
+    .done(function(data, textStatus, jqXHR){
+		console.log(data);
+		var ene = data["energy"];
+		var pro = data["protein"];
+		var fat = data["fat"];
+		var car = data["carbohydrate"];
+		var cal = data["calcium"];
+		var iro = data["iron"];
+		var via = data["vitaminA"];
+		var vie = data["vitaminE"];
+		var vib1 = data["vitaminB1"];
+		var vib2 = data["vitaminB2"];
+		var vic = data["vitaminC"];
+		var fib = data["fiber"];
+		var sat = data["saturatedFatAcid"];
+		var sal = data["salt"];
+		elm.setAttribute("src", "chart.php?ene="+ene+"&pro="+pro+"&fat="+fat+"&car="+car+"&cal="+cal+"&iro="+iro+"&via="+via+"&vie="+vie+"&vib1="+vib1+"&vib2="+vib2+"&vic="+vic+"&fib="+fib+"&sat="+sat+"&sal="+sal);
+		/*
+		for (key in data) {
+		  elm.innerHTML += ('key:' + key + ' value:' + data[key]);
+		}*/
+		return false;
+    })
+	// 失敗時
+    .fail(function(jqXHR, textStatus, errorThrown){
+		console.log(data);
+		return false;
+	});
+}
 </script>
 <!--Let browser know website is optimized for mobile-->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -125,7 +256,6 @@ function closefunc(){
         <h4>今日のおすすめ料理</h4>
         <div class="center">
 		  <?php
-			$daoFactory = DaoFactory::getDaoFactory();
 			$dao = $daoFactory->createImageDao();
 			$imageArray = $dao->random();
 			$imageRow = $imageArray[0];
@@ -216,24 +346,25 @@ function closefunc(){
 						  <button data-target="modal1" data-imagename="<?=$imageName?>" data-holonum="<?=$holoNum?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="foodfunc(this)"  >
 							<i class="material-icons orange-text text-darken-1 md-24">restaurant</i>
 						  </button>
-						  <button data-target="modal-comment<?=$cnt?>" class="btn-flat waves-effect waves-light modal-trigger">
+						  <button data-target="modal-comment<?=$cnt?>" data-holonum="<?=$holoNum?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="chartfunc(this)">
 							<i class="material-icons teal-text text-darken-1 md-36">list</i>
 						  </button>
 						</div>
 					  </div>
 					</div>
 				</div>
-					  <div id="modal-comment<?=$cnt?>" class="modal">
-						<div class="modal-content">
-						  <div class="container">
-							<div class="row"><div class="col s9">
-					<div class="iframe-content">
-						<iframe src="chart.html" frameborder=0>
-							iframe 対応のブラウザをご利用ください。
-						</iframe>
-						 </div>
-						 </div>
-							  <div class="col s3">
+				<div id="modal-comment<?=$cnt?>" class="modal">
+					<div class="modal-content">
+					  <div class="container">
+						<div class="row">
+							<div class="col s9">
+								<div class="iframe-content">
+									<iframe src="" frameborder=0>
+										iframe 対応のブラウザをご利用ください。
+									</iframe>
+								</div>
+							</div>
+							<div class="col s3">
 							<p>カテゴリ<br>
 								<?php
 									// カテゴリ一覧表示
@@ -352,7 +483,7 @@ function closefunc(){
 					$uploadUser = $imageRow->getUserId();
 					$holoNum = $imageRow->getGroupNo();
 					$uploadAvator = "guest.png";
-					if(file_exists("./Images/Avator/" . $uploadUser . ".png")){
+					if(file_exists("../Images/Avator/" . $uploadUser . ".png")){
 						$uploadAvator = $uploadUser . ".png";
 					}
 			?>
@@ -390,25 +521,26 @@ function closefunc(){
 						  <button data-target="modal1" data-imagename="<?=$imageName?>" class="btn-flat waves-effect waves-light modal-trigger" data-holonum="<?=$holoNum?>" onclick="foodfunc(this)"  >
 							<i class="material-icons orange-text text-darken-1 md-24">restaurant</i>
 						  </button>
-						  <button data-target="modal-favorite-comment<?=$cnt?>" class="btn-flat waves-effect waves-light modal-trigger">
+						  <button data-target="modal-favorite-comment<?=$cnt?>" data-holonum="<?=$holoNum?>" class="btn-flat waves-effect waves-light modal-trigger" onclick="chartfunc(this)">
 							<i class="material-icons teal-text text-darken-1 md-36">list</i>
 						  </button>
 						</div>
 					  </div>
 					</div>
 				</div>
-					  <div id="modal-favorite-comment<?=$cnt?>" class="modal">
-						<div class="modal-content">
-						  <div class="container">
-							<div class="row"><div class="col s9">
-					<div class="iframe-content">
-						<iframe src="chart.html" frameborder=0>
-							iframe 対応のブラウザをご利用ください。
-						</iframe>
-						 </div>
-						 </div>
-							  <div class="col s3">
-							<p>カテゴリ<br>
+				<div id="modal-favorite-comment<?=$cnt?>" class="modal">
+					<div class="modal-content">
+						<div class="container">
+							<div class="row">
+								<div class="col s9">
+									<div class="iframe-content">
+										<iframe src="" frameborder=0>
+											iframe 対応のブラウザをご利用ください。
+										</iframe>
+									</div>
+								</div>
+								<div class="col s3">
+									<p>カテゴリ<br>
 								<?php
 									// カテゴリ一覧表示
 									$categories = preg_split("/#|、+/", $imageRow->getCategory(), -1, PREG_SPLIT_NO_EMPTY);
@@ -509,13 +641,14 @@ function closefunc(){
 							$dao = $daoFactory->createHistoryDao();
 							$historyArray = $dao->select($userId);
 						?>
-							<iframe src="chart.html"frameborder=0>
+							<iframe id="historychart" src="chart.php" frameborder=0>
 								この部分は iframe 対応のブラウザで見てください。
 							</iframe>	
 						</div>
 					</div>
-					<div class="col s6">
+					<div id="nutritionbox" class="col s6">
 						<h5>過去７回分の合計栄養素</h5>
+						<p>
 						カロリー : 0kcal<br>
 						たんぱく質 : 0g<br>
 						脂質 : 0g<br>
@@ -528,8 +661,8 @@ function closefunc(){
 						ビタミンB2 : 0mg<br>
 						ビタミンC : 0mg<br>
 						食物繊維 : 0g<br>
-						飽和脂肪酸 : 0g<br>
 						塩分 : 0g
+						</p>
 					</div>
 				</div>
 			</div>
@@ -556,7 +689,6 @@ function closefunc(){
 				$dao = $daoFactory->createProfileDao();
 				$profileArray = $dao->select($userId);	
 				
-				$today = date("Ymd");
 				$cnt = 1;
 				foreach($profileArray as $profileRow){
 					// プロフィールデータ取り出し
@@ -645,9 +777,10 @@ function closefunc(){
 						<div class="input-field">
 							<select name="relation">
 								<option value="" disabled selected>続柄を選択</option>
-								<option value="自分" <?php if($relation == "自分"){ echo "selected"; } ?>>自分</option>
+								<option value="ママ" <?php if($relation == "ママ"){ echo "selected"; } ?>>ママ</option>
 								<option value="パパ" <?php if($relation == "パパ"){ echo "selected"; } ?>>パパ</option>
-								<option value="子供" <?php if($relation == "子供"){ echo "selected"; } ?>>子供</option>
+								<option value="娘" <?php if($relation == "娘"){ echo "selected"; } ?>>娘</option>
+								<option value="息子" <?php if($relation == "息子"){ echo "selected"; } ?>>息子</option>
 								<option value="おばあちゃん" <?php if($relation == "おばあちゃん"){ echo "selected"; } ?>>おばあちゃん</option>
 								<option value="おじいちゃん" <?php if($relation == "おじいちゃん"){ echo "selected"; } ?>>おじいちゃん</option>
 							</select>
@@ -692,9 +825,10 @@ function closefunc(){
 						<div class="input-field">
 							<select name="relation">
 								<option value="" disabled selected>続柄を選択</option>
-								<option value="自分">自分</option>
+								<option value="ママ">ママ</option>
 								<option value="パパ">パパ</option>
-								<option value="子供">子供</option>
+								<option value="娘">娘</option>
+								<option value="息子">息子</option>
 								<option value="おばあちゃん">おばあちゃん</option>
 								<option value="おじいちゃん">おじいちゃん</option>
 							</select>

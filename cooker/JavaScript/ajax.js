@@ -1,10 +1,10 @@
 // 調理履歴
-function historyfunc(imageName){
+function historyfunc(imageName, holoNum){
 	// 送るデータ
 	var name = imageName;
-	var data = {"imageName": name};
+	var groupNo = holoNum;
+	var data = {"imageName": name, "groupNo": groupNo};
 	var path = "./php/historyfunc.php";
-	
 	// jqueryの.ajaxでAjax実行
 	$.ajax({
 		type: "GET",
