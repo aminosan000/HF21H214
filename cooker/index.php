@@ -105,7 +105,6 @@ function historychart(){
 	})
 	// 成功時
     .done(function(data, textStatus, jqXHR){
-		console.log(data);
 		var per = data["per_nutrition"];
 		var sum = data["sum_nutrition"];
 		
@@ -163,7 +162,6 @@ function chartfunc(obj){
 	})
 	// 成功時
     .done(function(data, textStatus, jqXHR){
-		console.log(data);
 		var ene = data["energy"];
 		var pro = data["protein"];
 		var fat = data["fat"];
@@ -763,7 +761,9 @@ function chartfunc(obj){
 				<div class="col s2">
 					<div class="center">
 						<p class="prof_text"><?=$name?></p>
-						<img class="upload_avator" src="../Images/Avator/<?=$icon?>">
+						<a data-target="modal-face<?=$cnt?>" class="modal-trigger">
+							<img class="upload_avator" src="../Images/Avator/<?=$icon?>">
+						</a>
 						<p class="prof_text"><?=$relation?></p>
 					</div>
 				</div>
@@ -818,7 +818,8 @@ function chartfunc(obj){
 					</div>
 				</div>
 				<div class="col s1">
-					<a data-target="modal-profile<?=$cnt?>" class="btn-floating waves-effect waves-light yellow darken-2 modal-trigger"><i class="material-icons">edit</i></a>
+					<a data-target="modal-profile<?=$cnt?>" class="btn-floating waves-effect waves-light yellow darken-2 modal-trigger edit-icon"><i class="material-icons">edit</i></a>
+					<a class="btn-floating waves-effect waves-light red darken-2 modal-trigger" href="./php/profdeletefunc.php?profNo=<?=$profNo?>"><i class="material-icons">clear</i></a>
 				</div>
 			</div>		
 			<div id="modal-profile<?=$cnt?>" class="modal">
@@ -865,6 +866,34 @@ function chartfunc(obj){
 					<div id="loading-prof<?=$cnt?>" class="center"></div>
 				</div>
 			</div>
+	
+			<div id="modal-face<?=$cnt?>" class="modal">
+				<div class="modal-content">
+					<form id="upload">
+						<h5>顔写真を撮影</h5><br>
+						<div class="file-field input-field">
+						  <div class="btn orange darken-2">
+							<i class="material-icons md-24">photo_camera</i>
+							<input type="file" id="file" name="file">
+						  </div>
+						  <div class="file-path-wrapper">
+							<input class="file-path validate" type="text">
+						  </div>
+						</div>
+					</form>
+					<button class="waves-effect waves-orange orange darken-2 btn right" onclick="uploadfunc(this)" data-id="<?=$cnt?>"><i class="material-icons left">file_upload</i>登録</button>
+					<button class="waves-effect waves-light btn-flat right modal-action modal-close">キャンセル</button><br><br><br>
+					<div class="row">
+						<div class="col s12">
+							<div id="arrow<?=$cnt?>" class="arrow_box_top z-depth-1"><h5 class="text">家族の顔を撮影してください</h5></div>
+						</div>
+						<div class="col s12 center">
+							<img src="../Images/chef.png">
+						</div>
+					</div>
+				</div>
+			</div>
+			
 			<?php $cnt++; } ?>
 			<div class="center">
 				<a data-target="modal-profile-add" class="btn-floating btn-large waves-effect waves-light yellow darken-2 modal-trigger"><i class="material-icons">person_add</i></a>
@@ -1048,6 +1077,57 @@ conn.onopen = function(e) {
 conn.onmessage = function(e) {
     console.log(e.data);
 };
+
+// 顔画像投稿処理
+function uploadfunc(obj){
+	// フォームが空の時
+	var file = document.getElementById("file");
+	if(file.value != ""){
+		// ローディングマークを表示
+		var id = obj.getAttribute("data-id");
+		var elm = document.getElementById("loading" + id);
+		var arrow = document.getElementById("arrow" + id);
+		arrow.innerHTML = "<div class=\"center\"><img src='../Images/load.gif'><br><h5>画像解析中・・・</h5></div>";
+		// フォームデータを取得
+		var formdata = new FormData(document.getElementById("upload"));
+		// XMLHttpRequestによるアップロード処理
+		var xhttpreq = new XMLHttpRequest();
+		xhttpreq.onreadystatechange = function() {
+			if (xhttpreq.readyState == 4 && xhttpreq.status == 200) {
+				var res = xhttpreq.responseText;
+				console.log(res);
+				var text = "";
+				// 投稿失敗時はエラーごとにメッセージ表示
+				if(res == "dbErr"){
+					text = "<h5 class='err_text'>DBエラー</h5>"
+				}else if(res == "typeErr"){
+					text = "<h5 class='err_text'>画像ファイルのみ投稿できます</h5>"
+				}else if(res == "sizeErr"){
+					text = "<h5 class='err_text'>サイズが大きすぎます</h5>"
+				}else if(res == "fileErr"){
+					text = "<h5 class='err_text'>ファイルが不正です</h5>"
+				}else{
+					// 投稿成功時
+					var data= JSON.parse(res);
+					console.log(data);
+					var joy = data["joy"];
+					var sorrow = data["sorrow"];
+					var text = "";
+					if(joy == "VERY_LIKELY" || joy == "LIKELY"){
+						text = "<h5>とても健康的な顔です。<br>いい食生活ができているようですね。</h5>";
+					}else if(sorrow == "VERY_LIKELY" || sorrow == "LIKELY"){
+						text = "<h5>顔色が悪いですね。<br>ビタミンCとビタミンAの豊富な食べ物をおすすめします。</h5>";
+					}else{
+						text = "<h5>健康状態は悪くないようですね。<br>これからも栄養バランスには気をつけてください。</h5>";
+					}
+				}
+				arrow.innerHTML = text;
+			}
+		};
+		xhttpreq.open("POST", "./php/faceuploadfunc.php", true);
+		xhttpreq.send(formdata);
+	}
+}
 </script>
 
 </div><!-- id = modal_parts end -->
