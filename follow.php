@@ -139,7 +139,6 @@ function followfunc(obj){
                 </li>
                 <li><div class="divider"></div></li>
 				<li class="nav-position"> <a href="./" class="navigation-link"><i class="material-icons">home</i>ホーム</a> </li>
-				<li class="nav-position"> <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a> </li>
 				<li class="nav-position"> <a href="myprofile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a> </li>
 				<?php if($loginFlg){ ?>
 				<li class="nav-position"> <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a> </li>
@@ -268,18 +267,6 @@ function followfunc(obj){
 				</div>
 			</div>
 		</div>
-	</div>
-  <!-- for Desktop and Tablet -->
-  <div class="fixed-action-btn hide-on-small-only">
-    <a class="btn-floating btn-superlarge orange darken-2" href="./upload.php">
-      <i class="material-icons md-48">photo_camera</i>
-    </a>
-	</div>
-	<!-- for Mobile -->
-  <div class="fixed-action-btn-mobile hide-on-med-and-up">
-    <a class="btn-floating btn-superlarge orange darken-2" href="./upload.php">
-      <i class="material-icons md-48">photo_camera</i>
-    </a>
 	</div>
 </main>
 

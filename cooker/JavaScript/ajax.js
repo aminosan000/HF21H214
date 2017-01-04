@@ -17,8 +17,8 @@ function historyfunc(imageName, holoNum){
         	console.log(data);
 		var node = document.getElementById("modal1");
 		if(data == "success"){
-			node.children[0].innerHTML = "<h5>調理完了しました</h5>";
-			node.children[1].innerHTML = "<a class=\"modal-action modal-close waves-effect waves-light btn-flat\" onclick=\"closefunc()\">閉じる</a>";
+			node.children[0].innerHTML = "<div class=\"center\"><img src=\"../Images/cooking.gif\"></div>";
+			setTimeout(rewhite, 7000);
 			var row = document.getElementById("history").children[2];
 			var card = document.createElement("div");
 			card.setAttribute("class", "col s6");
@@ -104,4 +104,10 @@ function calculateAge(birthday){
 	today=today.getFullYear()*10000+today.getMonth()*100+100+today.getDate()
 	birthday=parseInt(birthday);
 	return(Math.floor((today-birthday)/10000));
+}
+
+function rewhite(){
+	var node = document.getElementById("modal1");
+	node.children[0].innerHTML = "<h5>調理完了しました</h5>";
+	node.children[1].innerHTML = "<a class=\"modal-action modal-close waves-effect waves-light btn-flat\" onclick=\"closefunc()\">閉じる</a>";
 }

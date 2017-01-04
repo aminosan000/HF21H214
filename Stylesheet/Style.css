@@ -22,6 +22,10 @@ header, main, footer {
     font-size: 33px;
 }
 
+p.comment {
+	font-size: 2em;
+}
+
 p.text {
   padding-bottom: 20px;
 }
@@ -173,4 +177,67 @@ nav.cook {
   -webkit-align-items: center;
   -ms-flex-align: center;
   font-weight: 400;
+}
+
+/* 吹き出し左 */
+.arrow_box_left {
+	position: relative;
+	background: #fff;
+	padding: 10px;
+	border: 2px solid #000;
+}
+.arrow_box_left:after, .arrow_box_left:before {
+	left: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box_left:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-left-color: #fff;
+	border-width: 10px;
+	margin-top: -10px;
+}
+.arrow_box_left:before {
+	border-color: rgba(0, 0, 0, 0);
+	border-left-color: #000;
+	border-width: 13px;
+	margin-top: -13px;
+}
+
+/* 吹き出し上 */
+.arrow_box_top {
+	position: relative;
+	background: #ffffff;
+	padding: 10px;
+	margin-bottom: 20px;
+	border: 2px solid #000;
+}
+.arrow_box_top:after, .arrow_box_top:before {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box_top:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-top-color: #ffffff;
+	border-width: 10px;
+	margin-left: -10px;
+}
+.arrow_box_top:before {
+	border-color: rgba(0, 0, 0, 0);
+	border-top-color: #000;
+	border-width: 13px;
+	margin-left: -13px;
 }

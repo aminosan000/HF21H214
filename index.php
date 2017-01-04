@@ -32,30 +32,6 @@
 <script src="JavaScript/materialize.js"></script>
 <script src="JavaScript/lity.js"></script>
 <script src="JavaScript/favorite.js"></script>
-<script type="text/javascript"><!--
-	function confirmfunc() {
-		$.confirm({
-			title: '',
-			content: 'ログインするとお気に入りに登録できます',
-			boxWidth: '30%',
-			opacity: 0.5,
-			buttons: {
-				deleteimage: {
-					text: 'ログイン',
-					btnClass: 'btn-orange',
-					action: function () {
-						location.href = "./login.php";
-					}
-				},
-				cancel: {
-					text: 'キャンセル',
-					action: function () {
-					}
-				}
-			}
-		});
-	}
- --></script>
 <!--Let browser know website is optimized for mobile-->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -99,7 +75,6 @@
                 </li>
                 <li><div class="divider"></div></li>
 				<li class="nav-position"> <a href="./" class="navigation-link"><i class="material-icons">home</i>ホーム</a> </li>
-				<li class="nav-position"> <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a> </li>
 				<li class="nav-position"> <a href="myprofile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a> </li>
 				<?php if($loginFlg){ ?>
 				<li class="nav-position"> <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a> </li>
@@ -365,7 +340,7 @@
   <div class="fixed-action-btn horizontal click-to-toggle">-->
   <!-- for Desktop and Tablet -->
   <div class="fixed-action-btn hide-on-small-only">
-    <a class="btn-floating btn-superlarge orange darken-2" href="./upload.php">
+    <a class="btn-floating btn-superlarge orange darken-2 modal-trigger" data-target="modal-upload">
       <i class="material-icons md-48">photo_camera</i>
     </a>
 	</div>
@@ -430,18 +405,70 @@
     <div class="divider"></div>
 
     <div class="modal-footer">
-      <button href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat right">閉じる</button>
+      <button class="modal-action modal-close waves-effect waves-light btn-flat right">閉じる</button>
     </div>
 
   </div><!-- class = modal-search end -->
 
-  </div>
+	<div id="modal-upload" class="modal">
+		<div class="modal-content">
+			<form id="upload">
+				<h5>画像を投稿</h5><br>
+				<div class="file-field input-field">
+				  <div class="btn orange darken-2">
+					<i class="material-icons md-24">photo_camera</i>
+					<input type="file" id="file" name="file">
+				  </div>
+				  <div class="file-path-wrapper">
+					<input class="file-path validate" type="text">
+				  </div>
+				</div>
+				<div class="input-field">
+					<label for="comment">コメント</label>
+					<input id="comment" type="text" class="validate" name="comment" maxlength="40" value="" placeholder="コメントを入力">
+				</div>
+			</form>
+			<button class="waves-effect waves-orange orange darken-2 btn right" onclick="uploadfunc()"><i class="material-icons left">file_upload</i>投稿</button>
+			<button class="waves-effect waves-light btn-flat right modal-action modal-close">キャンセル</button><br><br>
+			<div id="loading" class="center"></div>
+		</div>
+	</div>
+	
+	<div id="modal-ai" class="modal">
+		<div class="modal-content">
+			<div class="row">
+				<div class="col s12">
+					<div class="card">
+						<div class="card-image">
+							<img id="ai-image" src=""><br>
+						</div>
+						<div class="card-content">
+							<div class="row">
+								<div class="col s12">
+									<div id="ai-comment" class="arrow_box_top z-depth-1">これはおいしそうな・・・<br><br></div>
+								</div>
+								<div class="col s12 center">
+									<img src="./Images/chef.png">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+    			<div class="divider"></div>
+			<div class="modal-footer">
+				<button class="modal-action modal-close waves-effect waves-light btn-flat right" onclick="location.reload()">閉じる</button>
+			</div>
+		</div>
+	</div>
 
-  <script>
+</div>
+
+<script>
     window.onload = function() {
       // ボタンとモーダルを関連付ける
       $('.modal-trigger').leanModal({
-        dismissible: true,  // 画面外のタッチによってモーダルを閉じるかどうか
+        dismissible: false,  // 画面外のタッチによってモーダルを閉じるかどうか
         opacity: 0.4,       // 背景の透明度
         in_duration: 400,   // インアニメーションの時間
         out_duration: 400,  // アウトアニメーションの時間
@@ -455,7 +482,87 @@
           }
       });
     };
-  </script>
+
+	// 画像投稿処理
+	function uploadfunc(){
+		// フォームが空の時
+		var file = document.getElementById("file");
+		if(file.value != ""){
+			// ローディングマークを表示
+			var elm = document.getElementById("loading");
+			elm.innerHTML = "<img src='./Images/load.gif'><br><h5 class='text'>画像解析中・・・</h5>";
+			// フォームデータを取得
+			var formdata = new FormData(document.getElementById("upload"));
+			// XMLHttpRequestによるアップロード処理
+			var xhttpreq = new XMLHttpRequest();
+			xhttpreq.onreadystatechange = function() {
+				if (xhttpreq.readyState == 4 && xhttpreq.status == 200) {
+					var res = xhttpreq.responseText;
+					console.log(res);
+					var text = "";
+					// 投稿失敗時はエラーごとにメッセージ表示
+					if(res == "dbErr"){
+						text = "<h5 class='err_text'>DBエラー</h5>"
+					}else if(res == "typeErr"){
+						text = "<h5 class='err_text'>画像ファイルのみ投稿できます</h5>"
+					}else if(res == "sizeErr"){
+						text = "<h5 class='err_text'>サイズが大きすぎます</h5>"
+					}else if(res == "safeSearchErr"){
+						text = "<h5 class='err_text'>性的または暴力的な画像は投稿できません</h5>"
+					}else{
+						// 投稿成功時
+						text = "<h5 class='text'>投稿が完了しました</h5>";
+						var data= JSON.parse(res);
+						console.log(data);
+						var imageName = data["imageName"];
+						var dishName = data["dishName"];
+						var comment = "";
+						if(dishName == "不明"){
+							comment = "<p class=\"comment\">これは本当に食べ物ですか？</p>";
+						}else{
+							var dishNameArray = dishName.split("#");
+							comment = "<p class=\"comment\">これはおいしそうな<br><span class=\"red-text\">" + dishNameArray[1] + "</span>ですね</p>";
+						}
+						document.getElementById("ai-image").setAttribute("src", "./Images/Thumbnail/" + imageName);
+						document.getElementById("ai-comment").innerHTML = comment;
+						openfunc();
+					}
+					elm.innerHTML = text;
+				}
+			};
+			xhttpreq.open("POST", "./php/uploadfunc.php", true);
+			xhttpreq.send(formdata);
+		}
+	}
+	
+	// 非ログイン時お気に入りボタン
+	function confirmfunc() {
+		$.confirm({
+			title: '',
+			content: 'ログインするとお気に入りに登録できます',
+			boxWidth: '30%',
+			opacity: 0.5,
+			buttons: {
+				deleteimage: {
+					text: 'ログイン',
+					btnClass: 'btn-orange',
+					action: function () {
+						location.href = "./login.php";
+					}
+				},
+				cancel: {
+					text: 'キャンセル',
+					action: function () {
+					}
+				}
+			}
+		});
+	}
+	
+	function openfunc(){
+		$('#modal-ai').openModal();
+	}
+</script>
 
 </div><!-- id = modal_parts end -->
 

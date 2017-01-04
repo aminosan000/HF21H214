@@ -83,20 +83,6 @@
 <script src="JavaScript/favorite.js"></script>
 <script src="JavaScript/ajax.js"></script>
 <script>
-// ホログラム再生用ソケット
-var conn = new WebSocket('ws://localhost:8080');
-conn.onopen = function(e) {
-    console.log("Connection established!");
-};
-conn.onmessage = function(e) {
-    console.log(e.data);
-};
-
-// 読み込み時履歴レーダーチャート生成
-$(document).ready(function(){
-	historychart();
-});
-
 // 履歴レーダーチャート生成
 function historychart(){
 	// 書き換え対象のiframe要素取得
@@ -141,7 +127,6 @@ function historychart(){
 		elm1.setAttribute("src", "chart.php?ene="+ene+"&pro="+pro+"&fat="+fat+"&car="+car+"&cal="+cal+"&iro="+iro+"&via="+via+"&vie="+vie+"&vib1="+vib1+"&vib2="+vib2+"&vic="+vic+"&fib="+fib+"&sat="+sat+"&sal="+sal);
 		// 栄養素表示
 		elm2.innerHTML = "カロリー&#8195;&#8195;:	&#8195;"+sum["energy"]+"kcal<br>たんぱく質&#8195;:&#8195;"+sum["protein"]+"g<br>脂質&#8195;&#8195;&#8195;&#8195;:&#8195;"+sum["fat"]+"g<br>炭水化物&#8195;&#8195;:&#8195;"+sum["carbohydrate"]+"g<br>カルシウム&#8195;:&#8195;"+sum["calcium"]+"g<br>鉄分&#8195;&#8195;&#8195;&#8195;:&#8195;"+sum["iron"]+"g<br>ビタミンA&#8194;&#8195;:&#8195;"+sum["vitaminA"]+"μg<br>ビタミンE&#8194;&#8195;:&#8195;"+sum["vitaminE"]+"mg<br>ビタミンB1&#8195;:&#8195;"+sum["vitaminB1"]+"mg<br>ビタミンB2&#8195;:&#8195;"+sum["vitaminB2"]+"mg<br>ビタミンC&#8194;&#8195;:&#8195;"+sum["vitaminC"]+"mg<br>食物繊維&#8201;&#8195;&#8195;:&#8195;"+sum["fiber"]+"mg<br>塩分&#8201;&#8195;&#8195;&#8195;&#8195;:&#8195;"+sum["salt"]+"mg";
-		
 		/*
 		for (key in data) {
 		  elm.innerHTML += ('key:' + key + ' value:' + data[key]);
@@ -153,30 +138,6 @@ function historychart(){
 		console.log(data);
 		return false;
 	});
-}
-
-// 調理確定時
-function cookfunc(obj){
-	var imageName = obj.getAttribute("data-imagename");
-	var holoNum = obj.getAttribute("data-holonum");
-	historyfunc(imageName, holoNum);
-	if(holoNum == 0){
-		holoNum = Math.floor(Math.random () * 9) + 1;
-	}
-	conn.send(holoNum);
-}
-
-//調理ボタン押下時
-function foodfunc(obj){
-	var imagename =  obj.getAttribute("data-imagename");
-	var holonum = obj.getAttribute("data-holonum");
-	var node = document.getElementById("modal1");
-	node.children[0].innerHTML = "<h5>この料理を作りますか？</h5>";
-	node.children[1].innerHTML = "<a class=\"modal-action modal-close waves-effect waves-light btn-flat\">キャンセル</a><a class=\"waves-effect waves-red btn-flat red-btn\" onclick=\"cookfunc(this)\" data-imagename=\"" + imagename + "\" data-holonum=\"" + holonum + "\">作る</a>";
-}
-
-function closefunc(){
-	$('#modal1').closeModal();
 }
 
 // 料理ごとの栄養素レーダーチャート表示
@@ -229,14 +190,6 @@ function chartfunc(obj){
 		console.log(data);
 		return false;
 	});
-}
-
-// 検索処理時
-function searchfunc(){
-	var header = document.getElementById("header");
-	header.children[0].children[0].children[0].children[0].children[0].children[0].setAttribute("class", "");
-	header.children[0].children[0].children[0].children[0].children[1].children[0].setAttribute("class", "active");
-	
 }
 
 // 料理一覧更新
@@ -374,7 +327,7 @@ function searchfunc(){
 							$uploadAvator = $uploadUser . ".png";
 						}
 				?>
-				<div id="food<?=$imageName?>">
+				<div id="food<?=$imageId?>">
 				  <div class="col s12">
 					<div class="card">
 					  <div class="card-content">
@@ -429,7 +382,7 @@ function searchfunc(){
 								</div>
 							</div>
 							<div class="col s3">
-							<p>カテゴリ<br>
+							<p>タグ<br>
 								<?php
 									// カテゴリ一覧表示
 									$categories = preg_split("/#|、+/", $imageRow->getCategory(), -1, PREG_SPLIT_NO_EMPTY);
@@ -444,6 +397,21 @@ function searchfunc(){
 								  ?>
 							</p>
 							</div>
+							</div>
+								<biv>
+									料理名<h5>
+									<?php
+										$dishNameArray = preg_split("/#|、+/", $imageRow->getDishName(), -1, PREG_SPLIT_NO_EMPTY);
+										$cnt2 = 1;
+										foreach($dishNameArray as $dishName){
+											echo $dishName;
+											if($cnt2 < count($dishNameArray)){
+												echo " または ";
+											}
+											$cnt2++;
+										}
+									?>
+									</h5>
 							<div class="divider"></div>
 							<?php
 								// コメント一覧表示
@@ -477,7 +445,6 @@ function searchfunc(){
 									echo "<p>コメントなし</p>";
 								}
 							?>
-								</div>
 						  </div>
 						</div>
 					
@@ -487,7 +454,7 @@ function searchfunc(){
 						  <button class=" modal-action modal-close waves-effect waves-green btn-flat right">閉じる</button>
 						</div>
 					</div><!-- class modal-comment end -->
-				</div>
+					</div>
 				<?php
 					$cnt++;
 					}
@@ -554,7 +521,7 @@ function searchfunc(){
 						$uploadAvator = $uploadUser . ".png";
 					}
 			?>
-			<div id="favorite<?=$imageName?>">
+			<div id="favorite<?=$imageId?>">
 				  <div class="col s12">
 					<div class="card">
 					  <div class="card-content">
@@ -608,7 +575,7 @@ function searchfunc(){
 									</div>
 								</div>
 								<div class="col s3">
-									<p>カテゴリ<br>
+									<p>タグ<br>
 								<?php
 									// カテゴリ一覧表示
 									$categories = preg_split("/#|、+/", $imageRow->getCategory(), -1, PREG_SPLIT_NO_EMPTY);
@@ -623,6 +590,21 @@ function searchfunc(){
 								  ?>
 							</p>
 							</div>
+								</div>
+								<biv>
+									料理名<h5>
+									<?php
+										$dishNameArray = preg_split("/#|、+/", $imageRow->getDishName(), -1, PREG_SPLIT_NO_EMPTY);
+										$cnt2 = 1;
+										foreach($dishNameArray as $dishName){
+											echo $dishName;
+											if($cnt2 < count($dishNameArray)){
+												echo " または ";
+											}
+											$cnt2++;
+										}
+									?>
+									</h5>
 							<div class="divider"></div>
 							<?php
 								// コメント一覧表示
@@ -656,7 +638,6 @@ function searchfunc(){
 									echo "<p>コメントなし</p>";
 								}
 							?>
-								</div>
 						  </div>
 						</div>
 					
@@ -996,33 +977,78 @@ function searchfunc(){
 
   </div><!-- id = modal-parts end -->
 
-  <script>
-    window.onload = function() {
-      // ボタンとモーダルを関連付ける
-      $('.modal-trigger').leanModal({
-        dismissible: true,  // 画面外のタッチによってモーダルを閉じるかどうか
-        opacity: 0.4,       // 背景の透明度
-        in_duration: 400,   // インアニメーションの時間
-        out_duration: 400,  // アウトアニメーションの時間
-        // 開くときのコールバック
-          ready: function() {
-            console.log('ready');
-          },
-          // 閉じる時のコールバック
-          complete: function() {
-            console.log('closed');
-          }
-      });
-    };
+<script>
+window.onload = function() {
+  // ボタンとモーダルを関連付ける
+  $('.modal-trigger').leanModal({
+	dismissible: true,  // 画面外のタッチによってモーダルを閉じるかどうか
+	opacity: 0.4,       // 背景の透明度
+	in_duration: 400,   // インアニメーションの時間
+	out_duration: 400,  // アウトアニメーションの時間
+	// 開くときのコールバック
+	  ready: function() {
+		console.log('ready');
+	  },
+	  // 閉じる時のコールバック
+	  complete: function() {
+		console.log('closed');
+	  }
+  });
+};
+// タブナビゲーション初期化
+$(document).ready(function(){
+	$('ul.tabs').tabs('select_tab', 'tab_id');
+});
+// 
+$(document).ready(function() {
+	$('select').material_select();
+});
+
+// 読み込み時履歴レーダーチャート生成
+$(document).ready(function(){
+	historychart();
+});
 	
-	$(document).ready(function(){
-		$('ul.tabs').tabs('select_tab', 'tab_id');
-	});
-	
-	$(document).ready(function() {
-		$('select').material_select();
-	});
-  </script>
+// 検索処理時
+function searchfunc(){
+	var header = document.getElementById("header");
+	header.children[0].children[0].children[0].children[0].children[0].children[0].setAttribute("class", "");
+	header.children[0].children[0].children[0].children[0].children[1].children[0].setAttribute("class", "active");
+}
+
+// 調理確定時
+function cookfunc(obj){
+	var imageName = obj.getAttribute("data-imagename");
+	var holoNum = obj.getAttribute("data-holonum");
+	historyfunc(imageName, holoNum);
+	if(holoNum == 0){
+		holoNum = Math.floor(Math.random () * 9) + 1;
+	}
+	conn.send(holoNum);
+}
+
+// 調理ボタン押下時
+function foodfunc(obj){
+	var imagename =  obj.getAttribute("data-imagename");
+	var holonum = obj.getAttribute("data-holonum");
+	var node = document.getElementById("modal1");
+	node.children[0].innerHTML = "<h5>この料理を作りますか？</h5>";
+	node.children[1].innerHTML = "<a class=\"modal-action modal-close waves-effect waves-light btn-flat\">キャンセル</a><a class=\"waves-effect waves-red btn-flat red-btn\" onclick=\"cookfunc(this)\" data-imagename=\"" + imagename + "\" data-holonum=\"" + holonum + "\">作る</a>";
+}
+// モーダルキャンセルボタン
+function closefunc(){
+	$('#modal1').closeModal();
+}
+
+// ホログラム再生用ソケット
+var conn = new WebSocket('ws://localhost:8080');
+conn.onopen = function(e) {
+    console.log("Connection established!");
+};
+conn.onmessage = function(e) {
+    console.log(e.data);
+};
+</script>
 
 </div><!-- id = modal_parts end -->
 

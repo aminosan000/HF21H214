@@ -93,7 +93,17 @@ try{
 					}
 					// アップロード画面に結果を返す
 					if($flg){
-						echo "success";
+						// レスポンス用のJSONを作成
+						$json = json_encode(
+							array(
+								"imageName" => $imageName,
+								"dishName" => $dishName
+							)
+						);
+						// Content-TypeをJSONに指定する
+						header('Content-Type: application/json');
+						// レスポンスを返す
+						echo $json;
 					}else{
 						echo "dbInsertErr";
 					}

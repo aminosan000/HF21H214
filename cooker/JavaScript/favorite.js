@@ -17,7 +17,7 @@ function favoritefunc(obj){
         	console.log(data);
 		if(data == "success"){
 			var favorite = document.getElementById("favorite").children[1].children[0];
-			var id = "food" + name;
+			var id = "food" + (name.slice(0, 10));
 			if(condition == "false"){
 				obj.setAttribute("data-condition", "true");
 				obj.innerHTML = "<i class=\"material-icons red-text text-darken-1 md-36\">favorite</i>";
@@ -25,7 +25,7 @@ function favoritefunc(obj){
 				var favbutton = card.children[0].children[0].children[2].children[0].children[0];
 				var modal = card.children[1];
 				var combutton = card.children[0].children[0].children[2].children[0].children[2];
-				card.setAttribute("id", "favorite" + name);
+				card.setAttribute("id", "favorite" + (name.slice(0, 10)));
 				favbutton.setAttribute("data-condition", "true");
 				modal.setAttribute("id", "modal-favorite-comment" + combutton.getAttribute("data-target").slice(-10)); 
 				combutton.setAttribute("data-target", "modal-favorite-comment" + combutton.getAttribute("data-target").slice(-10));
@@ -51,7 +51,7 @@ function favoritefunc(obj){
 				button.setAttribute("data-condition", "false");
 				button.innerHTML = "<i class=\"material-icons red-text text-darken-1 md-36\">favorite_border</i>";
 				favorite.children[0].innerHTML = "お気に入り" + (parseInt(favorite.children[0].innerHTML.match(/\d+/), 10) - 1) + "件";
-				var card = document.getElementById("favorite" + name);
+				var card = document.getElementById("favorite" + (name.slice(0, 10)));
 				favorite.removeChild(card);
 			}
 		}

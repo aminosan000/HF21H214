@@ -47,11 +47,8 @@
 				var res = xhttpreq.responseText;
 				console.log(res);
 				var text = "";
-				// 投稿成功時
-				if(res == "success"){
-					text = "<h5 class='text'>投稿が完了しました</h5>";
 				// 投稿失敗時はエラーごとにメッセージ表示
-				}else if(res == "dbErr"){
+				if(res == "dbErr"){
 					text = "<h5 class='err_text'>DBエラー</h5>"
 				}else if(res == "typeErr"){
 					text = "<h5 class='err_text'>画像ファイルのみ投稿できます</h5>"
@@ -59,6 +56,9 @@
 					text = "<h5 class='err_text'>サイズが大きすぎます</h5>"
 				}else if(res == "safeSearchErr"){
 					text = "<h5 class='err_text'>性的または暴力的な画像は投稿できません</h5>"
+				}else{
+					// 投稿成功時
+					text = "<h5 class='text'>投稿が完了しました</h5>";
 				}
 				elm.innerHTML = text;
 			}
@@ -110,7 +110,6 @@
                 </li>
                 <li><div class="divider"></div></li>
 				<li class="nav-position"> <a href="./" class="navigation-link"><i class="material-icons">home</i>ホーム</a> </li>
-				<li class="nav-position"> <a href="upload.php" class="navigation-link"><i class="material-icons">photo_camera</i>アップロード</a> </li>
 				<li class="nav-position"> <a href="myprofile.php" class="navigation-link"><i class="material-icons">account_circle</i>プロフィール</a> </li>
 				<?php if($loginFlg){ ?>
 				<li class="nav-position"> <a href="favorite.php" class="navigation-link"><i class="material-icons">favorite</i>お気に入り</a> </li>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DEMO MOVIE</title>
+</head>
+
+<body>
+<script><!--
+var conn = new WebSocket('ws://localhost:8080');
+conn.onopen = function(e) {
+    console.log("Connection established!");
+};
+
+var movieReset = function(){
+	var obj = document.getElementById("video");
+	obj.setAttribute("src", "./movie/demo.mp4");
+	obj.setAttribute("loop", true);
+} 
+
+conn.onmessage = function(e) {
+    console.log(e.data);
+	var obj = document.getElementById("video");
+	obj.setAttribute("src", "./movie/cooking.mp4");
+	obj.removeAttribute("loop");
+	setTimeout(movieReset, 11000);
+};
+--></script>
+<video id="video" src="./movie/demo.mp4" preload="auto" autoplay loop controls width="100%"></video>
+</body>
+</html>
