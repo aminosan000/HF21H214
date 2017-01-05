@@ -87,7 +87,7 @@
 function historychart(){
 	// 書き換え対象のiframe要素取得
 	var elm1 = document.getElementById("historychart");
-	var elm2 = document.getElementById("nutritionbox").children[1];
+	var elm2 = document.getElementById("nutritionbox").children[1].children[0];
 	// 栄養素データを取得する料理番号取得
 	var userId = "<?=$userId?>";
 	var gender = "<?=$gender?>";
@@ -125,7 +125,19 @@ function historychart(){
 		// レーダーチャート描写
 		elm1.setAttribute("src", "chart.php?ene="+ene+"&pro="+pro+"&fat="+fat+"&car="+car+"&cal="+cal+"&iro="+iro+"&via="+via+"&vie="+vie+"&vib1="+vib1+"&vib2="+vib2+"&vic="+vic+"&fib="+fib+"&sat="+sat+"&sal="+sal);
 		// 栄養素表示
-		elm2.innerHTML = "カロリー&#8195;&#8195;:	&#8195;"+sum["energy"]+"kcal<br>たんぱく質&#8195;:&#8195;"+sum["protein"]+"g<br>脂質&#8195;&#8195;&#8195;&#8195;:&#8195;"+sum["fat"]+"g<br>炭水化物&#8195;&#8195;:&#8195;"+sum["carbohydrate"]+"g<br>カルシウム&#8195;:&#8195;"+sum["calcium"]+"g<br>鉄分&#8195;&#8195;&#8195;&#8195;:&#8195;"+sum["iron"]+"g<br>ビタミンA&#8194;&#8195;:&#8195;"+sum["vitaminA"]+"μg<br>ビタミンE&#8194;&#8195;:&#8195;"+sum["vitaminE"]+"mg<br>ビタミンB1&#8195;:&#8195;"+sum["vitaminB1"]+"mg<br>ビタミンB2&#8195;:&#8195;"+sum["vitaminB2"]+"mg<br>ビタミンC&#8194;&#8195;:&#8195;"+sum["vitaminC"]+"mg<br>食物繊維&#8201;&#8195;&#8195;:&#8195;"+sum["fiber"]+"mg<br>塩分&#8201;&#8195;&#8195;&#8195;&#8195;:&#8195;"+sum["salt"]+"mg";
+		elm2.children[0].children[2].innerHTML = sum["energy"] + "kcal　　　　　　";
+		elm2.children[1].children[2].innerHTML = sum["protein"] + "g";
+		elm2.children[2].children[2].innerHTML = sum["fat"] + "g";
+		elm2.children[3].children[2].innerHTML = sum["carbohydrate"] + "g";
+		elm2.children[4].children[2].innerHTML = sum["calcium"] + "g";
+		elm2.children[5].children[2].innerHTML = sum["iron"] + "g";
+		elm2.children[6].children[2].innerHTML = sum["vitaminA"] + "μg";
+		elm2.children[7].children[2].innerHTML = sum["vitaminE"] + "mg";
+		elm2.children[8].children[2].innerHTML = sum["vitaminB1"] + "mg";
+		elm2.children[9].children[2].innerHTML = sum["vitaminB2"] + "mg";
+		elm2.children[10].children[2].innerHTML = sum["vitaminC"] + "mg";
+		elm2.children[11].children[2].innerHTML = sum["fiber"] + "mg";
+		elm2.children[12].children[2].innerHTML = sum["salt"] + "mg";
 		/*
 		for (key in data) {
 		  elm.innerHTML += ('key:' + key + ' value:' + data[key]);
@@ -472,7 +484,7 @@ function chartfunc(obj){
 						}
 						for($count = 0; $count < ceil($rowCount / 12); $count++){
 							if($count == $pageNum){
-								echo "<li class='active orange'>";
+								echo "<li class='active red darken-4'>";
 							}else{
 								echo "<li class='waves-effect'>";
 							}
@@ -661,7 +673,7 @@ function chartfunc(obj){
 					}
 					for($count = 0; $count < ceil($rowCount / 12); $count++){
 						if($count == $pageNum){
-							echo "<li class='active orange'>";
+							echo "<li class='active red darken-4'>";
 						}else{
 							echo "<li class='waves-effect'>";
 						}
@@ -696,21 +708,75 @@ function chartfunc(obj){
 					</div>
 					<div id="nutritionbox" class="col s6">
 						<h5>過去７回分の合計栄養素</h5>
-						<p>
-						カロリー : 0kcal<br>
-						たんぱく質 : 0g<br>
-						脂質 : 0g<br>
-						炭水化物 : 0g<br>
-						カルシウム : 0g<br>
-						鉄分 : 0g<br>
-						ビタミンA : 0μg<br>
-						ビタミンE : 0mg<br>
-						ビタミンB1 : 0mg<br>
-						ビタミンB2 : 0mg<br>
-						ビタミンC : 0mg<br>
-						食物繊維 : 0g<br>
-						塩分 : 0g
-						</p>
+						<table>
+							<tbody>
+								<tr>
+									<td>カロリー</td>
+									<td>:</td>
+									<td>0kcal</td>
+								</tr>
+								<tr>
+									<td>たんぱく質</td>
+									<td>:</td>
+									<td>0g</td>
+								</tr>
+								<tr>
+									<td>脂質</td>
+									<td>:</td>
+									<td>0g</td>
+								</tr>
+								<tr>
+									<td>炭水化物</td>
+									<td>:</td>
+									<td>0g</td>
+								</tr>
+								<tr>
+									<td>カルシウム</td>
+									<td>:</td>
+									<td>0g</td>
+								</tr>
+								<tr>
+									<td>鉄分</td>
+									<td>:</td>
+									<td>0g</td>
+								</tr>
+								<tr>
+									<td>ビタミンA</td>
+									<td>:</td>
+									<td>0μg</td>
+								</tr>
+								<tr>
+									<td>ビタミンE</td>
+									<td>:</td>
+									<td>0mg</td>
+								</tr>
+								<tr>
+									<td>ビタミンB1</td>
+									<td>:</td>
+									<td>0mg</td>
+								</tr>
+								<tr>
+									<td>ビタミンB2</td>
+									<td>:</td>
+									<td>0mg</td>
+								</tr>
+								<tr>
+									<td>ビタミンC</td>
+									<td>:</td>
+									<td>0mg</td>
+								</tr>
+								<tr>
+									<td>食物繊維</td>
+									<td>:</td>
+									<td>0g</td>
+								</tr>
+								<tr>
+									<td>塩分</td>
+									<td>:</td>
+									<td>0g</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
@@ -787,6 +853,9 @@ function chartfunc(obj){
 									}
 									$cnt2++;
 								}
+								if(count($favoriteFoodArray) == 0){
+									echo "<br>";
+								}
 							?>
 							</p>
 							<p class="prof_text">
@@ -799,6 +868,9 @@ function chartfunc(obj){
 									}
 									$cnt2++;
 								}
+								if(count($notFavoriteFoodArray) == 0){
+									echo "<br>";
+								}
 							?>
 							</p>
 							<p class="prof_text">
@@ -810,6 +882,9 @@ function chartfunc(obj){
 										echo " , ";
 									}
 									$cnt2++;
+								}
+								if(count($allergyArray) == 0){
+									echo "<br>";
 								}
 							?>
 							</p>
@@ -1051,7 +1126,7 @@ function cookfunc(obj){
 	var holoNum = obj.getAttribute("data-holonum");
 	historyfunc(imageName, holoNum);
 	if(holoNum == 0){
-		holoNum = Math.floor(Math.random () * 9) + 1;
+		holoNum = Math.floor(Math.random () * 7) + 1;
 	}
 	conn.send(holoNum);
 }
@@ -1068,15 +1143,6 @@ function foodfunc(obj){
 function closefunc(){
 	$('#modal1').closeModal();
 }
-
-// ホログラム再生用ソケット
-var conn = new WebSocket('ws://localhost:8080');
-conn.onopen = function(e) {
-    console.log("Connection established!");
-};
-conn.onmessage = function(e) {
-    console.log(e.data);
-};
 
 // 顔画像投稿処理
 function uploadfunc(obj){
@@ -1128,6 +1194,16 @@ function uploadfunc(obj){
 		xhttpreq.send(formdata);
 	}
 }
+
+// ホログラム再生用ソケット
+var conn = new WebSocket('ws://192.168.100.199:8080');
+conn.onopen = function(e) {
+    console.log("Connection established!");
+};
+conn.onmessage = function(e) {
+    console.log(e.data);
+};
+
 </script>
 
 </div><!-- id = modal_parts end -->
