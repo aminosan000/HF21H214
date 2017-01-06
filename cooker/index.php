@@ -1181,11 +1181,11 @@ function uploadfunc(obj){
 					var text = "";
 					if(joy == "VERY_LIKELY" || joy == "LIKELY"){
 						text = "<h5>とても健康的な顔です。<br>いい食生活ができているようですね。</h5>";
-					}else if(sorrow == "VERY_LIKELY" || sorrow == "LIKELY"){
+					}else/*if(sorrow == "VERY_LIKELY" || sorrow == "LIKELY")*/{
 						text = "<h5>顔色が悪いですね。<br>ビタミンCとビタミンAの豊富な食べ物をおすすめします。</h5>";
-					}else{
+					}/*else{
 						text = "<h5>健康状態は悪くないようですね。<br>これからも栄養バランスには気をつけてください。</h5>";
-					}
+					}*/
 				}
 				arrow.innerHTML = text;
 			}
@@ -1196,7 +1196,7 @@ function uploadfunc(obj){
 }
 
 // ホログラム再生用ソケット
-var conn = new WebSocket('ws://192.168.100.199:8080');
+var conn = new WebSocket('ws://gunmetal.sakura.ne.jp:8080');
 conn.onopen = function(e) {
     console.log("Connection established!");
 };
