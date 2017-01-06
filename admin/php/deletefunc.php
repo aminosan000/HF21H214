@@ -12,8 +12,8 @@ try{
 		$dao = $daoFactory->createImageDao();
 		$flg = $dao->delete($imageName);
 		if($flg){
-			unlink('../Images/Upload/' . $imageName);
-			unlink('../Images/Thumbnail/' . $imageName);
+			unlink('../../Images/Upload/' . $imageName);
+			unlink('../../Images/Thumbnail/' . $imageName);
 		}
 	}
 }catch(Exception $e) {
