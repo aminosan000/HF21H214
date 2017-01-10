@@ -14,7 +14,7 @@ if(is_uploaded_file($_FILES['file']['tmp_name'])){
 	$fileType = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
 	if ($fileType == 'jpg' || $fileType == 'JPG' || $fileType == 'jpeg' || $fileType == 'JPEG' || $fileType == 'png' || $fileType == 'PNG' || $fileType == 'gif' || $fileType == 'GIF') {
 		// 拡張子がjpgまたはpngまたはgifの場合ファイルサイズチェック
-		if ($_FILES['file']['size'] < 10000000) {
+		if ($_FILES['file']['size'] < 10485760) {
 			// ファイル名生成
 			$randStr = makeRandStr(10);
 			$imageName = $randStr . "." . $fileType;
@@ -26,14 +26,6 @@ if(is_uploaded_file($_FILES['file']['tmp_name'])){
 				orientationFixedImage($imagePath, $imagePath);
 			}
 			$faceArray = cvRequest($imageName);
-			// 画像拡大縮小+トリミング
-			makeThumbnail($imageName);
-			// pngに変換
-			if($fileType == 'jpg' || $fileType == 'JPG' || $fileType == 'jpeg' || $fileType == 'JPEG' || $fileType == 'gif' || $fileType == 'GIF'){
-				$imageResource = imagecreatefromstring(file_get_contents($imagePath));
-				imagepng($imageResource, '../../Images/Face/' . $randStr . ".png");
-				unlink($imagePath);
-			}
 			// レスポンス用のJSONを作成
 			$json = json_encode(
 				array(
@@ -144,82 +136,6 @@ function image_flip($image){
 function image_rotate($image, $angle, $bgd_color){
 	return imagerotate($image, $angle, $bgd_color, 0);
 }
-
-/**
- *  画像リサイズ (100x100)
- *  $imageName: 元画像ファイル名
- */
-function makeThumbnail($imageName){
-	// 保存先パス
-	$savePath = "../../Images/Face/";
-	
-	// 生成元パス
-	$orgFile = '../../Images/Face/' . $imageName;
-	
-	// 画像のピクセルサイズ情報を取得
-	$imginfo = getimagesize( $orgFile );
-	
-	// イメージリソース取得
-	$ImageResource = imagecreatefromstring(file_get_contents($orgFile));
-	
-	// イメージリソースから、横、縦ピクセルサイズ取得
-	$width  = imagesx( $ImageResource );    // 横幅
-	$height = imagesy( $ImageResource );    // 縦幅
-	
-	if ($width >= $height) {
-		// 横長の場合
-		$x = floor(($width - $height) / 2);
-		$y = 0;
-		$width = $height;
-	} else {
-		// 4:3より縦長の場合
-		$y = floor(($height - $width) / 2);
-		$x = 0;
-		$height = $width;
-	}
-	
-	switch ( $imginfo[2] ) {
-	
-		// jpeg
-		case 2:
-			// 出力ピクセルサイズで新規画像作成
-			$square_width  = 350;
-			$square_height = 350;
-			$square_new = imagecreatetruecolor( $square_width, $square_height );
-			imagecopyresized( $square_new, $ImageResource, 0, 0, $x, $y, $square_width, $square_height, $width, $height );
-			imagejpeg($square_new, $savePath . $imageName, 100);
-			break;
-	
-		// gif
-		case 1:
-			// 出力ピクセルサイズで新規画像作成
-			$square_width  = 350;
-			$square_height = 350;
-			$square_new = imagecreatetruecolor( $square_width, $square_height );
-			imagecopyresampled($square_new, $ImageResource, 0, 0, $x, $y, $square_width, $square_height, $width, $height);
-			imagegif($square_new, $savePath . $imageName, 100);
-			break;
-	
-		// png
-		case 3:
-			// 出力ピクセルサイズで新規画像作成
-			$square_width  = 350;
-			$square_height = 350;
-			$square_new = imagecreatetruecolor( $square_width, $square_height );
-			imagealphablending($square_new, false);        // アルファブレンディングを無効
-			imageSaveAlpha($square_new, true);             // アルファチャンネルを有効
-			$transparent = imagecolorallocatealpha($square_new, 0, 0, 0, 127); // 透明度を持つ色を作成
-			imagefill($square_new, 0, 0, $transparent);    // 塗りつぶす
-			imagecopyresampled($square_new, $ImageResource, 0, 0, $x, $y, $square_width, $square_height, $width, $height);
-			imagepng($square_new, $savePath . $imageName);
-			break;
-	
-		// デフォルト
-		Default:
-			break;
-	}
-}
-
 /**
  * ランダム文字列生成 (英数字)
  * $length: 生成する文字数

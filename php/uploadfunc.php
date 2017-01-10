@@ -27,7 +27,7 @@ try{
 		$fileType = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
 		if ($fileType == 'jpg' || $fileType == 'JPG' || $fileType == 'jpeg' || $fileType == 'JPEG' || $fileType == 'png' || $fileType == 'PNG' || $fileType == 'gif' || $fileType == 'GIF') {
 			// 拡張子がjpgまたはpngまたはgifの場合ファイルサイズチェック
-			if ($_FILES['file']['size'] < 6291456) {
+			if ($_FILES['file']['size'] < 10485760) {
 				// ファイル名生成
 				$imageName = makeRandStr(10) . '.' . $fileType;
 				$imagePath = '../Images/Upload/' . $imageName;
