@@ -41,7 +41,7 @@ try{
 				makeThumbnail($imageName);
 				// Google Cloud Vision へリクエストし画像認識結果取得
 				$cvArray = cvRequest($imageName);
-				// セーフサーチの結果が問題なければ
+				// セーフサーチの結果が問題なければ（watsonはセーフサーチ非対応）
 				if($cvArray["adult"] == "UNKNOWN" || $cvArray["adult"] == "VERY_UNLIKELY" || $cvArray["adult"] == "UNLIKELY" and $cvArray["violence"] == "UNKNOWN" || $cvArray["violence"] == "VERY_UNLIKELY" || $cvArray["violence"] == "UNLIKELY"){
 					// Microsoft Transrate へリクエストしカテゴリ名を翻訳
 					$category = translator($cvArray["category"]);

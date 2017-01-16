@@ -1,7 +1,7 @@
 <?php
 function cvRequest($imageName){
 	// APIキー
-	$api_key = "AIzaSyAiuioX405mhOO_vVe7xGjkrMC_yuMJR_w" ;
+	$api_key = "AIzaSyBqptFpqbvbwCSuBTRjtDmt4HPLadRyk40" ;
 
 	// リファラー (許可するリファラーを設定した場合)
 	$referer = "https://gunmetal.sakura.ne.jp/hf21/" ;
@@ -88,3 +88,4 @@ function cvRequest($imageName){
 	$array["violence"] = $violence;
 	return $array;
 }
+?>

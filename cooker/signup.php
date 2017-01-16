@@ -24,7 +24,7 @@
 <link rel="SHORTCUT ICON" href="../Images/favicon.ico">
 <title>インスタグルメ</title>
 <!-- Import Google Icon Font-->
-<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- Import materialize.css-->
 <link type="text/css" rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/Style.css" media="screen,projection">

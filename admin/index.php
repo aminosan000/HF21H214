@@ -14,7 +14,7 @@ if (!isset($_SESSION['adminId'])) {
 <meta charset="UTF-8">
 <title>[管理画面]HOME</title>
 <!-- Import Google Icon Font-->
-<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- Import materialize.css-->
 <link type="text/css" rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
 <link type="text/css" rel="stylesheet" href="Stylesheet/lity.css"  media="screen,projection">
