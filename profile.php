@@ -190,7 +190,7 @@ function followfunc(){
 		<div class="row">
 			<div class="col s12 m12 l6 center"> <img class="circle" src="./Images/Avator/<?=$profImage?>" alt=""> </div>
 			<div class="col s12 m12 l6">
-				<div class="card small white">
+				<div class="card">
 					<div class="card-content">
 						<div class="left">
 						<span class="card-title">ユーザID : <?=$profId?></span><br>
@@ -207,6 +207,7 @@ function followfunc(){
 							<p id="followText" class="follow center"><?=$followText?></p>
 						</div>
 					</div>
+					<div class="clearfix"></div>
 				</div>
 			</div>
 		</div>

@@ -185,24 +185,16 @@
 		<div class="row">
 			<div class="col s12 m12 l6 center"> <img onclick="avatorfunc()" class="circle pointer" src="./Images/Avator/<?=$avatorImage?>" alt=""> </div>
 			<div class="col s12 m12 l6">
-				<div class="card small white">
-					<div class="card-content"> <span class="card-title">ユーザID :
-						<?=$userId?>
-						</span><br>
-						<!--
-            <button class="waves-effect waves-light btn-flat dropdown-button right" data-activates='dropdown-desktop'>
-              詳細を表示する
-            </button>
-            <ul id='dropdown-desktop' class='dropdown-content'>
-              <li><a class="grey-text" href="#!">ユーザ情報変更</a></li>
-            </ul>
-            --> 
-						<span class="text-darken-2"><a href="./follow.php"> フォロー : <?=$followCount?>人</a><br>
-						<a href="./follow.php?flg=false">フォロワー : <?=$followerCount?>人</a><br>
-						<br>
+				<div class="card">
+					<div class="card-content">
+						<span class="card-title">ユーザID : <?=$userId?></span><br>
+						<span class="text-darken-2">
+							<a href="./follow.php"> フォロー : <?=$followCount?>人</a><br>
+							<a href="./follow.php?flg=false">フォロワー : <?=$followerCount?>人</a><br><br>
 						</span>
 						<button type="button" class="waves-effect waves-light btn-large orange darken-2" onclick="logoutfunc()">ログアウト</button>
 					</div>
+					<div class="clearfix"></div>
 				</div>
 			</div>
 		</div>

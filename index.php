@@ -22,16 +22,19 @@
 <!-- Import Google Icon Font-->
 <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- Import materialize.css-->
-<link type="text/css" rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
-<link type="text/css" rel="stylesheet" href="Stylesheet/lity.css"  media="screen,projection">
-<link type="text/css" rel="stylesheet" href="Stylesheet/jquery-confirm.css"/>
-<link type="text/css" rel="stylesheet" href="Stylesheet/Style.css" media="screen,projection">
+<link rel="stylesheet" href="Stylesheet/materialize.css"  media="screen,projection">
+<link rel="stylesheet" href="Stylesheet/lity.css"  media="screen,projection">
+<link rel="stylesheet" href="Stylesheet/jquery-confirm.css"/>
+<link rel="stylesheet" href="Stylesheet/Style.css" media="screen,projection">
+<link rel="stylesheet" href="Stylesheet/remodal.css">
+<link rel="stylesheet" href="Stylesheet/remodal-default-theme.css">
 <!-- Import JavaScript -->
 <script src="JavaScript/jquery-3.1.1.min.js"></script>
 <script src="JavaScript/jquery-confirm.js"></script>
 <script src="JavaScript/materialize.js"></script>
 <script src="JavaScript/lity.js"></script>
 <script src="JavaScript/favorite.js"></script>
+<script src="JavaScript/remodal.js"></script>
 <!--Let browser know website is optimized for mobile-->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -296,7 +299,7 @@
 					<div class="divider"></div>
 				
 					<div class="modal-footer">
-					  <button href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat right">閉じる</button>
+					  <button href="#!" class=" modal-action modal-close waves-effect waves-light btn-flat right">閉じる</button>
 					</div>
 				</div><!-- class modal-comment end -->
 				</div>
@@ -336,32 +339,22 @@
                 ?>
 			</ul>
 		</div>
-	</div><!--
-  <div class="fixed-action-btn horizontal click-to-toggle">-->
-  <!-- for Desktop and Tablet -->
-  <div class="fixed-action-btn hide-on-small-only">
-    <a class="btn-floating btn-superlarge orange darken-2 modal-trigger" data-target="modal-upload">
-      <i class="material-icons md-48">photo_camera</i>
-    </a>
 	</div>
-	<!-- for Mobile -->
-  <div class="fixed-action-btn-mobile hide-on-med-and-up">
-    <a class="btn-floating btn-superlarge orange darken-2" href="./upload.php">
-      <i class="material-icons md-48">photo_camera</i>
-    </a><!--
-    <ul>
-      <li><a class="btn-floating btn-large red" href="./"><i class="material-icons">home</i></a></li>
-      <li><a data-target="modal-search" class="modal-trigger btn-floating btn-large red" href=""><i class="material-icons">search</i></a></li>
-      <li><a class="btn-floating btn-large red" href="./myprofile.php"><i class="material-icons">account_circle</i></a></li>
-      <li><a class="btn-floating btn-large red" href="./upload.php"><i class="material-icons">photo_camera</i></a></li>
-    </ul>-->
-  </div>
+	<!-- for Desktop and Tablet -->
+	<div class="remodal-bg">
+		<div class="fixed-action-btn hide-on-small-only">
+			<a class="btn-floating btn-superlarge orange darken-2" href="#modal-upload">
+				<i class="material-icons md-48">photo_camera</i>
+			</a>
+		</div>
+		<!-- for Mobile -->
+		<div class="fixed-action-btn-mobile hide-on-med-and-up">
+			<a class="btn-floating btn-large orange darken-2" href="#modal-upload">
+				<i class="material-icons md-36">photo_camera</i>
+			</a>
+		</div>
+	</div>
 </main>
-<!--
-<div class="fixed-action-btn hide-on-large-only">
-	<a href="./upload.php" class="btn-floating btn-large orange"><i class="large material-icons">photo_camera</i></a>
-</div>
--->
 
 <footer class="page-footer">
   <div class="footer-copyright orange darken-2">
@@ -409,9 +402,9 @@
     </div>
 
   </div><!-- class = modal-search end -->
-
-	<div id="modal-upload" class="modal">
-		<div class="modal-content">
+  
+	<div class="remodal" data-remodal-id="modal-upload" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
+		<div>
 			<form id="upload">
 				<h5>画像を投稿</h5><br>
 				<div class="file-field input-field">
@@ -428,41 +421,41 @@
 					<input id="comment" type="text" class="validate" name="comment" maxlength="40" value="" placeholder="コメントを入力">
 				</div>
 			</form>
-			<button class="waves-effect waves-orange orange darken-2 btn right" onclick="uploadfunc()"><i class="material-icons left">file_upload</i>投稿</button>
-			<button class="waves-effect waves-light btn-flat right modal-action modal-close">キャンセル</button><br><br>
-			<div id="loading" class="center"></div>
 		</div>
+		<button class="waves-effect waves-orange orange darken-2 btn right" onclick="uploadfunc()"><i class="material-icons left">file_upload</i>投稿</button>
+		<button class="waves-effect waves-light btn-flat right" data-remodal-action="cancel">キャンセル</button><br><br>
+		<div id="loading" class="center"></div>
 	</div>
 	
-	<div id="modal-ai" class="modal">
-		<div class="modal-content">
-			<div class="row">
-				<div class="col s12">
-					<div class="card">
-						<div class="card-image">
-							<img id="ai-image" src=""><br>
-						</div>
-						<div class="card-content">
-							<div class="row">
-								<div class="col s12">
-									<div id="ai-comment" class="arrow_box_top z-depth-1">これはおいしそうな・・・<br><br></div>
-								</div>
-								<div class="col s12 center">
-									<img src="./Images/chef.png">
-								</div>
+	<div class="remodal" data-remodal-id="modal-ai" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
+		<div class="row">
+			<div class="col s12">
+				<div class="card">
+					<div class="card-image">
+						<img id="ai-image" src=""><br>
+					</div>
+					<div id="ai" class="card-content">
+						<div class="row">
+							<div class="col s12">
+								<div id="ai-comment" class="arrow_box_top z-depth-1"><p class="comment">これはおいしそうな・・・<br><br></p></div>
 							</div>
+							<div class="col s12 center">
+								<img src="./Images/chef.png">
+							</div>
+							<div class="clearfix"></div>
 						</div>
 					</div>
 				</div>
 			</div>
-    			<div class="divider"></div>
-			<div class="modal-footer">
-				<button class="modal-action modal-close waves-effect waves-light btn-flat right" onclick="location.reload()">閉じる</button>
-			</div>
+		</div>
+		<div class="divider"></div>
+		<div class="modal-footer">
+			<a href="./"><button class="waves-effect waves-light btn-flat right">閉じる</button></a>
 		</div>
 	</div>
 
 </div>
+</div><!-- id = modal_parts end -->
 
 <script>
     window.onload = function() {
@@ -560,11 +553,67 @@
 	}
 	
 	function openfunc(){
-		$('#modal-ai').openModal();
+		var inst = $('[data-remodal-id=modal-ai]').remodal();
+		inst.open();
+		//$('#modal-ai').openModal();
 	}
+	
+	// remodal設定
+	<!-- You can define the global options -->
+	  // window.REMODAL_GLOBALS = {
+	  //   NAMESPACE: 'remodal',
+	  //   DEFAULTS: {
+	  //     hashTracking: true,
+	  //     closeOnConfirm: true,
+	  //     closeOnCancel: true,
+	  //     closeOnEscape: true,
+	  //     closeOnOutsideClick: true,
+	  //     modifier: ''
+	  //   }
+	  // };
+	
+	<!-- Events -->
+	  $(document).on('opening', '.remodal', function () {
+		console.log('opening');
+	  });
+	
+	  $(document).on('opened', '.remodal', function () {
+		console.log('opened');
+	  });
+	
+	  $(document).on('closing', '.remodal', function (e) {
+		console.log('closing' + (e.reason ? ', reason: ' + e.reason : ''));
+	  });
+	
+	  $(document).on('closed', '.remodal', function (e) {
+		console.log('closed' + (e.reason ? ', reason: ' + e.reason : ''));
+	  });
+	
+	  $(document).on('confirmation', '.remodal', function () {
+		console.log('confirmation');
+	  });
+	
+	  $(document).on('cancellation', '.remodal', function () {
+		console.log('cancellation');
+	  });
+	
+	//  Usage:
+	//  $(function() {
+	//
+	//    // In this case the initialization function returns the already created instance
+	//    var inst = $('[data-remodal-id=modal]').remodal();
+	//
+	//    inst.open();
+	//    inst.close();
+	//    inst.getState();
+	//    inst.destroy();
+	//  });
+	
+	  //  The second way to initialize:
+	  $('[data-remodal-id=modal2]').remodal({
+		modifier: 'with-red-theme'
+	  });
 </script>
-
-</div><!-- id = modal_parts end -->
 
 </body>
 </html>

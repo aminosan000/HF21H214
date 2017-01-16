@@ -1,5 +1,5 @@
-@import url('http://fonts.googleapis.com/earlyaccess/notosansjapanese.css');
-@import url('https://fonts.googleapis.com/css?family=Yesteryear');
+@import url('//fonts.googleapis.com/earlyaccess/notosansjapanese.css');
+@import url('//fonts.googleapis.com/css?family=Yesteryear');
 
 body {
   font-family: 'Noto Sans Japanese', sans-serif;
@@ -76,6 +76,12 @@ p.follow {
 	margin-top: 0;
 	padding: 0;
 	font-size: 12px;
+}
+
+@media only screen and (max-device-width: 480px) {
+	#ai {
+		padding: 0 0 10px 0;
+	}
 }
 
 /* アイコンサイズ */
@@ -218,6 +224,7 @@ nav.cook {
 	margin-bottom: 20px;
 	border: 2px solid #000;
 }
+
 .arrow_box_top:after, .arrow_box_top:before {
 	top: 100%;
 	left: 50%;
