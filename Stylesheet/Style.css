@@ -82,6 +82,11 @@ p.follow {
 	#ai {
 		padding: 0 0 10px 0;
 	}
+	
+	#load_img {
+		width: 132px;
+		height: 100px;
+	}
 }
 
 /* アイコンサイズ */
