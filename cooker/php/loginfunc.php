@@ -28,7 +28,7 @@ if(isset($_POST['id']) && isset($_POST['passwd'])){
 				// ユーザ名をセット
 				$_SESSION['userId'] = $userId;
 				// ログイン完了時、元のページに遷移
-				header('Location: ./');
+				header('Location: ../');
 				exit;
 			}else{
 				$err = 'passErr';
