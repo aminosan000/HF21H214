@@ -192,7 +192,7 @@
 							<a href="./follow.php"> フォロー : <?=$followCount?>人</a><br>
 							<a href="./follow.php?flg=false">フォロワー : <?=$followerCount?>人</a><br><br>
 						</span>
-						<button type="button" class="waves-effect waves-light btn-large orange darken-2" onclick="logoutfunc()">ログアウト</button>
+						<button type="button" class="waves-effect waves-light btn-large orange darken-2" onclick="logoutfunc()"><i class="material-icons left white-text">exit_to_app</i>ログアウト</button>
 					</div>
 					<div class="clearfix"></div>
 				</div>
