@@ -39,6 +39,11 @@ p.prof_text {
 	cursor: pointer;
 }
 
+button.exit {
+	position: relative;
+	top: -50px;
+}
+
 .upload_avator {
   height: 45px;
   width: 45px;

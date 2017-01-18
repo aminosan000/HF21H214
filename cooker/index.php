@@ -798,7 +798,8 @@ function chartfunc(obj){
 		<?php $cnt++; } ?>
 		</div>
 	</div>
-		<div id="profile" class="col s12"><h4>プロフィール</h4>
+		<div id="profile" class="col s12">
+			<h4>プロフィール</h4>
 		<?php
 				$dao = $daoFactory->createProfileDao();
 				$profileArray = $dao->select($userId);	
@@ -972,7 +973,8 @@ function chartfunc(obj){
 			<?php $cnt++; } ?>
 			<div class="center">
 				<a data-target="modal-profile-add" class="btn-floating btn-large waves-effect waves-light yellow darken-2 modal-trigger"><i class="material-icons">person_add</i></a>
-			</div>	
+			</div>
+			<a href="./php/logout.php"><button class="waves-effect waves-red btn-flat btn-large right exit"><i class="material-icons md-36 left">exit_to_app</i>LOGOUT</button></a>
 			<div id="modal-profile-add" class="modal">
 				<div class="modal-content">
 					<form id="form-prof0">
