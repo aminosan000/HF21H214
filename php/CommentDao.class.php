@@ -16,33 +16,21 @@ class CommentDao{
 		$this->password = $password;
 	}
 	public function select(){
+		$commentArray = array();
 		try{
 			$dbh = new PDO($this->dsn, $this->user, $this->password);
 			$imageName = '';
 			$cnt = 1;
 			// 行数を取得
-			$res = $dbh->query('SELECT * FROM Comment');
-			$rowCount = $res->rowCount();
-			$commentArray = array();
+			$res = $dbh->query('SELECT COUNT(*) FROM Comment');
+			$rowCount = $res->fetchColumn();
 			foreach($dbh->query('SELECT * FROM Comment ORDER BY ImageName') as $row) {
-				if($cnt == 1){
-					$imageName = $row['ImageName'];
-				}
-				if($imageName != $row['ImageName']){
-					$commentArray[$imageName] = $oneImageComment;
-					$imageName = $row['ImageName'];
-					$oneImageComment = array();
-				}
 				$comment = new Comment();
 				$comment->setImageName($row['ImageName']);
 				$comment->setUserId($row['UserId']);
 				$comment->setCommentDate($row['CommentDate']);
 				$comment->setComment($row['Comment']);
-				$oneImageComment[] = $comment;
-				if($cnt == $rowCount){
-					$commentArray[$imageName] = $oneImageComment;
-				}
-				$cnt++;
+				$commentArray[] = $comment;
 			}
 		}catch (PDOException $e){
 			print('Connection failed:'.$e->getMessage());
