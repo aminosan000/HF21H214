@@ -480,7 +480,7 @@
 		if(file.value != ""){
 			// ローディングマークを表示
 			var elm = document.getElementById("loading");
-			elm.innerHTML = "<img id=\"load_img\" src='./Images/load.gif'>";
+			elm.innerHTML = "<div class='preloader-wrapper big active hide-on-small-only'><div class='spinner-layer spinner-blue-only'><div class='circle-clipper left'><div class='circle'></div></div><div class='gap-patch'><div class='circle'></div></div><div class='circle-clipper right'><div class='circle'></div></div></div></div><div class='preloader-wrapper small active hide-on-med-and-up'><div class='spinner-layer spinner-blue-only'><div class='circle-clipper left'><div class='circle'></div></div><div class='gap-patch'><div class='circle'></div></div><div class='circle-clipper right'><div class='circle'></div></div></div></div><br><img id='load_img' src='./Images/load.gif'>";
 			// フォームデータを取得
 			var formdata = new FormData(document.getElementById("upload"));
 			// XMLHttpRequestによるアップロード処理

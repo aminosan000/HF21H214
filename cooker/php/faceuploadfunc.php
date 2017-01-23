@@ -18,7 +18,7 @@ if(is_uploaded_file($_FILES['file']['tmp_name'])){
 			// ファイル名生成
 			$randStr = makeRandStr(10);
 			$imageName = $randStr . "." . $fileType;
-			$imagePath = '../../Images/Face/' . $imageName;
+			$imagePath = '../../hf21/Images/Face/' . $imageName;
 			// サイズも拡張子もOKならファイルアップロード
 			move_uploaded_file($_FILES['file']['tmp_name'], $imagePath);
 			// スマホorタブレットで撮影した写真の向きを正す

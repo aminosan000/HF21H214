@@ -27,7 +27,7 @@
 	}else{
 		header("location: ./login.php");
 	}
-	if(file_exists("../Images/Avator/" . $userId . ".png")){
+	if(file_exists("../hf21/Images/Avator/" . $userId . ".png")){
 		$avatorImage = $userId . ".png";
 	}
 	$daoFactory = DaoFactory::getDaoFactory();
@@ -66,7 +66,7 @@
 <!-- アイコン -->
 <link rel="shortcut icon" sizes="196x196" href="icon.png">
 <link rel="apple-touch-icon" sizes="144x144" href="apple-icon.png">
-<link rel="SHORTCUT ICON" href="../Images/favicon.ico">
+<link rel="SHORTCUT ICON" href="../hf21/Images/favicon.ico">
 <title>インスタグルメ</title>
 <!-- Import Google Icon Font-->
 <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -285,14 +285,14 @@ function chartfunc(obj){
 			$holoNum = $imageRow->getGroupNo();
 		  ?>
 			<a data-target="modal1" data-imagename="<?=$imageName?>" class="modal-trigger" data-holonum="<?=$holoNum?>" onclick="foodfunc(this)" href="">
-				<img class="responsive-img" src="../Images/Thumbnail/<?=$imageName?>" alt="">
+				<img class="responsive-img" src="../hf21/Images/Thumbnail/<?=$imageName?>" alt="">
 			</a>
         </div><br>
 		<div class="valign-wrapper">
 			<div class="col s8">
 				<div class="arrow_box_left z-depth-1">今日のあなたへのオススメはこれです<br><br></div>
 			</div>
-			<div class="col s4"><img src="../Images/chef.png"></div>
+			<div class="col s4"><img src="../hf21/Images/chef.png"></div>
 		</div>
       </div>
     <div id="cook" class="col s12"><h4>料理一覧</h4>
@@ -333,7 +333,7 @@ function chartfunc(obj){
 						$uploadUser = $imageRow->getUserId();
 						$holoNum = $imageRow->getGroupNo();
 						$uploadAvator = "guest.png";
-						if(file_exists("../Images/Avator/" . $uploadUser . ".png")){
+						if(file_exists("../hf21/Images/Avator/" . $uploadUser . ".png")){
 							$uploadAvator = $uploadUser . ".png";
 						}
 				?>
@@ -343,7 +343,7 @@ function chartfunc(obj){
 					  <div class="card-content">
 						<div class="valign-wrapper">
 							<div class="col s2">
-								<img class="upload_avator" src="../Images/Avator/<?=$uploadAvator?>">
+								<img class="upload_avator" src="../hf21/Images/Avator/<?=$uploadAvator?>">
 							</div>
 							<div class="col s10">
 								<span class="black-text">
@@ -353,7 +353,7 @@ function chartfunc(obj){
 							</div>
 						</div>
 					  </div>
-					  <div class="card-image"> <a href="../Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="../Images/Thumbnail/<?=$imageName?>"></a> </div>
+					  <div class="card-image"> <a href="../hf21/Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="../hf21/Images/Thumbnail/<?=$imageName?>"></a> </div>
 					  <div class="card-action">
 						<div class="center">
 							<?php
@@ -431,7 +431,7 @@ function chartfunc(obj){
 									foreach($oneImageComment as $commentRow){
 										$commentUser = $commentRow->getUserId();
 										$commentAvator = "guest.png";
-										if(file_exists("../Images/Avator/" . $commentUser . ".png")){
+										if(file_exists("../hf21/Images/Avator/" . $commentUser . ".png")){
 											$commentAvator = $commentUser . ".png";
 										}
 							?>
@@ -439,7 +439,7 @@ function chartfunc(obj){
 								<div class="row">
 									<a href="./profile.php?profId=<?=$commentUser?>">
 											<div class="col s2">
-												<img class="upload_avator" src="../Images/Avator/<?=$commentAvator?>">
+												<img class="upload_avator" src="../hf21/Images/Avator/<?=$commentAvator?>">
 											</div>
 									</a>
 									<div class="col s10">
@@ -527,7 +527,7 @@ function chartfunc(obj){
 					$uploadUser = $imageRow->getUserId();
 					$holoNum = $imageRow->getGroupNo();
 					$uploadAvator = "guest.png";
-					if(file_exists("../Images/Avator/" . $uploadUser . ".png")){
+					if(file_exists("../hf21/Images/Avator/" . $uploadUser . ".png")){
 						$uploadAvator = $uploadUser . ".png";
 					}
 			?>
@@ -537,7 +537,7 @@ function chartfunc(obj){
 					  <div class="card-content">
 						<div class="valign-wrapper">
 							<div class="col s2">
-								<img class="upload_avator" src="../Images/Avator/<?=$uploadAvator?>">
+								<img class="upload_avator" src="../hf21/Images/Avator/<?=$uploadAvator?>">
 							</div>
 							<div class="col s10">
 								<span class="black-text">
@@ -546,7 +546,7 @@ function chartfunc(obj){
 							</div>
 						</div>
 					  </div>
-					  <div class="card-image"> <a href="../Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="../Images/Thumbnail/<?=$imageName?>"></a> </div>
+					  <div class="card-image"> <a href="../hf21/Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="../hf21/Images/Thumbnail/<?=$imageName?>"></a> </div>
 					  <div class="card-action">
 						<div class="center">
 							<?php
@@ -624,7 +624,7 @@ function chartfunc(obj){
 									foreach($oneImageComment as $commentRow){
 										$commentUser = $commentRow->getUserId();
 										$commentAvator = "guest.png";
-										if(file_exists("../Images/Avator/" . $commentUser . ".png")){
+										if(file_exists("../hf21/Images/Avator/" . $commentUser . ".png")){
 											$commentAvator = $commentUser . ".png";
 										}
 							?>
@@ -632,7 +632,7 @@ function chartfunc(obj){
 								<div class="row">
 									<a href="./profile.php?profId=<?=$commentUser?>">
 											<div class="col s2">
-												<img class="upload_avator" src="../Images/Avator/<?=$commentAvator?>">
+												<img class="upload_avator" src="../hf21/Images/Avator/<?=$commentAvator?>">
 											</div>
 									</a>
 									<div class="col s10">
@@ -790,7 +790,7 @@ function chartfunc(obj){
 			  <div class="col s6">
 				<div class="card">
 					<div class="card-image">
-						<a href="../Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="../Images/Thumbnail/<?=$imageName?>"></a>
+						<a href="../hf21/Images/Upload/<?=$imageName?>" data-lity="data-lity"><img src="../hf21/Images/Thumbnail/<?=$imageName?>"></a>
 						<span class="card-title"><?=$cnt?>回前</span>
 					</div>
 				</div>
@@ -829,7 +829,7 @@ function chartfunc(obj){
 					<div class="center">
 						<p class="prof_text"><?=$name?></p>
 						<a data-target="modal-face<?=$cnt?>" class="modal-trigger">
-							<img class="upload_avator" src="../Images/Avator/<?=$icon?>">
+							<img class="upload_avator" src="../hf21/Images/Avator/<?=$icon?>">
 						</a>
 						<p class="prof_text"><?=$relation?></p>
 					</div>
@@ -964,7 +964,7 @@ function chartfunc(obj){
 							<div id="arrow<?=$cnt?>" class="arrow_box_top z-depth-1"><h5 class="text">家族の顔を撮影してください</h5></div>
 						</div>
 						<div class="col s12 center">
-							<img src="../Images/chef.png">
+							<img src="../hf21/Images/chef.png">
 						</div>
 					</div>
 				</div>
@@ -1155,7 +1155,7 @@ function uploadfunc(obj){
 		var id = obj.getAttribute("data-id");
 		var elm = document.getElementById("loading" + id);
 		var arrow = document.getElementById("arrow" + id);
-		arrow.innerHTML = "<div class=\"center\"><img src='../Images/load.gif'><br><h5>画像解析中・・・</h5></div>";
+		arrow.innerHTML = "<div class='center'><div class='preloader-wrapper big active hide-on-small-only'><div class='spinner-layer spinner-blue-only'><div class='circle-clipper left'><div class='circle'></div></div><div class='gap-patch'><div class='circle'></div></div><div class='circle-clipper right'><div class='circle'></div></div></div></div><br><img id='load_img' src='../hf21/Images/load.gif'></div>";
 		// フォームデータを取得
 		var formdata = new FormData(document.getElementById("upload"));
 		// XMLHttpRequestによるアップロード処理

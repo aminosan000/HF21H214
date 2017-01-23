@@ -1,13 +1,13 @@
 <?php
 function cvRequest($imageName){
 	// APIキー
-	$api_key = "AIzaSyAiuioX405mhOO_vVe7xGjkrMC_yuMJR_w" ;
+	$api_key = "AIzaSyBqptFpqbvbwCSuBTRjtDmt4HPLadRyk40" ;
 
 	// リファラー (許可するリファラーを設定した場合)
 	$referer = "https://gunmetal.sakura.ne.jp/hf21/" ;
 
 	// 画像へのパス
-	$image_path = "../../Images/Face/" . $imageName ;
+	$image_path = "../../hf21/Images/Face/" . $imageName ;
 
 	// リクエスト用のJSONを作成
 	$json = json_encode( array(
