@@ -1199,6 +1199,13 @@ function uploadfunc(obj){
 
 // ホログラム再生用ソケット
 var conn = new WebSocket('ws://gunmetal.sakura.ne.jp:8080');
+
+function connect(){
+	conn = new WebSocket('ws://gunmetal.sakura.ne.jp:8080');
+}
+
+setInterval(connect, 30000);
+
 conn.onopen = function(e) {
     console.log("Connection established!");
 };
